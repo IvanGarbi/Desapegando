@@ -1,7 +1,9 @@
 using Desapegando.Application.Data;
+using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Services;
 using Desapegando.Data.Context;
+using Desapegando.Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +32,7 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 // Dependcy Injection
 builder.Services.AddScoped<ICondominoService, CondominoService>();
+builder.Services.AddScoped<ICondominoRepository, CondominoRepository>();
 
 
 // AutoMapper

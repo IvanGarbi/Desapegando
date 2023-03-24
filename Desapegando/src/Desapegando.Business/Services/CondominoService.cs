@@ -8,6 +8,11 @@ public class CondominoService : ICondominoService, IDisposable
 {
     private readonly ICondominoRepository _repository;
 
+    public CondominoService(ICondominoRepository repository)
+    {
+        _repository = repository;
+    }
+
     public async Task Create(Condomino condomino)
     {
         await _repository.Create(condomino);
