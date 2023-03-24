@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Desapegando.Application.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : MainController
     {
         private readonly ILogger<HomeController> _logger;
 
