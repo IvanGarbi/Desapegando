@@ -11,14 +11,12 @@ public class RegisterController : MainController
 {
     private readonly ICondominoService _condominoService;
     private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
     private readonly IMapper _mapper;
 
-    public RegisterController(UserManager<IdentityUser> userManager, ICondominoService condominoService, SignInManager<IdentityUser> signInManager, IMapper mapper)
+    public RegisterController(UserManager<IdentityUser> userManager, ICondominoService condominoService, IMapper mapper)
     {
         _userManager = userManager;
         _condominoService = condominoService;
-        _signInManager = signInManager;
         _mapper = mapper;
     }
 
@@ -28,25 +26,26 @@ public class RegisterController : MainController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(CondominoViewModel condominoViewModel)
+    public async Task<IActionResult> Index(CondominoRegisterViewModel condominoRegisterViewModel)
     {
         if (!ModelState.IsValid)
         {
-            return View(condominoViewModel);
+            return View(condominoRegisterViewModel);
         }
 
         var user = new IdentityUser();
-        user.Email = condominoViewModel.Email;
-        user.PhoneNumber = condominoViewModel.Telefone;
-        user.UserName = condominoViewModel.Nome;
+        user.Email = condominoRegisterViewModel.Email;
+        user.PhoneNumber = condominoRegisterViewModel.Telefone;
+        user.UserName = condominoRegisterViewModel.Email;
         user.EmailConfirmed = true;
+        user.PhoneNumberConfirmed = true;
 
-        var result = await _userManager.CreateAsync(user, condominoViewModel.Senha);
+        var result = await _userManager.CreateAsync(user, condominoRegisterViewModel.Senha);
 
         if (result.Succeeded)
         {
-            var identity = await _userManager.FindByEmailAsync(condominoViewModel.Email);
-            var condomino = _mapper.Map<Condomino>(condominoViewModel);
+            var identity = await _userManager.FindByEmailAsync(condominoRegisterViewModel.Email);
+            var condomino = _mapper.Map<Condomino>(condominoRegisterViewModel);
 
             condomino.Id = Guid.Parse(identity.Id);
 
