@@ -10,5 +10,6 @@ public class AutoMapperConfig : Profile
     public AutoMapperConfig()
     {
         CreateMap<CondominoRegisterViewModel, Condomino>().ReverseMap();
+        CreateMap<CondominoInativoViewModel, Condomino>().ReverseMap();
     }
 }

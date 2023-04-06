@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Desapegando.Application.Models.CondominoInativoViewModel>
+
+
+<section class="padding-y container" style="min-height: 35vh">
+    <div class="card mx-auto" style="max-width: 380px; margin-top: 100px;">
+
+        <div class="card-body">
+            <h4 class="card-title mb-4">Seja bem vindo!</h4>
+            
+            @foreach (var condomino in Model)
+            {
+                <div class="card" style="width: 18rem; float: left; margin-left: 5px; margin-top: 10px">
+                    <div class="card-body">
+                        <h5 class="card-title">Condômino</h5>
+                        <p class="card-text">Nome: @condomino.Sobrenome</p>
+                        <p class="card-text">Sobrenome: @condomino.Sobrenome</p>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-primary" asp-controller="Administrador" asp-action="AtivarCondomino" asp-route-id="@condomino.Id">Novos Condôminos</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            
+        </div>
+    </div>
+</section>
+
