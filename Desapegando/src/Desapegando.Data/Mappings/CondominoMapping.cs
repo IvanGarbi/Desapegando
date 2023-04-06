@@ -46,6 +46,10 @@ public class CondominoMapping : IEntityTypeConfiguration<Condomino>
             .IsRequired()
             .HasColumnType("BIT");
 
+        builder.Property(x => x.Ativo)
+            .IsRequired()
+            .HasColumnType("BIT");
+
         builder.ToTable("Condomino");
     }
 }

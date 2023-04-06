@@ -13,4 +13,5 @@ public class Condomino : Entity
     public string Apartamento { get; set; }
     public int Idade { get; set; }
     public bool Administrador { get; set; } = false;
+    public bool Ativo { get; set; } = false;
 }
