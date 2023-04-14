@@ -2,6 +2,7 @@
 using Desapegando.Application.Models;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
+using Desapegando.Business.Validations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,7 +56,24 @@ public class RegisterController : MainController
            condomino.Cpf = condomino.Cpf.Replace(".", "");
            condomino.Cpf = condomino.Cpf.Replace("-", "");
 
-            await _condominoService.Create(condomino);
+            var validator = new CondominoValidation();
+            var resultValidation = validator.Validate(condomino);
+
+            if (resultValidation.IsValid)
+            {
+                await _condominoService.Create(condomino);
+            }
+            else
+            {
+                foreach (var error in resultValidation.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                await _userManager.DeleteAsync(user);
+
+                return View(condominoRegisterViewModel);
+            }
         }
 
         return RedirectToAction("Index", "Home");

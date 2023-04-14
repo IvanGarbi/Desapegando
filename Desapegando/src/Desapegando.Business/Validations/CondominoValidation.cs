@@ -8,9 +8,9 @@ public class CondominoValidation : AbstractValidator<Condomino>
     public CondominoValidation()
     {
         RuleFor(x => x.Sexo)
-            .NotEmpty()
-            .NotNull()
-            .WithMessage("O {PropertyName} deve ser informado.")
+ //           .NotEmpty()
+ //           .NotNull()
+ //           .WithMessage("O {PropertyName} deve ser informado.")
             .IsInEnum();
 
         RuleFor(x => x.Email)
@@ -67,9 +67,9 @@ public class CondominoValidation : AbstractValidator<Condomino>
             .MaximumLength(11)
             .WithMessage("O {PropertyName} deve ter 11 caracteres.");
 
-        RuleFor(x => x.Administrador)
-            .NotEmpty()
-            .NotNull()
-            .WithMessage("O {PropertyName} deve ser informado.");
+        //RuleFor(x => x.Administrador)
+        //    .NotEmpty()
+        //    .NotNull()
+        //    .WithMessage("O {PropertyName} deve ser informado.");
     }
 }
