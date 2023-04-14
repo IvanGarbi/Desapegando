@@ -1,4 +1,5 @@
-﻿using Desapegando.Business.Models;
+﻿using System.Security.Cryptography.X509Certificates;
+using Desapegando.Business.Models;
 using FluentValidation;
 
 namespace Desapegando.Business.Validations;
@@ -8,9 +9,9 @@ public class CondominoValidation : AbstractValidator<Condomino>
     public CondominoValidation()
     {
         RuleFor(x => x.Sexo)
- //           .NotEmpty()
- //           .NotNull()
- //           .WithMessage("O {PropertyName} deve ser informado.")
+            //.NotEmpty()
+            //.NotNull()
+            //.WithMessage("O {PropertyName} deve ser informado.")
             .IsInEnum();
 
         RuleFor(x => x.Email)
@@ -65,11 +66,65 @@ public class CondominoValidation : AbstractValidator<Condomino>
             .WithMessage("O {PropertyName} deve conter somente números.")
             .MinimumLength(11)
             .MaximumLength(11)
-            .WithMessage("O {PropertyName} deve ter 11 caracteres.");
+            .WithMessage("O {PropertyName} deve ter 11 caracteres.")
+            .Must(cpf => Validar(cpf))
+            .WithMessage("O {PropertyName} não está em formato de CPF adequado.");
 
         //RuleFor(x => x.Administrador)
         //    .NotEmpty()
         //    .NotNull()
         //    .WithMessage("O {PropertyName} deve ser informado.");
+    }
+
+    public static bool Validar(string cpf)
+    {
+        if (cpf.Length > 11)
+            return false;
+
+        while (cpf.Length != 11)
+            cpf = '0' + cpf;
+
+        var igual = true;
+        for (var i = 1; i < 11 && igual; i++)
+            if (cpf[i] != cpf[0])
+                igual = false;
+
+        if (igual || cpf == "12345678909")
+            return false;
+
+        var numeros = new int[11];
+
+        for (var i = 0; i < 11; i++)
+            numeros[i] = int.Parse(cpf[i].ToString());
+
+        var soma = 0;
+        for (var i = 0; i < 9; i++)
+            soma += (10 - i) * numeros[i];
+
+        var resultado = soma % 11;
+
+        if (resultado == 1 || resultado == 0)
+        {
+            if (numeros[9] != 0)
+                return false;
+        }
+        else if (numeros[9] != 11 - resultado)
+            return false;
+
+        soma = 0;
+        for (var i = 0; i < 10; i++)
+            soma += (11 - i) * numeros[i];
+
+        resultado = soma % 11;
+
+        if (resultado == 1 || resultado == 0)
+        {
+            if (numeros[10] != 0)
+                return false;
+        }
+        else if (numeros[10] != 11 - resultado)
+            return false;
+
+        return true;
     }
 }

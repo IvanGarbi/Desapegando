@@ -52,9 +52,10 @@ public class RegisterController : MainController
 
             condomino.Telefone = condomino.Telefone.Replace("-", ""); // CTRL + H  - Replace Caracteres
             condomino.Telefone = condomino.Telefone.Replace("(", "");
-           condomino.Telefone = condomino.Telefone.Replace(")", "");
-           condomino.Cpf = condomino.Cpf.Replace(".", "");
-           condomino.Cpf = condomino.Cpf.Replace("-", "");
+            condomino.Telefone = condomino.Telefone.Replace(")", "");
+            condomino.Telefone = condomino.Telefone.Replace(" ", "");
+            condomino.Cpf = condomino.Cpf.Replace(".", "");
+            condomino.Cpf = condomino.Cpf.Replace("-", "");
 
             var validator = new CondominoValidation();
             var resultValidation = validator.Validate(condomino);
