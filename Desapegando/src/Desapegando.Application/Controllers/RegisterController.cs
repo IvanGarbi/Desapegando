@@ -49,7 +49,7 @@ public class RegisterController : MainController
 
             condomino.Id = Guid.Parse(identity.Id);
 
-            condomino.Telefone = condomino.Telefone.Replace("-", "");
+            condomino.Telefone = condomino.Telefone.Replace("-", ""); // CTRL + H  - Replace Caracteres
             condomino.Telefone = condomino.Telefone.Replace("(", "");
            condomino.Telefone = condomino.Telefone.Replace(")", "");
            condomino.Cpf = condomino.Cpf.Replace(".", "");
