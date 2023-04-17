@@ -76,6 +76,10 @@ public class RegisterController : MainController
                 return View(condominoRegisterViewModel);
             }
         }
+        else
+        {
+            // Fazer tratativa de erro para e-mail duplicado, etc. Erros do Identity
+        }
 
         return RedirectToAction("Index", "Home");
     }
