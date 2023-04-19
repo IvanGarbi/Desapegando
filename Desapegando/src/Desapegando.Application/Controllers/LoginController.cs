@@ -29,8 +29,7 @@ public class LoginController : MainController
             return View(condominoLoginViewModel);
         }
 
-        var condominoList = await _condominoRepository.Read();
-        var condomino = condominoList.Where(x => x.Email == condominoLoginViewModel.Email).FirstOrDefault();
+        var condomino = await _condominoRepository.ReadWithExpression(x => x.Email == condominoLoginViewModel.Email);
 
         if (condomino != null)
         {
