@@ -1,21 +1,29 @@
 ﻿using Desapegando.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Desapegando.Business.Interfaces.Repository;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Desapegando.Data.Repository;
 
 namespace Desapegando.Application.Controllers
 {
     public class HomeController : MainController
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ICondominoRepository _condominoRepository;
+        private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ICondominoRepository condominoRepository, IMapper mapper, UserManager<IdentityUser> userManager)
         {
-            _logger = logger;
+            _condominoRepository = condominoRepository;
+            _mapper = mapper;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(_mapper.Map<CondominoViewModel>(await _condominoRepository.ReadById(Guid.Parse(_userManager.GetUserId(User)))));
         }
 
         public IActionResult Privacy()

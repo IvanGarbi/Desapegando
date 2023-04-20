@@ -91,3 +91,33 @@ public class CondominoInativoViewModel
     [DisplayName("Idade")]
     public int Idade { get; set; }
 }
+
+public class CondominoViewModel
+{
+    public Guid Id { get; set; }
+
+    [DisplayName("Nome")]
+    public string Nome { get; set; }
+
+    [DisplayName("Sobrenome")]
+    public string Sobrenome { get; set; }
+
+    [DisplayName("Sexo")]
+    public Sexo Sexo { get; set; }
+
+    [DisplayName("Telefone")]
+    public string Telefone { get; set; }
+
+    [DisplayName("E-mail")]
+    public string Email { get; set; }
+
+    [DisplayName("CPF")]
+    public string Cpf { get; set; }
+
+    [DisplayName("Apartamento")]
+    public string Apartamento { get; set; }
+
+    [DisplayName("Idade")]
+    public int Idade { get; set; }
+    public bool Administrador { get; set; }
+}
