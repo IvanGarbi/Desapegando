@@ -118,6 +118,7 @@
                                     <select asp-for="Sexo" class="form-select" asp-items="@Html.GetEnumSelectList<Sexo>()">
                                         <option selected="" value="">Selecione</option>
                                     </select>
+                                    <span asp-validation-for="Sexo" class="text-danger"></span>
                                 </div>
 
                                 <div class="col-md-6">
@@ -162,8 +163,10 @@
                             </div>
 
                             <div class="form-check mb-3">
-                                <input class="form-check-input" id="termsService" type="checkbox" />
-                                <label class="form-label fs--1 text-none" for="termsService">I accept the <a href="#!">terms </a>and <a href="#!">privacy policy</a></label>
+                                <partial name="_TermsModal"/>
+                                <input asp-for="TermosPrivacidade" class="form-check-input" id="termsService" type="checkbox" required=""/>
+                                <label class="form-label fs--1 text-none" for="termsService">I accept the <a href="#!" data-bs-toggle="modal" data-bs-target="#verticallyCentered">terms </a>and <a href="#!" data-bs-toggle="modal" data-bs-target="#verticallyCentered">privacy policy</a></label>
+                                <span asp-validation-for="TermosPrivacidade" class="text-danger"></span>
                             </div>
                             <div class="text-center"><a class="fs--1 fw-bold" asp-action="Index" asp-controller="Login" >Sign in to an existing account</a></div>
                         </form>

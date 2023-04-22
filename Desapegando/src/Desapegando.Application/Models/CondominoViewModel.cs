@@ -16,7 +16,7 @@ public class CondominoRegisterViewModel
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [DisplayName("Sexo")]
-    public Sexo Sexo { get; set; }
+    public Sexo? Sexo { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [DisplayName("Telefone")]
@@ -37,9 +37,13 @@ public class CondominoRegisterViewModel
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [DisplayName("Idade")]
-    public int Idade { get; set; }
+    public int? Idade { get; set; }
 
     public bool Administrador { get; set; }
+
+    [Required(ErrorMessage = "É obrigatório aceitar os termos.")]
+    [Range(typeof(bool), "true", "true", ErrorMessage = "É obrigatório aceitar os termos.")]
+    public bool TermosPrivacidade { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 6)]
