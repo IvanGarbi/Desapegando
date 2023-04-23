@@ -16,6 +16,7 @@ public class LoginController : MainController
         _signInManager = signInManager;
         _condominoRepository = condominoRepository;
     }
+
     public async Task<IActionResult> Index()
     {
         return View();
@@ -41,7 +42,8 @@ public class LoginController : MainController
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Usuário não ativado pelo síndico.");
+                // Adicionando na ViewData para ser mostrado no View Component.
+                ViewData.ModelState.AddModelError(string.Empty, "Usuário não ativado pelo síndico.");
 
                 return View(condominoLoginViewModel);
             }

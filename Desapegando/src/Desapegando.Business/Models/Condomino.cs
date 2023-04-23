@@ -11,7 +11,7 @@ public class Condomino : Entity
     public string Email { get; set; }
     public string Cpf { get; set; }
     public string Apartamento { get; set; }
-    public int Idade { get; set; }
+    public DateTime DataNascimento { get; set; }
     public bool Administrador { get; set; } = false;
     public bool Ativo { get; set; } = false;
 }

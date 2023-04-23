@@ -36,8 +36,8 @@ public class CondominoRegisterViewModel
     public string Apartamento { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [DisplayName("Idade")]
-    public int? Idade { get; set; }
+    [DisplayName("Data de Nascimento")]
+    public DateTime? DataNascimento { get; set; }
 
     public bool Administrador { get; set; }
 
@@ -92,8 +92,8 @@ public class CondominoInativoViewModel
     [DisplayName("Apartamento")]
     public string Apartamento { get; set; }
 
-    [DisplayName("Idade")]
-    public int Idade { get; set; }
+    [DisplayName("Data de Nascimento")]
+    public DateTime DataNascimento { get; set; }
 }
 
 public class CondominoViewModel
@@ -121,7 +121,7 @@ public class CondominoViewModel
     [DisplayName("Apartamento")]
     public string Apartamento { get; set; }
 
-    [DisplayName("Idade")]
-    public int Idade { get; set; }
+    [DisplayName("Data de Nascimento")]
+    public DateTime DataNascimento { get; set; }
     public bool Administrador { get; set; }
 }

@@ -38,9 +38,9 @@ public class CondominoMapping : IEntityTypeConfiguration<Condomino>
             .IsRequired()
             .HasColumnType("VARCHAR(20)");
 
-        builder.Property(x => x.Idade)
+        builder.Property(x => x.DataNascimento)
             .IsRequired()
-            .HasColumnType("INT");
+            .HasColumnType("DATE");
 
         builder.Property(x => x.Administrador)
             .IsRequired()

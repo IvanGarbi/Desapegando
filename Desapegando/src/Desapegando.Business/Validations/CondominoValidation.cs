@@ -53,10 +53,12 @@ public class CondominoValidation : AbstractValidator<Condomino>
             .MaximumLength(20)
             .WithMessage("O {PropertyName} deve ter menos que 20 caracteres."); ;
 
-        RuleFor(x => x.Idade)
+        RuleFor(x => x.DataNascimento)
             .NotEmpty()
             .NotNull()
-            .WithMessage("O {PropertyName} deve ser informado.");
+            .WithMessage("O {PropertyName} deve ser informado.")
+            .Must(dataNascimento => ValidarIdade(dataNascimento))
+            .WithMessage("Deve ser maior de 18 anos.");
 
         RuleFor(x => x.Cpf)
             .NotEmpty()
@@ -67,7 +69,7 @@ public class CondominoValidation : AbstractValidator<Condomino>
             .MinimumLength(11)
             .MaximumLength(11)
             .WithMessage("O {PropertyName} deve ter 11 caracteres.")
-            .Must(cpf => Validar(cpf))
+            .Must(cpf => ValidarCpf(cpf))
             .WithMessage("O {PropertyName} não está em formato de CPF adequado.");
 
         //RuleFor(x => x.Administrador)
@@ -76,7 +78,23 @@ public class CondominoValidation : AbstractValidator<Condomino>
         //    .WithMessage("O {PropertyName} deve ser informado.");
     }
 
-    public static bool Validar(string cpf)
+    public static bool ValidarIdade(DateTime dataNascimento)
+    {
+        DateTime dateNow = DateTime.Today;
+
+        var idade = dateNow.Year - dataNascimento.Year;
+
+        if (dataNascimento.Date > dateNow.AddYears(-idade)) idade--;
+
+        if (idade < 18)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static bool ValidarCpf(string cpf)
     {
         if (cpf.Length > 11)
             return false;

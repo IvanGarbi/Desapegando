@@ -50,7 +50,7 @@ public class RegisterController : MainController
 
             condomino.Id = Guid.Parse(identity.Id);
 
-            condomino.Telefone = condomino.Telefone.Replace("-", ""); // CTRL + H  - Replace Caracteres
+            condomino.Telefone = condomino.Telefone.Replace("-", "");
             condomino.Telefone = condomino.Telefone.Replace("(", "");
             condomino.Telefone = condomino.Telefone.Replace(")", "");
             condomino.Telefone = condomino.Telefone.Replace(" ", "");
@@ -62,6 +62,9 @@ public class RegisterController : MainController
 
             if (resultValidation.IsValid)
             {
+                // Adicionando na TempData para ser mostrado no View Component.
+                TempData["Sucesso"] = "Agora só falta o Síndico aprovar seu registro!";
+
                 await _condominoService.Create(condomino);
             }
             else
@@ -78,10 +81,16 @@ public class RegisterController : MainController
         }
         else
         {
-            // Fazer tratativa de erro para e-mail duplicado, etc. Erros do Identity
+            // Tratativa de erro para e-mail duplicado, etc. Erros do Identity
+            foreach (var identityError in result.Errors)
+            {
+                // Adicionando na ViewData para ser mostrado no View Component.
+                ViewData.ModelState.AddModelError("", identityError.Description);
+            }
+            return View(condominoRegisterViewModel);
         }
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Login");
     }
 
 }

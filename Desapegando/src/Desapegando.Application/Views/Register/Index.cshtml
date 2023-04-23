@@ -28,11 +28,13 @@
     <link rel="icon" type="image/png" sizes="16x16" href="~/public/assets/img/favicons/favicon-16x16.png">
     <link rel="shortcut icon" type="image/x-icon" href="~/public/assets/img/favicons/favicon.ico">
     <link rel="manifest" href="~/public/assets/img/favicons/manifest.json">
+    <link href="~/public/vendors/flatpickr/flatpickr.min.css" rel="stylesheet" />
     <meta name="msapplication-TileImage" content="~/public/assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
     <script src="~/public/vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="~/public/vendors/simplebar/simplebar.min.js"></script>
     <script src="~/public/assets/js/config.js"></script>
+    <script src="~/public/assets/js/flatpickr.js"></script>
 
 
     <!-- ===============================================-->
@@ -87,6 +89,7 @@
                         </div>
                         <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
 
+                            <vc:Summary></vc:Summary>
 
                             <div class="mb-3 text-start">
                                 <label asp-for="Nome" class="form-label"></label>
@@ -130,9 +133,9 @@
 
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
-                                    <label asp-for="Idade" class="form-label" ></label>
-                                    <input asp-for="Idade" class="form-control" placeholder="Idade" />
-                                    <span asp-validation-for="Idade" class="text-danger"></span>
+                                    <label asp-for="DataNascimento" class="form-label" ></label>
+                                    <input asp-for="DataNascimento" class="form-control datetimepicker" id="datepicker" type="text" placeholder="dd/mm/yyyy" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' />
+                                    <span asp-validation-for="DataNascimento" class="text-danger"></span>
                                 </div>
 
 
