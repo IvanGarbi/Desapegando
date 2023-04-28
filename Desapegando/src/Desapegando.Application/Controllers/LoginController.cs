@@ -3,6 +3,7 @@ using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Desapegando.Application.Controllers;
 
@@ -36,9 +37,20 @@ public class LoginController : MainController
         {
             if (condomino.Ativo)
             {
-                var result = await _signInManager.PasswordSignInAsync(condominoLoginViewModel.Email, condominoLoginViewModel.Senha, false, false);
+                var result = await _signInManager.PasswordSignInAsync(condominoLoginViewModel.Email, condominoLoginViewModel.Senha, false, true);
 
-                return RedirectToAction("Index", "Home");
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if (result.IsLockedOut)
+                {
+                    ViewData.ModelState.AddModelError(string.Empty, "Usuário temporariamente bloqueado por tentativas inválidas.");
+                    return View(condominoLoginViewModel);
+                }
+
+                ViewData.ModelState.AddModelError(string.Empty, "Usuário ou Senha incorretos.");
+                return View(condominoLoginViewModel);
             }
             else
             {
@@ -51,7 +63,24 @@ public class LoginController : MainController
         else
         {
             // Adicionar erro de problema
+            ViewData.ModelState.AddModelError(string.Empty, "Usuário ou Senha incorretos.");
             return View();
+        }
+
+    }
+
+    public async Task<IActionResult> SignOut()
+    {
+        var result = _signInManager.SignOutAsync();
+
+        if (result.IsCompletedSuccessfully)
+        {
+            return RedirectToAction("Index", "Login");
+        }
+        else
+        {
+            // Verificar tratamento de erros...
+            return RedirectToAction("Index", "Home");
         }
 
     }

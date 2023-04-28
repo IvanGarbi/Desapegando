@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Desapegando.Application.Models;
+using Desapegando.Application.Services;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,14 @@ public class AdministradorController : MainController
     private readonly ICondominoRepository _condominoRepository;
     private readonly ICondominoService _condominoService;
     private readonly IMapper _mapper;
-    public AdministradorController(ICondominoRepository condominoRepository, IMapper mapper, ICondominoService condominoService)
+
+    private readonly IEmailSender _emailSender;
+    public AdministradorController(ICondominoRepository condominoRepository, IMapper mapper, ICondominoService condominoService, IEmailSender emailSender)
     {
         _condominoRepository = condominoRepository;
         _mapper = mapper;
         _condominoService = condominoService;
+        _emailSender = emailSender;
     }
 
     public async Task<IActionResult> NovosCondominos()
@@ -40,6 +44,17 @@ public class AdministradorController : MainController
         condomino.Ativo = true;
 
         await _condominoService.Update(condomino);
+
+        try
+        {
+            await _emailSender.SendEmailAsync(condomino.Email, "Condômino aprovado", "O seu cadastro em Desapegando já foi aprovado! Já é possível realizar o login e desfrutar da plataforma!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
 
         return RedirectToAction("NovosCondominos", "Administrador");
     }

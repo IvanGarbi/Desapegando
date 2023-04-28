@@ -1,4 +1,5 @@
 using Desapegando.Application.Data;
+using Desapegando.Application.Services;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Services;
@@ -34,6 +35,9 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 // Dependcy Injection
 builder.Services.AddScoped<ICondominoService, CondominoService>();
 builder.Services.AddScoped<ICondominoRepository, CondominoRepository>();
+
+builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
+builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
 
 
 // AutoMapper
