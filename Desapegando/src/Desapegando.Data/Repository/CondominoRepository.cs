@@ -19,4 +19,11 @@ public class CondominoRepository : Repository<Condomino>, ICondominoRepository
                                   .Where(predicateExpression)
                                   .FirstOrDefaultAsync();
     }
+
+    public async Task<IEnumerable<Condomino>> ReadWithExpressionList(Expression<Func<Condomino, bool>> predicateExpression)
+    {
+        return await Db.Condominos.AsNoTracking()
+                                  .Where(predicateExpression)
+                                  .ToListAsync();
+    }
 }

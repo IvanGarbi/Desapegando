@@ -62,10 +62,10 @@ public class RegisterController : MainController
 
             if (resultValidation.IsValid)
             {
+                await _condominoService.Create(condomino);
+
                 // Adicionando na TempData para ser mostrado no View Component.
                 TempData["Sucesso"] = "Agora só falta o Síndico aprovar seu registro!";
-
-                await _condominoService.Create(condomino);
             }
             else
             {
