@@ -80,12 +80,12 @@
                     <div class="col-sm-10 col-md-8 col-lg-5 col-xl-5 col-xxl-3">
                         <a class="d-flex flex-center text-decoration-none mb-4" href="~/public/index.html">
                             <div class="d-flex align-items-center fw-bolder fs-5 d-inline-block">
-                                <img src="~/public/assets/img/icons/logo.png" alt="phoenix" width="58" />
+                                <img src="~/Imagens/LOGO.png" alt="Desapegando" width="240" height="227" />
                             </div>
                         </a>
                         <div class="text-center mb-7">
-                            <h3 class="text-1000">Sign Up</h3>
-                            <p class="text-700">Create your account today</p>
+                            <h3 class="text-1000">Registre-se</h3>
+                            <p class="text-700">Crie Sua Conta Hoje!</p>
                         </div>
                         <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
 
@@ -168,10 +168,10 @@
                             <div class="form-check mb-3">
                                 <partial name="_TermsModal"/>
                                 <input asp-for="TermosPrivacidade" class="form-check-input" id="termsService" type="checkbox" required=""/>
-                                <label class="form-label fs--1 text-none" for="termsService">I accept the <a href="#!" data-bs-toggle="modal" data-bs-target="#verticallyCentered">terms </a>and <a href="#!" data-bs-toggle="modal" data-bs-target="#verticallyCentered">privacy policy</a></label>
+                                <label class="form-label fs--1 text-none" for="termsService">Eu aceito os <a href="#!" data-bs-toggle="modal" data-bs-target="#verticallyCentered">termos </a>e as <a href="#!" data-bs-toggle="modal" data-bs-target="#verticallyCentered">Politicas de Privacidade.</a></label>
                                 <span asp-validation-for="TermosPrivacidade" class="text-danger"></span>
                             </div>
-                            <div class="text-center"><a class="fs--1 fw-bold" asp-action="Index" asp-controller="Login" >Sign in to an existing account</a></div>
+                            <div class="text-center"><a class="fs--1 fw-bold" asp-action="Index" asp-controller="Login" >Possui uma conta? Faça seu Login</a></div>
                         </form>
                     </div>
                 </div>

@@ -76,12 +76,12 @@
                     <div class="col-sm-10 col-md-8 col-lg-5 col-xl-5 col-xxl-3">
                         <a class="d-flex flex-center text-decoration-none mb-4" href="~/index.html">
                             <div class="d-flex align-items-center fw-bolder fs-5 d-inline-block">
-                                <img src="~/public/assets/img/icons/logo.png" alt="phoenix" width="58" />
+                                <img src="~/Imagens/LOGO.png" alt="Desapegando" width="240" height="227"/>
                             </div>
                         </a>
                         <div class="text-center mb-7">
-                            <h3 class="text-1000">Sign In</h3>
-                            <p class="text-700">Get access to your account</p>
+                            <h3 class="text-1000">Realizar Login</h3>
+                            <p class="text-700">Acesse sua conta!</p>
                         </div>
 
                         <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
@@ -91,14 +91,14 @@
                             <div class="mb-3 text-start">
                                 <label class="form-label" asp-for="Email"></label>
                                 <div class="form-icon-container">
-                                    <input class="form-control form-icon-input" placeholder="name@example.com" asp-for="Email" /><span class="fas fa-user text-900 fs--1 form-icon"></span>
+                                    <input class="form-control form-icon-input" placeholder="nome@exemplo.com" asp-for="Email" /><span class="fas fa-user text-900 fs--1 form-icon"></span>
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="mb-3 text-start">
                                 <label class="form-label" asp-for="Senha"></label>
                                 <div class="form-icon-container">
-                                    <input class="form-control form-icon-input" placeholder="Password" type="password" asp-for="Senha" /><span class="fas fa-key text-900 fs--1 form-icon"></span>
+                                    <input class="form-control form-icon-input" placeholder="Senha" type="password" asp-for="Senha" /><span class="fas fa-key text-900 fs--1 form-icon"></span>
                                     <span asp-validation-for="Senha" class="text-danger"></span>
                                 </div>
                             </div>
@@ -112,9 +112,9 @@
                                 </div>*@
                                 @*<div class="col-auto"><a class="fs--1 fw-semi-bold" href="~/pages/authentication/simple/forgot-password.html">Forgot Password?</a></div>*@
                             </div>
-                            <button class="btn btn-primary w-100 mb-3">Sign In</button>
+                            <button class="btn btn-primary w-100 mb-3">Entrar</button>
                         </form>
-                        <div class="text-center"><a class="fs--1 fw-bold" asp-controller="Register" asp-action="Index">Create an account</a></div>
+                        <div class="text-center"><a class="fs--1 fw-bold" asp-controller="Register" asp-action="Index">Criar uma conta!</a></div>
                     </div>
                 </div>
             </div>
