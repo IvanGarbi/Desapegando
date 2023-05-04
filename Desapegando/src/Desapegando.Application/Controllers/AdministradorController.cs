@@ -24,9 +24,9 @@ public class AdministradorController : MainController
 
     public async Task<IActionResult> NovosCondominos()
     {
-        var condominos = await _condominoRepository.Read();
+        var condominosInativos = await _condominoRepository.ReadWithExpressionList(x => x.Ativo == false);
 
-        var condominosInativos = condominos.Where(x => x.Ativo == false);
+        //var condominosInativos = condominos.Where(x => x.Ativo == false);
 
         return View(_mapper.Map<IEnumerable<CondominoInativoViewModel>>(condominosInativos));
     }

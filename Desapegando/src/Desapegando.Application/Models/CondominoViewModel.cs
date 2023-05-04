@@ -124,4 +124,5 @@ public class CondominoViewModel
     [DisplayName("Data de Nascimento")]
     public DateTime DataNascimento { get; set; }
     public bool Administrador { get; set; }
+    public bool Ativo { get; set; }
 }

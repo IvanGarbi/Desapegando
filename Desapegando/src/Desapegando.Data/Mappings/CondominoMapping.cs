@@ -50,6 +50,10 @@ public class CondominoMapping : IEntityTypeConfiguration<Condomino>
             .IsRequired()
             .HasColumnType("BIT");
 
+        builder.HasMany(x => x.Produtos)
+            .WithOne(a => a.Condomino)
+            .HasForeignKey(k => k.CondominoId);
+
         builder.ToTable("Condomino");
     }
 }

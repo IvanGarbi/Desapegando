@@ -26,11 +26,6 @@ namespace Desapegando.Application.Controllers
             return View(_mapper.Map<CondominoViewModel>(await _condominoRepository.ReadById(Guid.Parse(_userManager.GetUserId(User)))));
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

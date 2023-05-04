@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Desapegando.Business.Models;
+﻿using Desapegando.Business.Models;
 using FluentValidation;
 
 namespace Desapegando.Business.Validations;

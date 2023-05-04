@@ -1,0 +1,38 @@
+﻿namespace Desapegando.Business.Models.Enums;
+
+public enum Categoria
+{
+    ArtigosEsportivos = 1,
+    Arte = 2,
+    Computadores = 3,
+    Notebook = 4,
+    Monitores = 5,
+    Tablet = 6,
+    Camera = 7,
+    Tv = 8,
+    Celulares = 9,
+    AcessoriosCelular = 10,
+    RoupaFeminina = 11,
+    RoupaMasculina = 12,
+    Joias = 13,
+    Relogios = 14,
+    Sapatos = 15,
+    AcessoriosVestuario = 16,
+    ArtigosJardinagem = 17,
+    ArtigosAnimais = 18,
+    Automoveis = 19,
+    Motocicleta = 20,
+    Radio = 21,
+    AcessoriosAutomotivos = 22,
+    AcessoriosMotociclismo = 23,
+    ArtigosMusicais = 24,
+    AudioSom = 25,
+    InstrumentosMusicais = 26,
+    BrinquedosInfantis = 27,
+    VideoGames = 28,
+    ProdutosBeleza = 29,
+    Perfumaria = 30,
+    ArtigosAntigos = 31,
+    Outros = 32,
+    MalasMochilas = 33
+}
