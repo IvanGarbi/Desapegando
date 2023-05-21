@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using System.Net;
-using Desapegando.Application.Models;
+using Desapegando.Application.ViewModels;
 using Desapegando.Business.Models;
 
 namespace Desapegando.Application.AutoMapper;
@@ -12,5 +12,9 @@ public class AutoMapperConfig : Profile
         CreateMap<CondominoRegisterViewModel, Condomino>().ReverseMap();
         CreateMap<CondominoInativoViewModel, Condomino>().ReverseMap();
         CreateMap<CondominoViewModel, Condomino>().ReverseMap();
+        CreateMap<ProdutoViewModel, Produto>().ReverseMap();
+        CreateMap<GetProdutoViewModel, Produto>().ForMember(x => x.ProdutoImagens, z => z.MapFrom(a => a.ProdutoImagemViewModels)).ReverseMap();
+        CreateMap<ProdutoImagemViewModel, ProdutoImagem>().ReverseMap();
+        CreateMap<UpdateProdutoViewModel, Produto>().ReverseMap();
     }
 }

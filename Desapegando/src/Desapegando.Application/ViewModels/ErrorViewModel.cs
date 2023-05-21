@@ -1,4 +1,4 @@
-namespace Desapegando.Application.Models
+namespace Desapegando.Application.ViewModels
 {
     public class ErrorViewModel
     {

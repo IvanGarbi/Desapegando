@@ -1,4 +1,4 @@
-﻿using Desapegando.Application.Models;
+﻿using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Models;
 using Microsoft.AspNetCore.Identity;

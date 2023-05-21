@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Desapegando.Application.Models;
+using Desapegando.Application.ViewModels;
 using Desapegando.Application.Services;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;

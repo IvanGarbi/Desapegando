@@ -14,6 +14,10 @@ public class ProdutoMapping : IEntityTypeConfiguration<Produto>
             .IsRequired()
             .HasColumnType("BIT");
 
+        builder.Property(x => x.Desistencia)
+            .IsRequired()
+            .HasColumnType("BIT");
+
         builder.Property(x => x.Categoria)
             .IsRequired()
             .HasConversion<int>();
@@ -22,37 +26,39 @@ public class ProdutoMapping : IEntityTypeConfiguration<Produto>
             .IsRequired()
             .HasColumnType("INT");
 
+        builder.Property(x => x.Quantidade)
+            .IsRequired()
+            .HasColumnType("INT");
+
+        builder.Property(x => x.Preco)
+            .IsRequired()
+            .HasColumnType("DECIMAL");
+
         builder.Property(x => x.DataPublicacao)
             .IsRequired()
             .HasColumnType("DATETIME");
-
 
         builder.Property(x => x.Descricao)
             .IsRequired()
             .HasColumnType("NVARCHAR")
             .HasMaxLength(250);
 
-
         builder.Property(x => x.EstadoProduto)
             .IsRequired()
             .HasConversion<int>();
-
-
-        builder.Property(x => x.Imagem)
-            .IsRequired()
-            .HasColumnType("NVARCHAR")
-            .HasMaxLength(100);
-
 
         builder.Property(x => x.Nome)
             .IsRequired()
             .HasColumnType("NVARCHAR")
             .HasMaxLength(150);
 
-
         builder.Property(x => x.CondominoId)
             .IsRequired()
             .HasColumnType("UNIQUEIDENTIFIER");
+
+        builder.HasMany(x => x.ProdutoImagens)
+        .WithOne(a => a.Produto)
+        .HasForeignKey(k => k.ProdutoId);
 
         builder.ToTable("Produto");
     }

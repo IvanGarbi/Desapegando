@@ -42,10 +42,6 @@ public class CondominoMapping : IEntityTypeConfiguration<Condomino>
             .IsRequired()
             .HasColumnType("DATE");
 
-        builder.Property(x => x.Administrador)
-            .IsRequired()
-            .HasColumnType("BIT");
-
         builder.Property(x => x.Ativo)
             .IsRequired()
             .HasColumnType("BIT");

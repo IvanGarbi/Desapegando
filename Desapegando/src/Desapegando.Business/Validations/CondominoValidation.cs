@@ -8,9 +8,6 @@ public class CondominoValidation : AbstractValidator<Condomino>
     public CondominoValidation()
     {
         RuleFor(x => x.Sexo)
-            //.NotEmpty()
-            //.NotNull()
-            //.WithMessage("O {PropertyName} deve ser informado.")
             .IsInEnum();
 
         RuleFor(x => x.Email)
@@ -71,13 +68,9 @@ public class CondominoValidation : AbstractValidator<Condomino>
             .Must(cpf => ValidarCpf(cpf))
             .WithMessage("O {PropertyName} não está em formato de CPF adequado.");
 
-        //RuleFor(x => x.Administrador)
-        //    .NotEmpty()
-        //    .NotNull()
-        //    .WithMessage("O {PropertyName} deve ser informado.");
     }
 
-    public static bool ValidarIdade(DateTime dataNascimento)
+    private static bool ValidarIdade(DateTime dataNascimento)
     {
         DateTime dateNow = DateTime.Today;
 
@@ -93,7 +86,7 @@ public class CondominoValidation : AbstractValidator<Condomino>
         return true;
     }
 
-    public static bool ValidarCpf(string cpf)
+    private static bool ValidarCpf(string cpf)
     {
         if (cpf.Length > 11)
             return false;

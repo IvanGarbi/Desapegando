@@ -12,6 +12,8 @@ public class DesapegandoDbContext : DbContext
     }
 
     public DbSet<Condomino> Condominos { get; set; }
+    public DbSet<Produto> Produtos { get; set; }
+    public DbSet<ProdutoImagem> ProdutoImagens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

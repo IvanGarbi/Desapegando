@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using Desapegando.Application.Models;
+using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
 using Desapegando.Business.Validations;
-using Desapegando.Data.Repository;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

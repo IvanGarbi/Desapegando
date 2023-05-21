@@ -12,7 +12,6 @@ public class Condomino : Entity
     public string Cpf { get; set; }
     public string Apartamento { get; set; }
     public DateTime DataNascimento { get; set; }
-    public bool Administrador { get; set; } = false;
     public bool Ativo { get; set; } = false;
 
     public ICollection<Produto> Produtos { get; set; }

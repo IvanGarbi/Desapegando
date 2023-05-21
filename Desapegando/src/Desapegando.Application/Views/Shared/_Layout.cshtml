@@ -249,7 +249,7 @@
                                                 <div class="overflow-auto scrollbar" style="height: 10rem;">
                                                     <ul class="nav d-flex flex-column mb-2 pb-1">
                                                         <li class="nav-item"><a class="nav-link px-3" asp-controller="Condomino" asp-action="Index"> <span class="me-2 text-900" data-feather="user"></span><span>Perfil</span></a></li>
-
+                                                        <li class="nav-item"><a class="nav-link px-3" asp-controller="Produto" asp-action="Criar"> <span class="me-2 text-900" data-feather="file-plus"></span><span>Novo Produto</span></a></li>
                                                         @if (User.HasClaim("Role", "Sindico"))
                                                         {
                                                             <li class="nav-item"><a class="nav-link px-3" asp-controller="Administrador" asp-action="NovosCondominos"><span class="me-2 text-900" data-feather="pie-chart"></span>Novos Condôminos</a></li>
@@ -392,13 +392,13 @@
                 </div>*@
                 <ul class="navbar-nav justify-content-end align-items-center">
                     <li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link ps-0 active" asp-action="Index" asp-controller="Home">Home</a></li>
-@*                    <li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/landing/favourite-stores.html">Stores</a></li>
+                    @*<li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/landing/favourite-stores.html">Stores</a></li>*@
                     <li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/landing/products-filter.html">Products</a></li>
-                    <li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/landing/wishlist.html">Wishlist</a></li>
-                    <li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/landing/shipping-info.html">Shipping Info</a></li>
-                    <li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/admin/add-product.html">Be a vendor</a></li>
-                    <li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/landing/order-tracking.html">Track order</a></li>
-                    <li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link pe-0" href="~/public/apps/e-commerce/landing/checkout.html">Checkout</a></li>*@
+                    <li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" asp-action="MeusProdutos" asp-controller="Produto">Meus Produtos</a></li>
+                    @*<li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/landing/shipping-info.html">Shipping Info</a></li>*@
+                    @*<li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/admin/add-product.html">Be a vendor</a></li>*@
+                    @*<li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link" href="~/public/apps/e-commerce/landing/order-tracking.html">Track order</a></li>*@
+                    @*<li class="nav-item" data-nav-item="data-nav-item"><a class="nav-link pe-0" href="~/public/apps/e-commerce/landing/checkout.html">Checkout</a></li>*@
                     <li class="nav-item dropdown" data-nav-item="data-nav-item" data-more-item="data-more-item">
 @*                        <a class="nav-link dropdown-toggle dropdown-caret-none fw-bold pe-0" href="javascript: void(0)" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-boundary="window" data-bs-reference="parent">
                             More<span class="fas fa-angle-down ms-2"></span>

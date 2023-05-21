@@ -34,12 +34,12 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, 
         await SaveChanges();
     }
 
-    public async Task<TEntity> ReadById(Guid id)
+    public virtual async Task<TEntity> ReadById(Guid id)
     {
         return await DbSet.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<TEntity>> Read()
+    public virtual async Task<IEnumerable<TEntity>> Read()
     {
         return await DbSet.AsNoTracking().ToListAsync();
     }

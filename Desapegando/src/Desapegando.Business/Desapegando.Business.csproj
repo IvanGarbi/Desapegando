@@ -7,10 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Repository\" />
     <Folder Include="Models\Enums\" />
-    <Folder Include="Validations\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

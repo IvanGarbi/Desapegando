@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace Desapegando.Application.Models;
+namespace Desapegando.Application.ViewModels;
 
 public class CondominoRegisterViewModel
 {

@@ -21,6 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDbContext<DesapegandoDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
 
@@ -33,8 +34,14 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 
 // Dependcy Injection
+//builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddTransient<DesapegandoDbContext>();
 builder.Services.AddScoped<ICondominoService, CondominoService>();
 builder.Services.AddScoped<ICondominoRepository, CondominoRepository>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<IProdutoImagemRepository, ProdutoImagemRepository>();
+builder.Services.AddScoped<IProdutoImagemService, ProdutoImagemService>();
 
 builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
 builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
