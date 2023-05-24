@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Desapegando.Business.Interfaces.Repository;
+using Desapegando.Business.Models;
+using Desapegando.Data.Context;
 
 namespace Desapegando.Data.Repository
 {
-    public class CampanhaRepository
+    public class CampanhaRepository : Repository<Campanha>, ICampanhaRepository
     {
+        public CampanhaRepository(DesapegandoDbContext context) : base(context)
+        {
+        }
     }
 }

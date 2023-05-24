@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Desapegando.Business.Models
 {
     public class Campanha : Entity
@@ -18,5 +13,10 @@ namespace Desapegando.Business.Models
         public DateTime DataInicio { get; set; }
         public DateTime DataFinal { get; set; }
         public bool Ativo { get; set; } = true;
+        public Guid CondominoId { get; set; }
+
+        /* EF Relation */
+        public Condomino Condomino { get; set; }
+        public ICollection<CampanhaImagem> CampanhaImagens { get; set; }
     }
 }

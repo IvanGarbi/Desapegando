@@ -15,4 +15,5 @@ public class Condomino : Entity
     public bool Ativo { get; set; } = false;
 
     public ICollection<Produto> Produtos { get; set; }
+    public ICollection<Campanha> Campanhas { get; set; }
 }

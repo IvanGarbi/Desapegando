@@ -1,13 +1,12 @@
 ﻿using Desapegando.Business.Models;
-using Desapegando.Business.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Desapegando.Data.Mappings
 {
-    public class ProdutoImagemMapping : IEntityTypeConfiguration<ProdutoImagem>
+    public class CampanhaImagemMapping : IEntityTypeConfiguration<CampanhaImagem>
     {
-        public void Configure(EntityTypeBuilder<ProdutoImagem> builder)
+        public void Configure(EntityTypeBuilder<CampanhaImagem> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -16,11 +15,11 @@ namespace Desapegando.Data.Mappings
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(150);
 
-            builder.Property(x => x.ProdutoId)
+            builder.Property(x => x.CampanhaId)
                 .IsRequired()
                 .HasColumnType("UNIQUEIDENTIFIER");
 
-            builder.ToTable("ProdutoImagem");
+            builder.ToTable("CampanhaImagem");
         }
     }
 }

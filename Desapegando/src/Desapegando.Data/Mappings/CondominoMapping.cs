@@ -50,6 +50,10 @@ public class CondominoMapping : IEntityTypeConfiguration<Condomino>
             .WithOne(a => a.Condomino)
             .HasForeignKey(k => k.CondominoId);
 
+        builder.HasMany(x => x.Campanhas)
+            .WithOne(a => a.Condomino)
+            .HasForeignKey(k => k.CondominoId);
+
         builder.ToTable("Condomino");
     }
 }

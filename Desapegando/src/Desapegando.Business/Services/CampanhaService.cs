@@ -1,13 +1,35 @@
-﻿using Desapegando.Business.Interfaces.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Desapegando.Business.Interfaces.Repository;
+using Desapegando.Business.Interfaces.Services;
+using Desapegando.Business.Models;
 
-namespace Desapegando.Business.Services
+namespace Desapegando.Business.Services;
+
+public class CampanhaService : ICampanhaService, IDisposable
 {
-    public class CampanhaService : ICampanhaService
+    private readonly ICampanhaRepository _repository;
+
+    public CampanhaService(ICampanhaRepository repository)
     {
+        _repository = repository;
+    }
+
+    public async Task Create(Campanha campanha)
+    {
+        await _repository.Create(campanha);
+    }
+
+    public async Task Delete(Guid id)
+    {
+        await _repository.Delete(id);
+    }
+
+    public async Task Update(Campanha campanha)
+    {
+        await _repository.Update(campanha);
+    }
+
+    public async void Dispose()
+    {
+        _repository?.Dispose();
     }
 }

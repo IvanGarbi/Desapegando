@@ -47,7 +47,7 @@ public class CondominoValidation : AbstractValidator<Condomino>
             .NotNull()
             .WithMessage("O {PropertyName} deve ser informado.")
             .MaximumLength(20)
-            .WithMessage("O {PropertyName} deve ter menos que 20 caracteres."); ;
+            .WithMessage("O {PropertyName} deve ter menos que 20 caracteres.");
 
         RuleFor(x => x.DataNascimento)
             .NotEmpty()
