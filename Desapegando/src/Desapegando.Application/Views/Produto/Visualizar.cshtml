@@ -1,0 +1,405 @@
+﻿@using Desapegando.Business.Models.Enums;
+@model Desapegando.Application.ViewModels.GetProdutoViewModel
+@{
+    Layout = "_Layout";
+}
+
+@{
+    var quantidadeImagens = Model.ProdutoImagemViewModels.Count;
+}
+
+<section class="pt-5 pb-9">
+    <div class="pt-5 pb-9">
+
+
+        <!-- ============================================-->
+        <!-- <section> begin ============================-->
+        <section class="py-0">
+
+            <div class="container-small">
+                <div class="row g-5 mb-5 mb-lg-8" data-product-details="data-product-details">
+                    <div class="col-12 col-lg-6">
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-2 col-lg-12 col-xl-2">
+                                <div class="swiper-products-thumb swiper swiper-container theme-slider overflow-visible" id="swiper-products-thumb"></div>
+                            </div>
+                            <div class="col-12 col-md-10 col-lg-12 col-xl-10">
+                                <div class="d-flex align-items-center border rounded-3 text-center p-5 h-100">
+                                    <div class="swiper swiper-container theme-slider" data-thumb-target="swiper-products-thumb" data-products-swiper='{"slidesPerView":1,"spaceBetween":16,"thumbsEl":".swiper-products-thumb"}'></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <button class="btn btn-lg btn-outline-warning rounded-pill w-100 me-3 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</button>
+  @*                          <button class="btn btn-lg btn-warning rounded-pill w-100 fs--1 fs-sm-0"><span class="fas fa-shopping-cart me-2"></span>Add to cart</button>*@
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="d-flex flex-column justify-content-between h-100">
+                            <div>
+                                <div class="d-flex flex-wrap">
+@*                                    <div class="me-2">
+                                        <span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span>
+                                    </div>*@
+                                    <p class="text-primary fw-semi-bold mb-2">@Model.Curtida Pessoas curtiram esse produto </p>
+                                </div>
+                                <h3 class="mb-3 lh-sm">@Model.Nome</h3>
+                                @*<div class="d-flex flex-wrap align-items-start mb-3"><span class="badge bg-success fs--1 rounded-pill me-2 fw-semi-bold">#1 Best seller</span><a class="fw-semi-bold" href="#!">in Phoenix sell analytics 2021</a></div>*@
+                                <div class="d-flex flex-wrap align-items-center">
+                                    <h1 class="me-3">R$@Model.Preco</h1>
+@*                                    <p class="text-500 text-decoration-line-through fs-2 mb-0 me-3">$1499.99</p>
+                                    <p class="text-warning-500 fw-bolder fs-2 mb-0">10% off</p>*@
+                                </div>
+                                <p class="text-success fw-semi-bold fs-1 mb-2">Produto Disponível</p>
+                                <p class="mb-2 text-800"><strong class="text-1000">Do you want it on Saturday, July 29th?</strong> Choose <strong class="text-1000">Saturday Delivery </strong>at checkout if you want your order delivered within 12 hours 43 minutes, <a class="fw-bold" href="#!">Details. </a><strong class="text-1000">Gift wrapping is available.</strong></p>
+                                @*<p class="text-danger-500 fw-bold mb-5 mb-lg-0">Special offer ends in 23:00:45 hours</p>*@
+                            </div>
+                            <div>
+                                <div class="mb-3">
+                                    <p class="fw-semi-bold mb-2 text-900">Color : <span class="text-1100" data-product-color="data-product-color">Blue</span></p>
+                                    <div class="d-flex product-color-variants" data-product-color-variants="data-product-color-variants">
+                                        @switch (quantidadeImagens)
+                                        {
+                                            case 1:
+                                                <div class="rounded-1 border me-2 active" data-variant="Blue" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName"]'>'<img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
+                                                break;
+                                            case 2:
+                                                <div class="rounded-1 border me-2" data-variant="Orange" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[1].FileName"]'><img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
+                                                break;
+                                            case 3:
+                                                <div class="rounded-1 border me-2" data-variant="Orange" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[1].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[2].FileName"]'><img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
+                                                break;
+                                            case 4:
+                                                <div class="rounded-1 border me-2" data-variant="Orange" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[1].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[2].FileName", "../../../Imagens/@Model.ProdutoImagemViewModels[3].FileName"]'><img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
+                                                break;
+                                        }
+                                    </div>
+                                </div>
+                                <div class="row g-3 g-sm-5 align-items-end">
+@*                                    <div class="col-12 col-sm-auto">
+                                        <p class="fw-semi-bold mb-2 text-900">Size : </p>
+                                        <div class="d-flex align-items-center">
+                                            <select class="form-select w-auto">
+                                                <option value="44">44</option>
+                                                <option value="22">22</option>
+                                                <option value="18">18</option>
+                                            </select><a class="ms-2 fs--1 fw-semi-bold" href="#!">Size chart</a>
+                                        </div>
+                                    </div>*@
+                                    <div class="col-12 col-sm">
+                                        <p class="fw-semi-bold mb-2 text-900">Quantidade : </p>
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <div class="d-flex flex-between-center" data-quantity="data-quantity">
+                                                @*<button class="btn btn-phoenix-primary px-3" data-type="minus"><span class="fas fa-minus"></span></button>*@
+                                                <input class="form-control text-center input-spin-none bg-transparent border-0 outline-none" style="width:50px;" type="number" min="1" value="@Model.Quantidade" />
+                                                @*<button class="btn btn-phoenix-primary px-3" data-type="plus"><span class="fas fa-plus"></span></button>*@
+                                            </div>
+                                            @*<button class="btn btn-phoenix-primary px-3 border-0"><span class="fas fa-share-alt fs-1"></span></button>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of .container-->
+
+        </section>
+        <!-- <section> close ============================-->
+        <!-- ============================================-->
+        <!-- ============================================-->
+        <!-- <section> begin ============================-->
+        <section class="py-0">
+
+            <div class="container-small">
+                <ul class="nav nav-underline mb-4" id="productTab" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" id="description-tab" data-bs-toggle="tab" href="#tab-description" role="tab" aria-controls="tab-description" aria-selected="true">Descrição</a></li>
+                    <li class="nav-item"><a class="nav-link" id="specification-tab" data-bs-toggle="tab" href="#tab-specification" role="tab" aria-controls="tab-specification" aria-selected="false">Informações</a></li>
+                </ul>
+                <div class="row gx-3 gy-7">
+                    <div class="col-12 col-lg-7 col-xl-8">
+                        <div class="tab-content" id="productTabContent">
+                            <div class="tab-pane pe-lg-6 pe-xl-12 fade show active text-1100" id="tab-description" role="tabpanel" aria-labelledby="description-tab">
+                                <p class="mb-5">@Html.Raw(@Model.Descricao)</p><a href="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" data-gallery="gallery-description"><img class="img-fluid mb-5 rounded-3" src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt=""></a>
+                                @*<p class="mb-0">The new iMac joins Apple's fantastic M1-powered Mac family, which includes the MacBook Air, 13-inch MacBook Pro, and Mac mini, and represents yet another step ahead in the company's shift to Apple silicon. Customers may order iMac starting Friday, April 30. It's the most personal, powerful, capable, and enjoyable it's ever been. In the second half of May, the iMac will be available."M1 is a huge step forward for the Mac," said Greg Joswiak, Apple's senior vice president of Worldwide Marketing. "Today, we're delighted to present the all-new iMac, the first Mac developed around the groundbreaking M1 processor." "The new iMac takes everything people love about iMac to an entirely new level, with its beautiful design in seven breathtaking colors, its immersive 4.5K Retina display, the greatest camera, mics, and speakers ever in a Mac, and Touch ID, combined with M1's incredible performance and macOS Big Sur's power."</p>*@
+                            </div>
+                            <div class="tab-pane pe-lg-6 pe-xl-12 fade" id="tab-specification" role="tabpanel" aria-labelledby="specification-tab">
+                                <h3 class="mb-0 ms-4 fw-bold">Processor/Chipset</h3>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 40%"> </th>
+                                            <th style="width: 60%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Categoria</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">@Model.Categoria</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Estado do Produto</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">@Model.EstadoProduto</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Gpu core</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">7</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Neural engine</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">16 cores</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Storage</h3>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 40%"></th>
+                                            <th style="width: 60%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Memory</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">8 GB unified</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">SSD</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">256 GB</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Display</h3>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 40%"> </th>
+                                            <th style="width: 60%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Display type</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">Retina</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Size</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">24” (actual diagonal 23.5”)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Resolution</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">4480 x 2520 </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Brightness</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">500 nits</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Additional Specifications</h3>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 40%"> </th>
+                                            <th style="width: 60%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Camera</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">1080p FaceTime HD camera</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100">
+                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Video </h6>
+                                            </td>
+                                            <td class="px-5 mb-0">Full native resolution on built-in display at 1 billion colors; <br>One external display with up to 6K resolution at 60Hz</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100">
+                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Audio</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">High-fidelity six-speaker with force-cancelling woofers <br>Wide stereo sound <br>Spatial audio with Dolby Atmos3<br>Studio-quality three-mic array with directional beamforming</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100">
+                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Inputs </h6>
+                                            </td>
+                                            <td class="px-5 mb-0">Magic Keyboard<br>Magic Mouse</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100">
+                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Wireless </h6>
+                                            </td>
+                                            <td class="px-5 mb-0">802.11ax Wi-Fi 6 (IEEE 802.11a/b/g/n/ac compatible)<br>Bluetooth 5.0 wireless technology</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100">
+                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">I/O &amp; expantions </h6>
+                                            </td>
+                                            <td class="px-5 mb-0">Thunderbolt / USB 4 ports x 2<br>3.5 mm headphone jack<br>Gigabit Ethernet<br>USB 3 ports x2</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-100 align-middle">
+                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Operating System</h6>
+                                            </td>
+                                            <td class="px-5 mb-0">macOS Monterey </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <h3 class="mb-3 mt-6 ms-4 fw-bold">In The Box</h3>
+                                <p class="lh-sm border-top mb-0 py-3 px-4">iMac 24”</p>
+                                <p class="lh-sm border-top mb-0 py-3 px-4">Magic Keyboard </p>
+                                <p class="lh-sm border-top mb-0 py-3 px-4">Magic Mouse</p>
+                                <p class="lh-sm border-top mb-0 py-3 px-4">143W power adapter</p>
+                                <p class="lh-sm border-top mb-0 py-3 px-4">2m Power Cord</p>
+                                <p class="lh-sm border-y mb-0 py-3 px-4">USB-C to Lightning Cable</p>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-12 col-lg-5 col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-black">Usually Bought Together</h5>
+                                <div class="w-75">
+                                    <p class="text-700 fs--1 fw-bold line-clamp-1">with 24" iMac® with Retina 4.5K display - Apple M1 8GB Memory - 256GB SSD - w/Touch ID (Latest Model) - Blue</p>
+                                </div>
+                                <div class="border-dashed border-y py-4">
+                                    <div class="d-flex align-items-center mb-5">
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" checked="checked" />
+                                            <label class="form-check-label"></label>
+                                        </div><img class="border rounded" src="~/public/assets/img/products/2.png" width="53" alt="" />
+                                        <div class="ms-2">
+                                            <a class="fs--1 fw-bold line-clamp-2 mb-2" href="~/public/apps/e-commerce/landing/product-details.html"> iPhone 13 pro max-Pacific Blue- 128GB</a>
+                                            <h5>$899.99</h5>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-5">
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" checked="checked" />
+                                            <label class="form-check-label"></label>
+                                        </div><img class="border rounded" src="~/public/assets/img/products/16.png" width="53" alt="" />
+                                        <div class="ms-2">
+                                            <a class="fs--1 fw-bold line-clamp-2 mb-2" href="~/public/apps/e-commerce/landing/product-details.html">Apple AirPods Pro</a>
+                                            <h5>$59.00</h5>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-0">
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" />
+                                            <label class="form-check-label"></label>
+                                        </div><img class="border rounded" src="~/public/assets/img/products/10.png" width="53" alt="" />
+                                        <div class="ms-2">
+                                            <a class="fs--1 fw-bold line-clamp-2 mb-2" href="~/public/apps/e-commerce/landing/product-details.html">Apple Magic Mouse (Wireless, Rechargable) - Silver, Worst mouse ever</a>
+                                            <h5>$89.00</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-end justify-content-between pt-3">
+                                    <div>
+                                        <h5 class="mb-2 text-600">Total</h5>
+                                        <h4 class="mb-0 text-1100">$958.99</h4>
+                                    </div>
+                                    <div class="btn btn-outline-warning">Add 3 items to cart<span class="fas fa-shopping-cart ms-2"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+            <!-- end of .container-->
+
+        </section>
+        <!-- <section> close ============================-->
+        <!-- ============================================-->
+
+
+    </div>
+
+</section>
+
+@section Scripts{
+    <link rel="manifest" href="~/public/assets/img/favicons/manifest.json">
+    <script src="~/public/vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="~/public/vendors/simplebar/simplebar.min.js"></script>
+    <script src="~/public/assets/js/config.js"></script>
+
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link href="~/public/vendors/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="~/public/vendors/dropzone/dropzone.min.css" rel="stylesheet">
+    <link href="~/public/vendors/glightbox/glightbox.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="~/public/vendors/simplebar/simplebar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+@*    <link href="~/public/assets/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
+    <link href="~/public/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="~/public/assets/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="~/public/assets/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">*@
+    <script>
+      var phoenixIsRTL = window.config.config.phoenixIsRTL;
+      if (phoenixIsRTL) {
+        var linkDefault = document.getElementById('style-default');
+        var userLinkDefault = document.getElementById('user-style-default');
+        linkDefault.setAttribute('disabled', true);
+        userLinkDefault.setAttribute('disabled', true);
+        document.querySelector('html').setAttribute('dir', 'rtl');
+      } else {
+        var linkRTL = document.getElementById('style-rtl');
+        var userLinkRTL = document.getElementById('user-style-rtl');
+        linkRTL.setAttribute('disabled', true);
+        userLinkRTL.setAttribute('disabled', true);
+      }
+    </script>
+
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script src="~/public/vendors/popper/popper.min.js"></script>
+    <script src="~/public/vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="~/public/vendors/anchorjs/anchor.min.js"></script>
+    <script src="~/public/vendors/is/is.min.js"></script>
+    <script src="~/public/vendors/fontawesome/all.min.js"></script>
+    <script src="~/public/vendors/lodash/lodash.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="~/public/vendors/list.js/list.min.js"></script>
+    <script src="~/public/vendors/feather-icons/feather.min.js"></script>
+    <script src="~/public/vendors/dayjs/dayjs.min.js"></script>
+    <script src="~/public/vendors/swiper/swiper-bundle.min.js"></script>
+    <script src="~/public/vendors/dropzone/dropzone.min.js"></script>
+    <script src="~/public/vendors/rater-js/index.js"></script>
+    <script src="~/public/vendors/glightbox/glightbox.min.js"> </script>
+    <script src="~/public/assets/js/phoenix.js"></script>
+}
+
+
+

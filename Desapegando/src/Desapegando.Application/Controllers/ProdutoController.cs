@@ -41,6 +41,12 @@ namespace Desapegando.Application.Controllers
                 return View(produtoViewModel);
             }
 
+            if (produtoViewModel.ImagensUpload.Count > 4)
+            {
+                ModelState.AddModelError(string.Empty, "Só é possível adicionar no máximo 3 iamgens.");
+                return View(produtoViewModel);
+            }
+
             var produto = _mapper.Map<Produto>(produtoViewModel);
 
             produto.DataPublicacao = DateTime.Now;
@@ -132,6 +138,12 @@ namespace Desapegando.Application.Controllers
                 return View(produtoViewModel);
             }
 
+            if (produtoViewModel.ImagensUpload.Count > 4)
+            {
+                ModelState.AddModelError(string.Empty, "Só é possível adicionar no máximo 3 iamgens.");
+                return View(produtoViewModel);
+            }
+
             var produtoDb = await _produtoRepository.ReadById(produtoViewModel.Id);
 
             var listaProdutoImagensDb = produtoDb.ProdutoImagens;
@@ -209,6 +221,20 @@ namespace Desapegando.Application.Controllers
 
             return RedirectToAction("Index", "Home");
 
+        }
+
+        public async Task<IActionResult> Visualizar(Guid id)
+        {
+            var produtoDb = await _produtoRepository.ReadById(id);
+
+            if (produtoDb == null)
+            {
+                return View();
+            }
+
+            var produtoViewModel = _mapper.Map<GetProdutoViewModel>(produtoDb);
+
+            return View(produtoViewModel);
         }
 
         private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)

@@ -4,6 +4,7 @@ using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
 using Desapegando.Business.Validations;
+using Desapegando.Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,12 @@ namespace Desapegando.Application.Controllers
         {
             if (!ModelState.IsValid)
             {
+                return View(campanhaViewModel);
+            }
+
+            if (campanhaViewModel.ImagensUpload.Count > 4)
+            {
+                ModelState.AddModelError(string.Empty, "Só é possível adicionar no máximo 3 iamgens.");
                 return View(campanhaViewModel);
             }
 
@@ -129,6 +136,13 @@ namespace Desapegando.Application.Controllers
                 return View(campanhaViewModel);
             }
 
+            if (campanhaViewModel.ImagensUpload.Count > 4)
+            {
+                ModelState.AddModelError(string.Empty, "Só é possível adicionar no máximo 3 iamgens.");
+                return View(campanhaViewModel);
+            }
+
+
             var campanhaDb = await _campanhaRepository.ReadById(campanhaViewModel.Id);
 
             var listaCampanhaImagensDb = campanhaDb.CampanhaImagens;
@@ -209,6 +223,20 @@ namespace Desapegando.Application.Controllers
 
             return RedirectToAction("Index", "Home");
 
+        }
+
+        public async Task<IActionResult> Visualizar(Guid id)
+        {
+            var campanhaDb = await _campanhaRepository.ReadById(id);
+
+            if (campanhaDb == null)
+            {
+                return View();
+            }
+
+            var campanhaViewModel = _mapper.Map<GetCampanhaViewModel>(campanhaDb);
+
+            return View(campanhaViewModel);
         }
 
         private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)

@@ -42,6 +42,10 @@ builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<IProdutoImagemRepository, ProdutoImagemRepository>();
 builder.Services.AddScoped<IProdutoImagemService, ProdutoImagemService>();
+builder.Services.AddScoped<ICampanhaRepository, CampanhaRepository>();
+builder.Services.AddScoped<ICampanhaService, CampanhaService>();
+builder.Services.AddScoped<ICampanhaImagemRepository, CampanhaImagemRepository>();
+builder.Services.AddScoped<ICampanhaImagemService, CampanhaImagemService>();
 
 builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
 builder.Services.AddTransient<IEmailSender, AuthMessageSender>();

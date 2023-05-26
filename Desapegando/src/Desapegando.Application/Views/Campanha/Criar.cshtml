@@ -1,5 +1,5 @@
 ﻿@using Desapegando.Business.Models.Enums;
-@model Desapegando.Application.ViewModels.ProdutoViewModel
+@model Desapegando.Application.ViewModels.CampanhaViewModel
 @{
     Layout = "_Layout";
 }
@@ -14,20 +14,24 @@
             <form enctype="multipart/form-data" class="mb-9" method="post">
                 <div class="row g-3 flex-between-end mb-5">
                     <div class="col-auto">
-                        <h2 class="mb-2">Adicionar produto</h2>
-                        <h5 class="text-700 fw-semi-bold">Adicione um produto para desapegar!</h5>
+                        <h2 class="mb-2">Adicionar campanha</h2>
+                        <h5 class="text-700 fw-semi-bold">Adicione uma campanha!</h5>
                     </div>
                     <div class="col-auto">
-                        <button asp-action="Criar" asp-controller="Produto" class="btn btn-primary mb-2 mb-sm-0" type="submit">Salvar produto</button>
+                        <button asp-action="Criar" asp-controller="Campanha" class="btn btn-primary mb-2 mb-sm-0" type="submit">Salvar campanha</button>
                     </div>
                 </div>
-                <h4 class="mb-3">Nome do Produto</h4>
+                <h4 class="mb-3">Nome da Campanha</h4>
                 <div class="row g-5">
                     <div class="col-12 col-xl-8">
                         <input asp-for="Nome" class="form-control mb-5" type="text" placeholder="Escreva o nome aqui..." />
                         <span asp-validation-for="Nome" class="text-danger"></span>
+                        <h4 class="mb-3">Nome da Instituição</h4>
+                        <input asp-for="NomeInstituicao" class="form-control mb-5" type="text" placeholder="Escreva o nome aqui..." />
+                        <span asp-validation-for="NomeInstituicao" class="text-danger"></span>
+
                         <div class="mb-6">
-                            <h4 class="mb-3">Descrição do Produto</h4>
+                            <h4 class="mb-3">Descrição da Campanha</h4>
                             <textarea asp-for="Descricao" type="text" class="tinymce" name="Descricao" data-tinymce='{"height":"15rem","placeholder":"Escreva a descrição aqui..."}'></textarea>
                             <span asp-validation-for="Descricao" class="text-danger"></span>
                         </div>
@@ -56,33 +60,51 @@
                                 <div class="nav flex-sm-column border-bottom border-bottom-sm-0 border-end-sm border-300 fs--1 vertical-tab h-100 justify-content-between" role="tablist" aria-orientation="vertical">
                                     <a class="nav-link border-end border-end-sm-0 border-bottom-sm border-300 text-center text-sm-start cursor-pointer outline-none d-sm-flex align-items-sm-center active" id="pricingTab" data-bs-toggle="tab" data-bs-target="#pricingTabContent" role="tab" aria-controls="pricingTabContent" aria-selected="true">
                                         <span class="me-sm-2 fs-4 nav-icons" data-feather="tag"></span>
-                                        <span class="d-none d-sm-inline">Preço</span>
+                                        <span class="d-none d-sm-inline">Data de Vigência</span>
                                     </a>
                                     <a class="nav-link border-end border-end-sm-0 border-bottom-sm border-300 text-center text-sm-start cursor-pointer outline-none d-sm-flex align-items-sm-center" id="restockTab" data-bs-toggle="tab" data-bs-target="#restockTabContent" role="tab" aria-controls="restockTabContent" aria-selected="false">
                                         <span class="me-sm-2 fs-4 nav-icons" data-feather="package"></span>
-                                        <span class="d-none d-sm-inline">Quantidade</span>
+                                        <span class="d-none d-sm-inline">Dados Responsável</span>
                                     </a>
                                 </div>
                             </div>
                             <div class="col-sm-8">
                                 <div class="tab-content py-3 ps-sm-4 h-100">
                                     <div class="tab-pane fade show active" id="pricingTabContent" role="tabpanel">
-                                        <h4 class="mb-3 d-sm-none">Pricing</h4>
+                                        <h4 class="mb-3 d-sm-none">Data de Vigência</h4>
                                         <div class="row g-3">
                                             <div class="col-12 col-lg-6">
-                                                <h5 class="mb-2 text-1000">Preço</h5>
-                                                <input asp-for="Preco" class="form-control" type="text" placeholder="$$$" />
-                                                <span asp-validation-for="Preco" class="text-danger"></span>
+                                                <h5 class="mb-2 text-1000">Data Início</h5>
+                                                <input asp-for="DataInicio" class="form-control datetimepicker" id="datepicker" type="text" placeholder="dd/mm/yyyy" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' />
+                                                <span asp-validation-for="DataInicio" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <h5 class="mb-2 text-1000">Data Final</h5>
+                                                <input asp-for="DataFinal" class="form-control datetimepicker" id="datepicker" type="text" placeholder="dd/mm/yyyy" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' />
+                                                <span asp-validation-for="DataFinal" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade h-100" id="restockTabContent" role="tabpanel" aria-labelledby="restockTab">
                                         <div class="d-flex flex-column h-100">
-                                            <h5 class="mb-3 text-1000">Quantidade</h5>
-                                            <div class="row g-3 flex-1 mb-4">
-                                                <div class="col-sm-7">
-                                                    <input asp-for="Quantidade" class="form-control" type="number" placeholder="Quantity" />
-                                                    <span asp-validation-for="Quantidade" class="text-danger"></span>
+                                            <h5 class="mb-3 text-1000">Informações do Responsável</h5>
+                                            <div class="row g-3">
+                                                <div class="col-12 col-lg-12">
+                                                    <h5 class="mb-2 text-1000">Nome do Responsável</h5>
+                                                    <input asp-for="NomeResponsavel" class="form-control" type="text" placeholder="Nome do Responsável" />
+                                                    <span asp-validation-for="NomeResponsavel" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3 mt-2">
+                                                <div class="col-12 col-lg-6">
+                                                    <h5 class="mb-2 text-1000">Telefone do Responsável</h5>
+                                                    <input asp-for="TelefoneResponsavel" class="form-control" type="text" placeholder="Telefone do Responsável" />
+                                                    <span asp-validation-for="TelefoneResponsavel" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-12 col-lg-6">
+                                                    <h5 class="mb-2 text-1000">E-mail do Responsável</h5>
+                                                    <input asp-for="EmailResponsavel" class="form-control" type="text" placeholder="E-mail" />
+                                                    <span asp-validation-for="EmailResponsavel" class="text-danger"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -101,23 +123,10 @@
                                             <div class="col-12 col-sm-6 col-xl-12">
                                                 <div class="mb-4">
                                                     <div class="d-flex flex-wrap mb-2">
-                                                        <h5 class="mb-0 text-1000 me-2">Categoria</h5>
+                                                        <h5 class="mb-0 text-1000 me-2">Local de Encontro</h5>
                                                     </div>
-                                                    <select asp-for="Categoria" class="form-select" asp-items="@Html.GetEnumSelectList<Categoria>()">
-                                                        <option selected="" value="">Selecione</option>
-                                                    </select>
-                                                    <span asp-validation-for="Categoria" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-6 col-xl-12">
-                                                <div class="mb-4">
-                                                    <div class="d-flex flex-wrap mb-2">
-                                                        <h5 class="mb-0 text-1000 me-2">Estado do Produto</h5>
-                                                    </div>
-                                                    <select asp-for="EstadoProduto" class="form-select" asp-items="@Html.GetEnumSelectList<EstadoProduto>()">
-                                                        <option selected="" value="">Selecione</option>
-                                                    </select>
-                                                    <span asp-validation-for="EstadoProduto" class="text-danger"></span>
+                                                    <input asp-for="LocalDeEncontro" class="form-control" type="text" placeholder="Local de Encontro" />
+                                                    <span asp-validation-for="LocalDeEncontro" class="text-danger"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -151,4 +160,5 @@
     <script src="~/public/vendors/tinymce/tinymce.min.js"></script>
     <script src="~/public/vendors/dropzone/dropzone.min.js"></script>
     <script src="~/public/vendors/choices/choices.min.js"></script>
+    <script src="~/public/vendors/dayjs/dayjs.min.js"></script>
 }
