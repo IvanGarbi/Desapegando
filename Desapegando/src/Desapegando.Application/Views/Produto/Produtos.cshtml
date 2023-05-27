@@ -1,0 +1,131 @@
+﻿@using Desapegando.Business.Models.Enums;
+@*@model IEnumerable<Desapegando.Application.ViewModels.GetProdutoViewModel>*@
+@model Desapegando.Application.ViewModels.FiltrarProdutoViewModel
+
+@{
+    var listaProdutos = ViewBag.produtos;
+}
+@{
+    Layout = "_Layout";
+}
+
+<section class="pt-5 pb-9">
+    <form method="post">
+    <div class="container">
+        <button class="btn btn-sm btn-phoenix-secondary text-700 mb-5 d-lg-none" data-phoenix-toggle="offcanvas" data-phoenix-target="#productFilterColumn"> <span class="fa-solid fa-filter me-2"></span>Filtro</button>
+        <div class="row">
+            <div class="col-lg-3 col-xxl-2 ps-2">
+                <div class="product-filter-offcanvas bg-soft scrollbar phoenix-offcanvas phoenix-offcanvas-fixed" id="productFilterColumn">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0 ms-1">Filtros</h3>
+                        <button class="btn d-lg-none p-0" data-phoenix-dismiss="offcanvas"><span class="uil uil-times fs-0"></span></button>
+                    </div><a class="btn px-0 ms-1 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseAvailability" role="button" aria-expanded="true" aria-controls="collapseAvailability">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <div class="fs-0 text-1000">Categoria</div><span class="fa-solid fa-angle-down toggle-icon text-500"></span>
+                        </div>
+                    </a>
+                    <div class="collapse ms-1 show" id="collapseAvailability">
+                        <div class="mb-2">
+                            <div class="form mb-0 p-0">
+                                @*<label for="organizerMultiple">...</label>*@
+                                <div class="mb-2">
+                                    <select asp-for="Categorias" asp-items="@Html.GetEnumSelectList<Categoria>()" class="form-select mt-0" id="organizerMultiple" data-choices="data-choices" multiple="multiple" data-options='{"removeItemButton":true,"placeholder":true}'>
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                </div>
+                            </div>
+@*                            <div class="form-check mb-0">
+                                <input class="form-check-input mt-0" id="preBookInput" type="checkbox" name="color">
+                                <label class="form-check-label d-block lh-sm fs-0 text-900 fw-normal mb-0" for="preBookInput">Pre-book</label>
+                            </div>
+                            <div class="form-check mb-0">
+                                <input class="form-check-input mt-0" id="outOfStockInput" type="checkbox" name="color">
+                                <label class="form-check-label d-block lh-sm fs-0 text-900 fw-normal mb-0" for="outOfStockInput">Out of stock</label>
+                            </div>*@
+                        </div>
+                    </div>
+                        <button asp-action="Produtos" asp-controller="Produto" class="btn btn-phoenix-primary border-300 px-3" type="submit">Pesquisar</button>
+                </div>
+                <div class="phoenix-offcanvas-backdrop d-lg-none" data-phoenix-backdrop></div>
+            </div>
+            <div class="col-lg-9 col-xxl-10">
+                <div class="row gx-3 gy-6 mb-8">
+                    @foreach (var produto in listaProdutos)
+                    {
+                    <div class="col-12 col-sm-6 col-md-4 col-xxl-2">
+                        <div class="product-card-container h-100">
+                            <div class="position-relative text-decoration-none product-card h-100">
+                                <div class="d-flex flex-column justify-content-between h-100">
+                                    <div>
+                                        <div class="border border-1 rounded-3 position-relative mb-3">
+                                            <button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
+                                                <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
+                                            </button><img class="img-fluid" src="~/Imagens/@produto.ProdutoImagemViewModels[0].FileName" alt="" />
+                                        </div><a class="stretched-link text-decoration-none" href="~/public/apps/e-commerce/landing/product-details.html">
+                                            <h6 class="mb-2 lh-sm line-clamp-3 product-name">@produto.Nome</h6>
+                                        </a>
+                                        <p class="fs--1">
+                                            @*<span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span>*@<span class="text-500 fw-semi-bold ms-1">@produto.Curtida Pessoas curtiram esse produto</span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="fs--1 text-700 mb-2">Categoria: @produto.Categoria</p>
+                                        <div class="d-flex align-items-center mb-1">
+                                            @*<p class="me-2 text-900 text-decoration-line-through mb-0">$125.00</p>*@
+                                            <h3 class="text-1100 mb-0">R$@produto.Preco</h3>
+                                        </div>
+                                            <p class="text-700 fw-semi-bold fs--1 lh-1 mb-0">Estado: @produto.EstadoProduto</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+                <div class="d-flex justify-content-end">
+                        <button class="page-link" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                        <ul class="mb-0 pagination"></ul>
+                        <button class="page-link pe-0" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
+@*                    <nav aria-label="Page navigation example">
+                        <ul class="pagination mb-0">
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <span class="fas fa-chevron-left"> </span>
+                                </a>
+                            </li>
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">4</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">5</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link pe-0" href="#"> <span class="fas fa-chevron-right"></span></a>
+                            </li>
+                        </ul>
+                    </nav>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <!-- end of .container-->
+
+</section>
+
+@section Scripts{
+    <link href="~/public/vendors/choices/choices.min.css" rel="stylesheet" />
+    <script src="~/public/vendors/choices/choices.min.js"></script>
+}
+
+
+

@@ -51,26 +51,31 @@
                                     <p class="text-warning-500 fw-bolder fs-2 mb-0">10% off</p>*@
                                 </div>
                                 <p class="text-success fw-semi-bold fs-1 mb-2">Produto Disponível</p>
-                                <p class="mb-2 text-800"><strong class="text-1000">Do you want it on Saturday, July 29th?</strong> Choose <strong class="text-1000">Saturday Delivery </strong>at checkout if you want your order delivered within 12 hours 43 minutes, <a class="fw-bold" href="#!">Details. </a><strong class="text-1000">Gift wrapping is available.</strong></p>
+                                <p class="mb-2 text-800">
+                                    <strong class="text-1000">Condômino Responsável: @Model.CondominoViewModel.Nome</strong>
+                                    <br>
+                                    <strong class="text-1000">Telefone Condômino: @Model.CondominoViewModel.Telefone</strong>
+                                    <br>
+                                    <strong class="text-1000">Apartamento Condômino: @Model.CondominoViewModel.Apartamento</strong>
                                 @*<p class="text-danger-500 fw-bold mb-5 mb-lg-0">Special offer ends in 23:00:45 hours</p>*@
                             </div>
                             <div>
                                 <div class="mb-3">
-                                    <p class="fw-semi-bold mb-2 text-900">Color : <span class="text-1100" data-product-color="data-product-color">Blue</span></p>
+                                    <p class="fw-semi-bold mb-2 text-900">Fotos : <span class="text-1100" data-product-color="data-product-color"></span></p>
                                     <div class="d-flex product-color-variants" data-product-color-variants="data-product-color-variants">
                                         @switch (quantidadeImagens)
                                         {
                                             case 1:
-                                                <div class="rounded-1 border me-2 active" data-variant="Blue" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName"]'>'<img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
+                                                <div class="rounded-1 border me-2 active" data-variant="1" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName"]'>'<img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
                                                 break;
                                             case 2:
-                                                <div class="rounded-1 border me-2" data-variant="Orange" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[1].FileName"]'><img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
+                                                <div class="rounded-1 border me-2" data-variant="2" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[1].FileName"]'><img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
                                                 break;
                                             case 3:
-                                                <div class="rounded-1 border me-2" data-variant="Orange" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[1].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[2].FileName"]'><img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
+                                                <div class="rounded-1 border me-2" data-variant="3" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[1].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[2].FileName"]'><img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
                                                 break;
                                             case 4:
-                                                <div class="rounded-1 border me-2" data-variant="Orange" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[1].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[2].FileName", "../../../Imagens/@Model.ProdutoImagemViewModels[3].FileName"]'><img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
+                                                <div class="rounded-1 border me-2" data-variant="4" data-products-images='["../../../Imagens/@Model.ProdutoImagemViewModels[0].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[1].FileName","../../../Imagens/@Model.ProdutoImagemViewModels[2].FileName", "../../../Imagens/@Model.ProdutoImagemViewModels[3].FileName"]'><img src="~/Imagens/@Model.ProdutoImagemViewModels[0].FileName" alt="" width="38" /></div>
                                                 break;
                                         }
                                     </div>
@@ -125,7 +130,7 @@
                                 @*<p class="mb-0">The new iMac joins Apple's fantastic M1-powered Mac family, which includes the MacBook Air, 13-inch MacBook Pro, and Mac mini, and represents yet another step ahead in the company's shift to Apple silicon. Customers may order iMac starting Friday, April 30. It's the most personal, powerful, capable, and enjoyable it's ever been. In the second half of May, the iMac will be available."M1 is a huge step forward for the Mac," said Greg Joswiak, Apple's senior vice president of Worldwide Marketing. "Today, we're delighted to present the all-new iMac, the first Mac developed around the groundbreaking M1 processor." "The new iMac takes everything people love about iMac to an entirely new level, with its beautiful design in seven breathtaking colors, its immersive 4.5K Retina display, the greatest camera, mics, and speakers ever in a Mac, and Touch ID, combined with M1's incredible performance and macOS Big Sur's power."</p>*@
                             </div>
                             <div class="tab-pane pe-lg-6 pe-xl-12 fade" id="tab-specification" role="tabpanel" aria-labelledby="specification-tab">
-                                <h3 class="mb-0 ms-4 fw-bold">Processor/Chipset</h3>
+                                <h3 class="mb-0 ms-4 fw-bold">Categoria/Estado</h3>
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -146,7 +151,7 @@
                                             </td>
                                             <td class="px-5 mb-0">@Model.EstadoProduto</td>
                                         </tr>
-                                        <tr>
+                                        @*<tr>
                                             <td class="bg-100 align-middle">
                                                 <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Gpu core</h6>
                                             </td>
@@ -157,10 +162,10 @@
                                                 <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Neural engine</h6>
                                             </td>
                                             <td class="px-5 mb-0">16 cores</td>
-                                        </tr>
+                                        </tr>*@
                                     </tbody>
                                 </table>
-                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Storage</h3>
+@*                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Storage</h3>
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -277,7 +282,7 @@
                                 <p class="lh-sm border-top mb-0 py-3 px-4">Magic Mouse</p>
                                 <p class="lh-sm border-top mb-0 py-3 px-4">143W power adapter</p>
                                 <p class="lh-sm border-top mb-0 py-3 px-4">2m Power Cord</p>
-                                <p class="lh-sm border-y mb-0 py-3 px-4">USB-C to Lightning Cable</p>
+                                <p class="lh-sm border-y mb-0 py-3 px-4">USB-C to Lightning Cable</p>*@
                             </div>
                         </div>
                     </div>

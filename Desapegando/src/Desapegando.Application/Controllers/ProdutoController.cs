@@ -6,6 +6,7 @@ using Desapegando.Business.Models;
 using Desapegando.Business.Validations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Security.Claims;
 
 namespace Desapegando.Application.Controllers
@@ -235,6 +236,51 @@ namespace Desapegando.Application.Controllers
             var produtoViewModel = _mapper.Map<GetProdutoViewModel>(produtoDb);
 
             return View(produtoViewModel);
+        }
+
+        public async Task<IActionResult> Produtos()
+        {
+            var produtosDb = await _produtoRepository.Read();
+
+            ViewBag.produtos = Enumerable.Empty<GetProdutoViewModel>();
+
+            if (!produtosDb.Any())
+            {
+                return View();
+            }
+
+            var produtosViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(produtosDb);
+
+            ViewBag.produtos = produtosViewModel;
+
+
+            return View();
+            //return View(produtosViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Produtos(FiltrarProdutoViewModel filtrarProdutoViewModel)
+        {
+            if (filtrarProdutoViewModel.Categorias == null)
+            {
+                return RedirectToAction("Produtos");
+            }
+
+            var produtosDb = await _produtoRepository.ReadExpression(x => filtrarProdutoViewModel.Categorias.Contains(x.Categoria));
+
+            ViewBag.produtos = Enumerable.Empty<GetProdutoViewModel>();
+
+            if (!produtosDb.Any())
+            {
+                return View();
+            }
+
+            var produtosViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(produtosDb);
+
+            ViewBag.produtos = produtosViewModel;
+
+            return View();
+            //return View(produtosViewModel);
         }
 
         private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)

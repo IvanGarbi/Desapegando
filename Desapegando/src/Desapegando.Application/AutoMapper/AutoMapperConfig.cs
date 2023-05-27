@@ -13,7 +13,7 @@ public class AutoMapperConfig : Profile
         CreateMap<CondominoInativoViewModel, Condomino>().ReverseMap();
         CreateMap<CondominoViewModel, Condomino>().ReverseMap();
         CreateMap<ProdutoViewModel, Produto>().ReverseMap();
-        CreateMap<GetProdutoViewModel, Produto>().ForMember(x => x.ProdutoImagens, z => z.MapFrom(a => a.ProdutoImagemViewModels)).ReverseMap();
+        CreateMap<GetProdutoViewModel, Produto>().ForMember(x => x.ProdutoImagens, z => z.MapFrom(a => a.ProdutoImagemViewModels)).ForMember(y => y.Condomino, c => c.MapFrom(w => w.CondominoViewModel)).ReverseMap();
         CreateMap<ProdutoImagemViewModel, ProdutoImagem>().ReverseMap();
         CreateMap<UpdateProdutoViewModel, Produto>().ReverseMap();
         CreateMap<CampanhaViewModel, Campanha>().ReverseMap();

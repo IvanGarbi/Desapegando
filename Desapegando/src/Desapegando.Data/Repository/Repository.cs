@@ -2,6 +2,7 @@
 using Desapegando.Business.Models;
 using Desapegando.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Desapegando.Data.Repository;
 
@@ -37,6 +38,11 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, 
     public virtual async Task<TEntity> ReadById(Guid id)
     {
         return await DbSet.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
+    }
+
+    public virtual async Task<IEnumerable<TEntity>> ReadExpression(Expression<Func<TEntity, bool>> predicateExpression)
+    {
+        return await DbSet.AsNoTracking().Where(predicateExpression).ToListAsync();
     }
 
     public virtual async Task<IEnumerable<TEntity>> Read()
