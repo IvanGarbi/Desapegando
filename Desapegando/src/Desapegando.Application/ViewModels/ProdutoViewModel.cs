@@ -16,19 +16,19 @@ namespace Desapegando.Application.ViewModels
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Categoria")]
-        public Categoria Categoria { get; set; }
+        public Categoria? Categoria { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Condição")]
-        public EstadoProduto EstadoProduto { get; set; }
+        public EstadoProduto? EstadoProduto { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Preço")]
-        public decimal Preco { get; set; }
+        public decimal? Preco { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Quantidade")]
-        public int Quantidade { get; set; }
+        public int? Quantidade { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Imagens do Produto")]
@@ -49,19 +49,19 @@ namespace Desapegando.Application.ViewModels
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Categoria")]
-        public Categoria Categoria { get; set; }
+        public Categoria? Categoria { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Condição")]
-        public EstadoProduto EstadoProduto { get; set; }
+        public EstadoProduto? EstadoProduto { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Preço")]
-        public decimal Preco { get; set; }
+        public decimal? Preco { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Quantidade")]
-        public int Quantidade { get; set; }
+        public int? Quantidade { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Imagens do Produto")]

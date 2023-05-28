@@ -37,11 +37,11 @@ namespace Desapegando.Application.ViewModels
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Data de Início")]
-        public DateTime DataInicio { get; set; }
+        public DateTime? DataInicio { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Data Final")]
-        public DateTime DataFinal { get; set; }
+        public DateTime? DataFinal { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Imagens do Produto")]
@@ -83,11 +83,11 @@ namespace Desapegando.Application.ViewModels
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Data de Início")]
-        public DateTime DataInicio { get; set; }
+        public DateTime? DataInicio { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Data Final")]
-        public DateTime DataFinal { get; set; }
+        public DateTime? DataFinal { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [DisplayName("Imagens do Produto")]

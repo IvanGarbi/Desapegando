@@ -93,7 +93,7 @@ namespace Desapegando.Application.Controllers
         {
             var todosCampanhaDb = await _campanhaRepository.Read();
 
-            var minhasCampanhasDb = todosCampanhaDb.Where(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)));
+            var minhasCampanhasDb = todosCampanhaDb.Where(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)) && x.Ativo == true);
 
             if (minhasCampanhasDb == null)
             {
@@ -104,7 +104,6 @@ namespace Desapegando.Application.Controllers
 
             return View(meusCampanhasDbViewModel);
         }
-
 
         public async Task<IActionResult> Editar(Guid id)
         {
@@ -156,8 +155,8 @@ namespace Desapegando.Application.Controllers
             campanhaDb.Descricao = campanhaViewModel.Descricao;
             campanhaDb.Ativo = campanhaViewModel.Ativo;
             campanhaDb.NomeInstituicao = campanhaViewModel.NomeInstituicao;
-            campanhaDb.DataInicio = campanhaViewModel.DataInicio;
-            campanhaDb.DataFinal = campanhaViewModel.DataFinal;
+            campanhaDb.DataInicio = campanhaViewModel.DataInicio.Value;
+            campanhaDb.DataFinal = campanhaViewModel.DataFinal.Value;
             campanhaDb.EmailResponsavel = campanhaViewModel.EmailResponsavel;
             campanhaDb.LocalDeEncontro = campanhaViewModel.LocalDeEncontro;
             campanhaDb.NomeResponsavel = campanhaViewModel.NomeResponsavel;
@@ -237,6 +236,22 @@ namespace Desapegando.Application.Controllers
             var campanhaViewModel = _mapper.Map<GetCampanhaViewModel>(campanhaDb);
 
             return View(campanhaViewModel);
+        }
+
+        public async Task<IActionResult> Deletar(Guid id)
+        {
+            var campanhaDb = await _campanhaRepository.ReadById(id);
+
+            if (campanhaDb == null)
+            {
+                return View();
+            }
+
+            campanhaDb.Ativo = false;
+
+            await _campanhaService.Update(campanhaDb);
+
+            return RedirectToAction("MinhasCampanhas");
         }
 
         private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)

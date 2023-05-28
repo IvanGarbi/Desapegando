@@ -31,6 +31,11 @@ namespace Desapegando.Application.Controllers
         {
             var produtos = await _produtoRepository.Read();
             var campanhas = await _campanhaRepository.Read();
+
+            produtos = produtos.Where(x => x.Ativo);
+            campanhas = campanhas.Where(x => x.Ativo);
+
+
             var produtosViewModels = _mapper.Map<IEnumerable<GetProdutoViewModel>>(produtos);
             var campanhasViewModels = _mapper.Map<IEnumerable<GetCampanhaViewModel>>(campanhas);
 

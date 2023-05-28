@@ -3,7 +3,9 @@ using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
+using Desapegando.Business.Services;
 using Desapegando.Business.Validations;
+using Desapegando.Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -96,7 +98,7 @@ namespace Desapegando.Application.Controllers
         {
             var todosProdutoDb = await _produtoRepository.Read();
 
-            var meusProdutosDb = todosProdutoDb.Where(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)));
+            var meusProdutosDb = todosProdutoDb.Where(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)) && x.Ativo == true);
 
             if (meusProdutosDb == null)
             {
@@ -107,7 +109,6 @@ namespace Desapegando.Application.Controllers
 
             return View(meusProdutosDbViewModel);
         }
-
 
         public async Task<IActionResult> Editar(Guid id)
         {
@@ -156,9 +157,9 @@ namespace Desapegando.Application.Controllers
 
             produtoDb.Nome = produtoViewModel.Nome;
             produtoDb.Descricao = produtoViewModel.Descricao;
-            produtoDb.Preco = produtoViewModel.Preco;
-            produtoDb.EstadoProduto = produtoViewModel.EstadoProduto;
-            produtoDb.Categoria = produtoViewModel.Categoria;
+            produtoDb.Preco = produtoViewModel.Preco.Value;
+            produtoDb.EstadoProduto = produtoViewModel.EstadoProduto.Value;
+            produtoDb.Categoria = produtoViewModel.Categoria.Value;
             produtoDb.Desistencia = produtoViewModel.Desistencia;
             produtoDb.Ativo = produtoViewModel.Ativo;
 
@@ -242,6 +243,8 @@ namespace Desapegando.Application.Controllers
         {
             var produtosDb = await _produtoRepository.Read();
 
+            produtosDb = produtosDb.Where(x => x.Ativo);
+
             ViewBag.produtos = Enumerable.Empty<GetProdutoViewModel>();
 
             if (!produtosDb.Any())
@@ -266,7 +269,7 @@ namespace Desapegando.Application.Controllers
                 return RedirectToAction("Produtos");
             }
 
-            var produtosDb = await _produtoRepository.ReadExpression(x => filtrarProdutoViewModel.Categorias.Contains(x.Categoria));
+            var produtosDb = await _produtoRepository.ReadExpression(x => filtrarProdutoViewModel.Categorias.Contains(x.Categoria) && x.Ativo == true);
 
             ViewBag.produtos = Enumerable.Empty<GetProdutoViewModel>();
 
@@ -281,6 +284,22 @@ namespace Desapegando.Application.Controllers
 
             return View();
             //return View(produtosViewModel);
+        }
+
+        public async Task<IActionResult> Deletar(Guid id)
+        {
+            var produtoDb = await _produtoRepository.ReadById(id);
+
+            if (produtoDb == null)
+            {
+                return View();
+            }
+
+            produtoDb.Ativo = false;
+
+            await _produtoService.Update(produtoDb);
+
+            return RedirectToAction("MeusProdutos");
         }
 
         private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)

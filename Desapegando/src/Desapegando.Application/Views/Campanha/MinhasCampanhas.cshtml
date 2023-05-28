@@ -18,7 +18,7 @@
         <section class="pt-5 pb-9">
 
             <div class="container-small cart">
-                <h2 class="mb-5">Meus Produtos<span class="text-700 fw-normal ms-2">(@Model.Count())</span></h2>
+                <h2 class="mb-5">Minhas Campanhas<span class="text-700 fw-normal ms-2">(@Model.Count())</span></h2>
                 <div class="border-y" id="productWishlistTable" data-list='{"valueNames":["products","color","size","price","quantity","total"],"page":5,"pagination":true}'>
                     <div class="table-responsive scrollbar">
                         <table class="table fs--1 mb-0">
@@ -40,12 +40,12 @@
                                     <td class="align-middle white-space-nowrap ps-0 py-0">
                                         <div class="border rounded-2 d-inline-block"><img src="~/Imagens/@campanha.CampanhaImagemViewModels[0].FileName" alt="" width="53" /></div>
                                     </td>
-                                    <td class="products align-middle pe-11"><a class="fw-semi-bold mb-0 line-clamp-1" href="#!">@campanha.Nome</a></td>
+                                    <td class="products align-middle pe-11"><a class="fw-semi-bold mb-0 line-clamp-1" asp-action="Visualizar" asp-controller="Campanha" asp-route-id="@campanha.Id">@campanha.Nome</a></td>
                                     <td class="color align-middle white-space-nowrap fs--1 text-900">@campanha.Nome</td>
                                     <td class="size align-middle white-space-nowrap text-700 fs--1 fw-semi-bold">@campanha.NomeInstituicao</td>
                                     <td class="price align-middle text-900 fs--1 fw-semi-bold text-end">@campanha.LocalDeEncontro</td>
                                     <td class="total align-middle fw-bold text-1000 text-end text-nowrap pe-0">
-                                        <button class="btn btn-sm text-500 hover-text-600 me-2"><span class="fas fa-trash"></span></button>
+                                        <a class="btn btn-sm text-500 hover-text-600 me-2" asp-action="Deletar" asp-controller="Campanha" asp-route-id="@campanha.Id"><span class="fas fa-trash"></span></a>
                                         <a class="btn btn-primary fs--2" asp-action="Editar" asp-controller="Campanha" asp-route-id="@campanha.Id"><span class="fas fa-shopping-cart me-1 fs--2"></span>Editar</a>
                                     </td>
                                 </tr>
