@@ -135,7 +135,7 @@ namespace Desapegando.Application.Controllers
                 return View(campanhaViewModel);
             }
 
-            if (campanhaViewModel.ImagensUpload.Count > 4)
+            if (novasImagens && campanhaViewModel.ImagensUpload.Count > 4)
             {
                 ModelState.AddModelError(string.Empty, "Só é possível adicionar no máximo 3 iamgens.");
                 return View(campanhaViewModel);

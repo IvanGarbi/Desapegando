@@ -66,6 +66,10 @@
                                         <span class="me-sm-2 fs-4 nav-icons" data-feather="package"></span>
                                         <span class="d-none d-sm-inline">Dados Responsável</span>
                                     </a>
+                                    <a class="nav-link border-end border-end-sm-0 border-bottom-sm border-300 text-center text-sm-start cursor-pointer outline-none d-sm-flex align-items-sm-center" id="shippingTab" data-bs-toggle="tab" data-bs-target="#shippingTabContent" role="tab" aria-controls="shippingTabContent" aria-selected="false">
+                                        <span class="me-sm-2 fs-4 nav-icons" data-feather="sliders"></span>
+                                        <span class="d-none d-sm-inline">Status da Campanha</span>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -105,6 +109,17 @@
                                                     <h5 class="mb-2 text-1000">E-mail do Responsável</h5>
                                                     <input asp-for="EmailResponsavel" class="form-control" type="text" placeholder="E-mail" />
                                                     <span asp-validation-for="EmailResponsavel" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade h-100" id="shippingTabContent" role="tabpanel" aria-labelledby="shippingTab">
+                                        <div class="d-flex flex-column h-100">
+                                            <h5 class="mb-3 text-1000">Status da Campanha</h5>
+                                            <div class="flex-1">
+                                                <div class="form-check">
+                                                    <input asp-for="Ativo" class="form-check-input" id="vendaCheck" type="checkbox" />
+                                                    <label class="form-check-label text-900 fs-0" for="vendaCheck">Disponível</label>
                                                 </div>
                                             </div>
                                         </div>
