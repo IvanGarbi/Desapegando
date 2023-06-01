@@ -46,7 +46,7 @@ namespace Desapegando.Application.Controllers
 
             if (produtoViewModel.ImagensUpload.Count > 4)
             {
-                ModelState.AddModelError(string.Empty, "Só é possível adicionar no máximo 3 iamgens.");
+                ModelState.AddModelError("ImagensUpload", "Só é possível adicionar no máximo 4 imagens.");
                 return View(produtoViewModel);
             }
 
@@ -142,7 +142,7 @@ namespace Desapegando.Application.Controllers
 
             if (novasImagens && produtoViewModel.ImagensUpload.Count > 4)
             {
-                ModelState.AddModelError(string.Empty, "Só é possível adicionar no máximo 3 iamgens.");
+                ModelState.AddModelError("ImagensUpload", "Só é possível adicionar no máximo 4 imagens.");
                 return View(produtoViewModel);
             }
 
