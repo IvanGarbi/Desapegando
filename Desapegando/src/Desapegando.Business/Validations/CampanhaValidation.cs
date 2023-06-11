@@ -68,7 +68,11 @@ namespace Desapegando.Business.Validations
             RuleFor(x => x.DataFinal)
                 .NotEmpty()
                 .NotNull()
-                .WithMessage("O {PropertyName} deve ser informado.");
+                .WithMessage("O {PropertyName} deve ser informado.")
+                .DependentRules(() => { RuleFor(y => y.DataFinal)
+                                        .GreaterThanOrEqualTo(a => a.DataInicio)
+                                        .WithMessage("A Data Inicial não pode ser maior que a Data Final.");
+                });
 
             RuleFor(x => x.CondominoId)
                 .NotNull()
