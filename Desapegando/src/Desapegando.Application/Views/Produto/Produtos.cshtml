@@ -10,7 +10,6 @@
 }
 
 <section class="pt-5 pb-9">
-    <form method="post">
     <div class="container">
         <button class="btn btn-sm btn-phoenix-secondary text-700 mb-5 d-lg-none" data-phoenix-toggle="offcanvas" data-phoenix-target="#productFilterColumn"> <span class="fa-solid fa-filter me-2"></span>Filtro</button>
         <div class="row">
@@ -24,6 +23,7 @@
                             <div class="fs-0 text-1000">Categoria</div><span class="fa-solid fa-angle-down toggle-icon text-500"></span>
                         </div>
                     </a>
+                    <form method="post">
                     <div class="collapse ms-1 show" id="collapseAvailability">
                         <div class="mb-2">
                             <div class="form mb-0 p-0">
@@ -44,7 +44,8 @@
                             </div>*@
                         </div>
                     </div>
-                        <button asp-action="Produtos" asp-controller="Produto" class="btn btn-phoenix-primary border-300 px-3" type="submit">Pesquisar</button>
+                    <button asp-action="Produtos" asp-controller="Produto" class="btn btn-phoenix-primary border-300 px-3" type="submit">Pesquisar</button>
+                    </form>
                 </div>
                 <div class="phoenix-offcanvas-backdrop d-lg-none" data-phoenix-backdrop></div>
             </div>
@@ -117,7 +118,7 @@
             </div>
         </div>
     </div>
-    </form>
+    
     <!-- end of .container-->
 
 </section>
