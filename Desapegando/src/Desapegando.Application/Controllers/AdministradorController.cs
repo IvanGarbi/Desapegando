@@ -84,4 +84,9 @@ public class AdministradorController : MainController
         return RedirectToAction("NovosCondominos", "Administrador");
     }
 
+    public async Task<IActionResult> Dashboard()
+    {
+        return View();
+    }
+
 }
