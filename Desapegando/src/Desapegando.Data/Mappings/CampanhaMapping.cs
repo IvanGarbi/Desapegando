@@ -24,7 +24,7 @@ namespace Desapegando.Data.Mappings
 
             builder.Property(x => x.Descricao)
                 .IsRequired()
-                .HasColumnType("VARCHAR(200)");
+                .HasColumnType("VARCHAR(MAX)");
 
             builder.Property(x => x.LocalDeEncontro)
                 .IsRequired()

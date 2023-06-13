@@ -32,9 +32,9 @@ public class AdministradorController : MainController
     }
 
     //[HttpPost]
-    public async Task<IActionResult> AtivarCondomino(Guid Id)
+    public async Task<IActionResult> AtivarCondomino(Guid id)
     {
-        var condomino = await _condominoRepository.ReadById(Id);
+        var condomino = await _condominoRepository.ReadById(id);
 
         if (condomino == null)
         {
@@ -48,6 +48,31 @@ public class AdministradorController : MainController
         try
         {
             await _emailSender.SendEmailAsync(condomino.Email, "Condômino aprovado", "O seu cadastro em Desapegando já foi aprovado! Já é possível realizar o login e desfrutar da plataforma!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+
+        return RedirectToAction("NovosCondominos", "Administrador");
+    }
+
+    public async Task<IActionResult> ExcluirCondomino(Guid id)
+    {
+        var condomino = await _condominoRepository.ReadById(id);
+
+        if (condomino == null)
+        {
+            return RedirectToAction("NovosCondominos", "Administrador");
+        }
+
+        await _condominoService.Delete(id);
+
+        try
+        {
+            await _emailSender.SendEmailAsync(condomino.Email, "Condômino não aprovado", "O seu cadastro em Desapegando não foi aprovado.");
         }
         catch (Exception e)
         {

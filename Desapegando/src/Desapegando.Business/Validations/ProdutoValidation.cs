@@ -26,9 +26,7 @@ namespace Desapegando.Business.Validations
             RuleFor(x => x.Descricao)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage("O {PropertyName} deve ser informado.")
-                .MaximumLength(250)
-                .WithMessage("O {PropertyName} deve ter menos que 250 caracteres.");
+                .WithMessage("O {PropertyName} deve ser informado.");
 
             RuleFor(x => x.Curtida)
                 .GreaterThanOrEqualTo(0)

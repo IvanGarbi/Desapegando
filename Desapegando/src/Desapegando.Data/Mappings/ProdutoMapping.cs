@@ -40,8 +40,7 @@ public class ProdutoMapping : IEntityTypeConfiguration<Produto>
 
         builder.Property(x => x.Descricao)
             .IsRequired()
-            .HasColumnType("NVARCHAR")
-            .HasMaxLength(250);
+            .HasColumnType("NVARCHAR(MAX)");
 
         builder.Property(x => x.EstadoProduto)
             .IsRequired()

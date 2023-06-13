@@ -179,7 +179,7 @@
                   <div class="col-auto">
                     <div class="search-box">
                       <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
-                        <input class="form-control search-input search" type="search" placeholder="Search customers" aria-label="Search" />
+                        <input class="form-control search-input search" type="search" placeholder="Procurar condôminos" aria-label="Search" />
                         <span class="fas fa-search search-box-icon"></span>
 
                       </form>
@@ -228,10 +228,11 @@
                         <th class="sort align-middle pe-5" scope="col" data-sort="customer" style="width:10%;">NOME</th>
                         <th class="sort align-middle pe-5" scope="col" data-sort="email" style="width:20%;">EMAIL</th>
                         <th class="sort align-middle text-end" scope="col" data-sort="total-orders" style="width:10%">ATIVAR CONDÔMINO</th>
-                          <th class="sort align-middle text-end ps-3" scope="col" data-sort="total-spent" style="width:10%">APARTAMENTO</th>
+                        <th class="sort align-middle text-end ps-3" scope="col" data-sort="total-spent" style="width:10%">APARTAMENTO</th>
                         <th class="sort align-middle ps-7" scope="col" data-sort="city" style="width:25%;">CPF</th>
                         <th class="sort align-middle text-end" scope="col" data-sort="last-seen" style="width:15%;">TELEFONE</th>
                         <th class="sort align-middle text-end pe-0" scope="col" data-sort="last-order" style="width:10%;min-width: 150px;">SEXO</th>
+                        <th class="sort align-middle text-end pe-0" scope="col" data-sort="last-order" style="width:10%;min-width: 100px;">EXCLUIR</th>
                       </tr>
                     </thead>
                   <tbody class="list" id="customers-table-body">
@@ -257,6 +258,7 @@
                           <td class="city align-middle white-space-nowrap text-1000 ps-7">@condomino.Cpf</td>
                           <td class="last-seen align-middle white-space-nowrap text-700 text-end">@condomino.Telefone</td>
                           <td class="last-order align-middle white-space-nowrap text-700 text-end">@condomino.Sexo</td>
+                          <td class="email align-middle white-space-nowrap pe-3 text-700 text-end"><a class="fw-semi-bold" asp-controller="Administrador" asp-action="ExcluirCondomino" asp-route-id="@condomino.Id">Excluir</a></td>
                       </tr>
                   }
 
