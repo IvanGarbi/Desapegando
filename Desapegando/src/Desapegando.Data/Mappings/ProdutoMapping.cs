@@ -38,6 +38,10 @@ public class ProdutoMapping : IEntityTypeConfiguration<Produto>
             .IsRequired()
             .HasColumnType("DATETIME");
 
+        builder.Property(x => x.DataVenda)
+            .IsRequired(false)
+            .HasColumnType("DATETIME");
+
         builder.Property(x => x.Descricao)
             .IsRequired()
             .HasColumnType("NVARCHAR(MAX)");

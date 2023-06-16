@@ -42,6 +42,11 @@ public class CondominoMapping : IEntityTypeConfiguration<Condomino>
             .IsRequired()
             .HasColumnType("DATE");
 
+        builder.Property(x => x.DataRegistro)
+            .IsRequired()
+            .HasColumnType("DATETIME")
+            .HasDefaultValueSql("GETDATE()");
+
         builder.Property(x => x.Ativo)
             .IsRequired()
             .HasColumnType("BIT");

@@ -1,10 +1,71 @@
-﻿@*@model IEnumerable<Desapegando.Application.ViewModels.CondominoInativoViewModel>*@
+﻿@model Desapegando.Application.ViewModels.DashboardViewModel
 
 @{
     Layout = "_Layout";
 }
 @{
     int[] teste = {1100, 1500, 1600 };
+
+    int novosCondominos = Model.NovosCondominos;
+    int produtosVendidos = Model.ProdutosVendidos;
+    int produtosParaVender = Model.ProdutosDisponiveis;
+
+    int totalVendasPeriodo = 100;
+    Random randNum = new Random();
+    //int[] totalVendasPorPeriodo = { 120, 100, 98, 102, 135, 120, 100, 98, 102, 135, 120, 100, 98, 102, 135, 120, 100, 98, 102, 135, 120, 100, 98, 102, 135, 120, 100, 98, 102, 135 };
+    int[] totalVendasPorPeriodo = new int[30];
+    for (int i = 0; i < 30; i++)
+    {
+        totalVendasPorPeriodo[i] = randNum.Next(150);
+    }
+
+    int[] totalVendasPorPeriodo2 = new int[30];
+    for (int i = 0; i < 30; i++)
+    {
+        totalVendasPorPeriodo2[i] = randNum.Next(150);
+    }
+
+    //int[] totalVendasUltimos7Dias = { 120, 100, 98, 102, 135, 99, 120 };
+    var vendas7DiasViewModelArray = Model.Vendas7DiasViewModel.ToArray();
+
+    var teste12 = Model.Vendas7DiasViewModel.Select(x => x.Quantidade).ToArray();
+
+    int[] totalVendasUltimos7Dias = { vendas7DiasViewModelArray[0] != null ? vendas7DiasViewModelArray[0].Quantidade : 0,
+                                      vendas7DiasViewModelArray[1] != null ? vendas7DiasViewModelArray[1].Quantidade : 0,
+                                      vendas7DiasViewModelArray[2] != null ? vendas7DiasViewModelArray[2].Quantidade : 0,
+                                      vendas7DiasViewModelArray[3] != null ? vendas7DiasViewModelArray[3].Quantidade : 0,
+                                      vendas7DiasViewModelArray[4] != null ? vendas7DiasViewModelArray[4].Quantidade : 0,
+                                      vendas7DiasViewModelArray[5] != null ? vendas7DiasViewModelArray[5].Quantidade : 0,
+                                      vendas7DiasViewModelArray[6] != null ? vendas7DiasViewModelArray[6].Quantidade : 0 };
+    //int totalProdutosVendidosUltimos7Dias = 4500000;
+    //int totalProdutosDisponiveisUltimos7Dias = 3000000;
+    //int totalProdutosDesistidosUltimos7Dias = 2500000;
+    int totalProdutosVendidosUltimos7Dias = Model.TotalProdutosVendidosUltimos7Dias;
+    int totalProdutosDisponiveisUltimos7Dias = Model.TotalProdutosDisponiveisUltimos7Dias;
+    int totalProdutosDesistidosUltimos7Dias = Model.TotalProdutosDesistidosUltimos7Dias;
+    int[] totalProdutosVDisDesUltimos7Dias = { totalProdutosVendidosUltimos7Dias, totalProdutosDisponiveisUltimos7Dias, totalProdutosDesistidosUltimos7Dias };
+    
+    //int[] novosCondominosUlitmos7Dias = { 120, 100, 98, 102, 135, 99, 105, 103, 100, 103, 110, 89, 67, 100 };
+    var novosCondominos7DiasArray = Model.NovosCondominos7Dias.ToArray();
+    
+    int[] novosCondominosUlitmos7Dias = { novosCondominos7DiasArray[0] != null ? novosCondominos7DiasArray[0].Quantidade : 0,
+                                          novosCondominos7DiasArray[1] != null ? novosCondominos7DiasArray[1].Quantidade : 0, 
+                                          novosCondominos7DiasArray[2] != null ? novosCondominos7DiasArray[2].Quantidade : 0, 
+                                          novosCondominos7DiasArray[3] != null ? novosCondominos7DiasArray[3].Quantidade : 0, 
+                                          novosCondominos7DiasArray[4] != null ? novosCondominos7DiasArray[4].Quantidade : 0, 
+                                          novosCondominos7DiasArray[5] != null ? novosCondominos7DiasArray[5].Quantidade : 0, 
+                                          novosCondominos7DiasArray[6] != null ? novosCondominos7DiasArray[6].Quantidade : 0,
+                                          novosCondominos7DiasArray[7] != null ? novosCondominos7DiasArray[7].Quantidade : 0, 
+                                          novosCondominos7DiasArray[8] != null ? novosCondominos7DiasArray[8].Quantidade : 0, 
+                                          novosCondominos7DiasArray[9] != null ? novosCondominos7DiasArray[9].Quantidade : 0, 
+                                          novosCondominos7DiasArray[10] != null ? novosCondominos7DiasArray[10].Quantidade : 0, 
+                                          novosCondominos7DiasArray[11] != null ? novosCondominos7DiasArray[11].Quantidade : 0, 
+                                          novosCondominos7DiasArray[12] != null ? novosCondominos7DiasArray[12].Quantidade : 0, 
+                                          novosCondominos7DiasArray[12] != null ? novosCondominos7DiasArray[13].Quantidade : 0};
+
+    int novasCampanhasDisponiveisUlitmos30Dias = 45;
+    int novasCampanhasEncerradasUlitmos30Dias = 55;
+    int[] novasCampanhasUlitmos30Dias = { novasCampanhasDisponiveisUlitmos30Dias, novasCampanhasEncerradasUlitmos30Dias };
 }
 
 
@@ -13,7 +74,7 @@
 <!-- ===============================================-->
 <section class="pt-5 pb-9">
     <div class="container-small px-0">
-        @*<div class="pb-5">
+        <div class="pb-5">
             <div class="row g-4">
                 <div class="col-12 col-xxl-6">
                     <div class="mb-8">
@@ -25,7 +86,7 @@
                             <div class="d-flex align-items-center">
                                 <img src="~/public/assets/img/icons/illustrations/4l.png" alt="" height="46" width="46" />
                                 <div class="ms-3">
-                                    <h4 class="mb-0">57 new orders</h4>
+                                    <h4 class="mb-0">@novosCondominos new orders</h4>
                                     <p class="text-800 fs--1 mb-0">Awating processing</p>
                                 </div>
                             </div>
@@ -34,7 +95,7 @@
                             <div class="d-flex align-items-center">
                                 <img src="~/public/assets/img/icons/illustrations/3l.png" alt="" height="46" width="46" />
                                 <div class="ms-3">
-                                    <h4 class="mb-0">5 orders</h4>
+                                    <h4 class="mb-0">@produtosVendidos orders</h4>
                                     <p class="text-800 fs--1 mb-0">On hold</p>
                                 </div>
                             </div>
@@ -43,7 +104,7 @@
                             <div class="d-flex align-items-center">
                                 <img src="~/public/assets/img/icons/illustrations/2l.png" alt="" height="46" width="46" />
                                 <div class="ms-3">
-                                    <h4 class="mb-0">15 products</h4>
+                                    <h4 class="mb-0">@produtosParaVender products</h4>
                                     <p class="text-800 fs--1 mb-0">Out of stock</p>
                                 </div>
                             </div>
@@ -127,17 +188,17 @@
                                         <div class="d-flex align-items-center mb-2">
                                             <div class="bullet-item bg-primary me-2"></div>
                                             <h6 class="text-900 fw-semi-bold flex-1 mb-0">Percentage discount</h6>
-                                            <h6 class="text-900 fw-semi-bold mb-0">72%</h6>
+                                            <h6 class="text-900 fw-semi-bold mb-0">@(totalProdutosVendidosUltimos7Dias / 100000)%</h6>
                                         </div>
                                         <div class="d-flex align-items-center mb-2">
                                             <div class="bullet-item bg-primary-200 me-2"></div>
                                             <h6 class="text-900 fw-semi-bold flex-1 mb-0">Fixed card discount</h6>
-                                            <h6 class="text-900 fw-semi-bold mb-0">18%</h6>
+                                            <h6 class="text-900 fw-semi-bold mb-0">@(totalProdutosDisponiveisUltimos7Dias / 100000)%</h6>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <div class="bullet-item bg-info-500 me-2"></div>
                                             <h6 class="text-900 fw-semi-bold flex-1 mb-0">Fixed product discount</h6>
-                                            <h6 class="text-900 fw-semi-bold mb-0">10%</h6>
+                                            <h6 class="text-900 fw-semi-bold mb-0">@(totalProdutosDesistidosUltimos7Dias / 100000)%</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -159,12 +220,12 @@
                                         <div class="d-flex align-items-center mb-2">
                                             <div class="bullet-item bg-primary me-2"></div>
                                             <h6 class="text-900 fw-semi-bold flex-1 mb-0">Paying customer</h6>
-                                            <h6 class="text-900 fw-semi-bold mb-0">30%</h6>
+                                            <h6 class="text-900 fw-semi-bold mb-0">@(novasCampanhasDisponiveisUlitmos30Dias)%</h6>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <div class="bullet-item bg-primary-100 me-2"></div>
                                             <h6 class="text-900 fw-semi-bold flex-1 mb-0">Non-paying customer</h6>
-                                            <h6 class="text-900 fw-semi-bold mb-0">70%</h6>
+                                            <h6 class="text-900 fw-semi-bold mb-0">@(novasCampanhasEncerradasUlitmos30Dias)%</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -173,8 +234,8 @@
                     </div>
                 </div>
             </div>
-        </div>*@
-        <div class="echart-line-chart-example" style="min-height: 300px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); position: relative;" data-echart-responsive="data-echart-responsive" _echarts_instance_="ec_1686516042133">
+        </div>
+@*        <div class="echart-line-chart-example" style="min-height: 300px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); position: relative;" data-echart-responsive="data-echart-responsive" _echarts_instance_="ec_1686516042133">
             <div style="position: relative; width: 723px; height: 300px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="723" height="300" style="position: absolute; left: 0px; top: 0px; width: 723px; height: 300px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div class="" style="position: absolute; display: block; border-style: solid; white-space: nowrap; z-index: 9999999; box-shadow: rgba(0, 0, 0, 0.2) 1px 2px 10px; background-color: rgb(239, 242, 246); border-width: 1px; border-radius: 4px; color: rgb(20, 24, 36); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 7px 10px; top: 0px; left: 0px; transform: translate3d(546px, 44px, 0px); border-color: rgb(203, 208, 221); pointer-events: none; visibility: hidden; opacity: 0;">
                 <div>
                     <h6 class="fs--1 text-700 mb-0">
@@ -183,7 +244,7 @@
                     </h6>
                 </div>
             </div>
-        </div>
+        </div>*@
     </div>
 </section>
 <!-- ===============================================-->
@@ -194,240 +255,105 @@
     <script src="~/public/assets/js/echarts-example.js"></script>*@
 
     <script src="~/public/vendors/echarts/echarts.min.js"></script>
-    <script src="~/public/assets/js/ecommerce-dashboard.js"></script>
+@*    <script src="~/public/assets/js/ecommerce-dashboard.js"></script>*@
 
     <script>
         const dados = [@teste[0], @teste[1], @teste[2]];
+
+        const totalVendas = [@totalVendasUltimos7Dias[0], 
+                             @totalVendasUltimos7Dias[1], 
+                             @totalVendasUltimos7Dias[2], 
+                             @totalVendasUltimos7Dias[3],
+                             @totalVendasUltimos7Dias[4], 
+                             @totalVendasUltimos7Dias[5], 
+                             @totalVendasUltimos7Dias[6]];
+
+        const novosCondominos7Dias = [@novosCondominosUlitmos7Dias[0],
+                                      @novosCondominosUlitmos7Dias[1],
+                                      @novosCondominosUlitmos7Dias[2],
+                                      @novosCondominosUlitmos7Dias[3],
+                                      @novosCondominosUlitmos7Dias[4],
+                                      @novosCondominosUlitmos7Dias[5],
+                                      @novosCondominosUlitmos7Dias[6],
+                                      @novosCondominosUlitmos7Dias[7],
+                                      @novosCondominosUlitmos7Dias[8],
+                                      @novosCondominosUlitmos7Dias[9],
+                                      @novosCondominosUlitmos7Dias[10],
+                                      @novosCondominosUlitmos7Dias[11],
+                                      @novosCondominosUlitmos7Dias[12],
+                                      @novosCondominosUlitmos7Dias[13]];
+
+        const totalProdutosVDisDes7Dias = [@totalProdutosVDisDesUltimos7Dias[0],
+                                           @totalProdutosVDisDesUltimos7Dias[1],
+                                           @totalProdutosVDisDesUltimos7Dias[2]];
+
+        const totalNovasCampanhas30Dias = [@novasCampanhasUlitmos30Dias[0],
+                                           @novasCampanhasUlitmos30Dias[1]];
+
+        const totalVendasPeriodo = [@totalVendasPorPeriodo[0],
+                                    @totalVendasPorPeriodo[1],
+                                    @totalVendasPorPeriodo[2],
+                                    @totalVendasPorPeriodo[3],
+                                    @totalVendasPorPeriodo[4],
+                                    @totalVendasPorPeriodo[5],
+                                    @totalVendasPorPeriodo[6],
+                                    @totalVendasPorPeriodo[7],
+                                    @totalVendasPorPeriodo[8],
+                                    @totalVendasPorPeriodo[9],
+                                    @totalVendasPorPeriodo[10],
+                                    @totalVendasPorPeriodo[11],
+                                    @totalVendasPorPeriodo[12],
+                                    @totalVendasPorPeriodo[13],
+                                    @totalVendasPorPeriodo[14],
+                                    @totalVendasPorPeriodo[15],
+                                    @totalVendasPorPeriodo[16],
+                                    @totalVendasPorPeriodo[17],
+                                    @totalVendasPorPeriodo[18],
+                                    @totalVendasPorPeriodo[19],
+                                    @totalVendasPorPeriodo[20],
+                                    @totalVendasPorPeriodo[21],
+                                    @totalVendasPorPeriodo[22],
+                                    @totalVendasPorPeriodo[23],
+                                    @totalVendasPorPeriodo[24],
+                                    @totalVendasPorPeriodo[25],
+                                    @totalVendasPorPeriodo[26],
+                                    @totalVendasPorPeriodo[27],
+                                    @totalVendasPorPeriodo[28],
+                                    @totalVendasPorPeriodo[29]];
+
+        const totalVendasPeriodo2 = [@totalVendasPorPeriodo2[0],
+                                     @totalVendasPorPeriodo2[1],
+                                     @totalVendasPorPeriodo2[2],
+                                     @totalVendasPorPeriodo2[3],
+                                     @totalVendasPorPeriodo2[4],
+                                     @totalVendasPorPeriodo2[5],
+                                     @totalVendasPorPeriodo2[6],
+                                     @totalVendasPorPeriodo2[7],
+                                     @totalVendasPorPeriodo2[8],
+                                     @totalVendasPorPeriodo2[9],
+                                     @totalVendasPorPeriodo2[10],
+                                     @totalVendasPorPeriodo2[11],
+                                     @totalVendasPorPeriodo2[12],
+                                     @totalVendasPorPeriodo2[13],
+                                     @totalVendasPorPeriodo2[14],
+                                     @totalVendasPorPeriodo2[15],
+                                     @totalVendasPorPeriodo2[16],
+                                     @totalVendasPorPeriodo2[17],
+                                     @totalVendasPorPeriodo2[18],
+                                     @totalVendasPorPeriodo2[19],
+                                     @totalVendasPorPeriodo2[20],
+                                     @totalVendasPorPeriodo2[21],
+                                     @totalVendasPorPeriodo2[22],
+                                     @totalVendasPorPeriodo2[23],
+                                     @totalVendasPorPeriodo2[24],
+                                     @totalVendasPorPeriodo2[25],
+                                     @totalVendasPorPeriodo2[26],
+                                     @totalVendasPorPeriodo2[27],
+                                     @totalVendasPorPeriodo2[28],
+                                     @totalVendasPorPeriodo2[29]];
+
     </script>
-    <script src="~/src/js/dashboard.js"></script>
+    @*<script src="~/src/js/dashboard.js"></script>*@
+    <script src="~/src/js/dashboard2.js"></script>
 
-@*    <script>
-        (function (factory) {
-            typeof define === 'function' && define.amd ? define(factory) :
-                factory();
-        })((function () {
-            'use strict';
-
-            // import * as echarts from 'echarts';
-            const { merge } = window._;
-
-            // form config.js
-            const echartSetOption = (
-                chart,
-                userOptions,
-                getDefaultOptions,
-                responsiveOptions
-            ) => {
-                const { breakpoints, resize } = window.phoenix.utils;
-                const handleResize = options => {
-                    Object.keys(options).forEach(item => {
-                        if (window.innerWidth > breakpoints[item]) {
-                            chart.setOption(options[item]);
-                        }
-                    });
-                };
-
-                const themeController = document.body;
-                // Merge user options with lodash
-                chart.setOption(merge(getDefaultOptions(), userOptions));
-
-                resize(() => {
-                    chart.resize();
-                    if (responsiveOptions) {
-                        handleResize(responsiveOptions);
-                    }
-                });
-                if (responsiveOptions) {
-                    handleResize(responsiveOptions);
-                }
-
-                themeController.addEventListener(
-                    'clickControl',
-                    ({ detail: { control } }) => {
-                        if (control === 'phoenixTheme') {
-                            chart.setOption(window._.merge(getDefaultOptions(), userOptions));
-                        }
-                    }
-                );
-            };
-            // -------------------end config.js--------------------
-
-            const resizeEcharts = () => {
-                const $echarts = document.querySelectorAll('[data-echart-responsive]');
-
-                if ($echarts.length > 0) {
-                    $echarts.forEach(item => {
-                        const echartInstance = echarts.getInstanceByDom(item);
-                        echartInstance?.resize();
-                    });
-                }
-            };
-
-            const navbarVerticalToggle = document.querySelector('.navbar-vertical-toggle');
-            navbarVerticalToggle &&
-                navbarVerticalToggle.addEventListener('navbar.vertical.toggle', e => {
-                    return resizeEcharts();
-                });
-
-            const echartTabs = document.querySelectorAll('[data-tab-has-echarts]');
-            echartTabs &&
-                echartTabs.forEach(tab => {
-                    tab.addEventListener('shown.bs.tab', e => {
-                        const el = e.target;
-                        const { hash } = el;
-                        const id = hash ? hash : el.dataset.bsTarget;
-                        const content = document.getElementById(id.substring(1));
-                        const chart = content?.querySelector('[data-echart-tab]');
-                        chart && window.echarts.init(chart).resize();
-                    });
-                });
-
-            const tooltipFormatter = (params, dateFormatter = 'MMM DD') => {
-                let tooltipItem = ``;
-                params.forEach(el => {
-                    tooltipItem += `<div class='ms-1'>
-                <h6 class="text-700"><span class="fas fa-circle me-1 fs--2" style="color:${el.borderColor ? el.borderColor : el.color
-                        }"></span>
-                  ${el.seriesName} : ${typeof el.value === 'object' ? el.value[1] : el.value
-                        }
-                </h6>
-              </div>`;
-                });
-                return `<div>
-                    <p class='mb-2 text-600'>
-                      ${window.dayjs(params[0].axisValue).isValid()
-                        ? window.dayjs(params[0].axisValue).format(dateFormatter)
-                        : params[0].axisValue
-                    }
-                    </p>
-                    ${tooltipItem}
-                  </div>`;
-            };
-
-            const basicLineChartInit = () => {
-                const { getColor, getData } = window.phoenix.utils;
-                const $chartEl = document.querySelector('.echart-line-chart-example');
-                const months = [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                    'August',
-                    'September',
-                    'October',
-                    'November',
-                    'December'
-                ];
-
-                const data = [
-                    1000, 1500, @teste, 1010, 1045, 2000, 1200, 1330, 1000, 1200, 1410, 1200
-                ];
-
-                const tooltipFormatter = params => {
-                    return `
-            <div>
-                <h6 class="fs--1 text-700 mb-0">
-                  <span class="fas fa-circle me-1" style='color:${params[0].borderColor}'></span>
-                  ${params[0].name} : ${params[0].value}
-                </h6>
-            </div>
-            `;
-                };
-
-                if ($chartEl) {
-                    const userOptions = getData($chartEl, 'echarts');
-                    const chart = window.echarts.init($chartEl);
-                    const getDefaultOptions = () => ({
-                        tooltip: {
-                            trigger: 'axis',
-                            padding: [7, 10],
-                            backgroundColor: getColor('gray-100'),
-                            borderColor: getColor('gray-300'),
-                            textStyle: { color: getColor('dark') },
-                            borderWidth: 1,
-                            transitionDuration: 0,
-                            formatter: tooltipFormatter,
-                            axisPointer: {
-                                type: 'none'
-                            }
-                        },
-                        xAxis: {
-                            type: 'category',
-                            data: months,
-                            boundaryGap: false,
-                            axisLine: {
-                                lineStyle: {
-                                    color: getColor('gray-300')
-                                }
-                            },
-                            axisTick: { show: false },
-                            axisLabel: {
-                                color: getColor('gray-400'),
-                                formatter: value => value.substring(0, 3),
-                                margin: 15
-                            },
-                            splitLine: {
-                                show: false
-                            }
-                        },
-                        yAxis: {
-                            type: 'value',
-                            splitLine: {
-                                lineStyle: {
-                                    type: 'dashed',
-                                    color: getColor('gray-200')
-                                }
-                            },
-                            boundaryGap: false,
-                            axisLabel: {
-                                show: true,
-                                color: getColor('gray-400'),
-                                margin: 15
-                            },
-                            axisTick: { show: false },
-                            axisLine: { show: false },
-                            min: 600
-                        },
-                        series: [
-                            {
-                                type: 'line',
-                                data,
-                                itemStyle: {
-                                    color: getColor('white'),
-                                    borderColor: getColor('primary'),
-                                    borderWidth: 2
-                                },
-                                lineStyle: {
-                                    color: getColor('primary')
-                                },
-                                showSymbol: false,
-                                symbol: 'circle',
-                                symbolSize: 10,
-                                smooth: false,
-                                hoverAnimation: true
-                            }
-                        ],
-                        grid: { right: '3%', left: '10%', bottom: '10%', top: '5%' }
-                    });
-                    echartSetOption(chart, userOptions, getDefaultOptions);
-                }
-            };
-
-
-
-
-
-
-            const { docReady } = window.phoenix.utils;
-
-            docReady(basicLineChartInit);
-
-
-        }));
-        //# sourceMappingURL=echarts-example.js.map
-
-    </script>*@
 }
