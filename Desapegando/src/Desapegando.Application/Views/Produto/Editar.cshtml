@@ -96,12 +96,16 @@
                                             <h5 class="mb-3 text-1000">Status do Produto</h5>
                                             <div class="flex-1">
                                                 <div class="form-check">
-                                                    <input asp-for="Ativo" class="form-check-input" id="vendaCheck" type="checkbox"/>
+                                                    <input asp-for="Ativo" class="form-check-input" id="disponivelCheck" type="checkbox"/>
                                                     <label class="form-check-label text-900 fs-0" for="vendaCheck">Disponível para Venda</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input asp-for="Desistencia" class="form-check-input" id="desistirCheck" type="checkbox" />
                                                     <label class="form-check-label text-900 fs-0" for="desistirCheck">Desistir da Venda</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input asp-for="ProdutoVendido" class="form-check-input" id="vendaCheck" type="checkbox" />
+                                                    <label class="form-check-label text-900 fs-0" for="desistirCheck">Produto Vendido</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -179,16 +183,27 @@
             $("#vendaCheck").on('change', function () {
                 if ($(this).is(':checked')) {
                     $("#desistirCheck").prop('checked', false);
+                    $("#disponivelCheck").prop('checked', false);
                 } else {
-                    $("#desistirCheck").prop('checked', true);
+                   //$("#desistirCheck").prop('checked', true);
                 }
             });
 
             $("#desistirCheck").on('change', function () {
                 if ($(this).is(':checked')) {
                     $("#vendaCheck").prop('checked', false);
+                    $("#disponivelCheck").prop('checked', false);
                 } else {
-                    $("#vendaCheck").prop('checked', true);
+                    //$("#vendaCheck").prop('checked', true);
+                }
+            });
+
+            $("#disponivelCheck").on('change', function () {
+                if ($(this).is(':checked')) {
+                    $("#vendaCheck").prop('checked', false);
+                    $("#desistirCheck").prop('checked', false);
+                } else {
+                    //$("#vendaCheck").prop('checked', true);
                 }
             });
         });

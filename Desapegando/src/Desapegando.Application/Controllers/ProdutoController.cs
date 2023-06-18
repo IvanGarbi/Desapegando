@@ -163,6 +163,11 @@ namespace Desapegando.Application.Controllers
             produtoDb.Desistencia = produtoViewModel.Desistencia;
             produtoDb.Ativo = produtoViewModel.Ativo;
 
+            if (!produtoViewModel.Ativo && !produtoViewModel.Desistencia)
+            {
+                produtoDb.DataVenda = DateTime.Now;
+            }
+
             var validator = new ProdutoValidation();
             var resultValidation = validator.Validate(produtoDb);
 

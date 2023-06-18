@@ -100,18 +100,19 @@ public class AdministradorController : MainController
         var condominos = await _condominoRepository.Read();
 
         // primeiros resultados
-        var novosCondominos = condominos.Where(x => x.Ativo == false);
+        var produtosDesistidos = produtos.Where(x => x.Desistencia == true);
         var produtosVendidos = produtos.Where(x => x.Desistencia == false && x.Ativo == false);
         var produtosDisponiveis = produtos.Where(x => x.Ativo == true);
 
         // Novos condôminos 7 dias
-        var novosCondominos7Dias = condominos.Where(x => x.Ativo == false && x.DataRegistro >= DateTime.Now.AddDays(-14)); // seria 2 semanas para comparação
+        var novosCondominos7Dias = condominos.Where(x => x.Ativo == false && x.DataRegistro >= DateTime.Now.AddMonths(-2)).ToArray(); // pegar de 2 meses para facilitar, pois a iteração da data é quem define
 
         var datas = new List<DateTime>();
         //datas = novosCondominos7Dias.Select(x => x.DataRegistro).Distinct().ToList();
-        for (int i = 0; i < 7; i++)
+        for (int i = 7; i > 0; i--)
         {
             datas.Add(DateTime.Now.AddDays(-i));
+            datas.Add(DateTime.Now.AddDays(-i).AddMonths(-1));
         }
 
         List<NovosCondominos7DiasViewModel> listanovosCondominos7DiasViewModel = new List<NovosCondominos7DiasViewModel>();
@@ -120,32 +121,37 @@ public class AdministradorController : MainController
             NovosCondominos7DiasViewModel novosCondominos7DiasViewModel = new NovosCondominos7DiasViewModel
             {
                 DataRegistro = data,
-                Quantidade = novosCondominos7Dias.Where(x => x.DataRegistro.Day == data.Day).Count()
+                Quantidade = novosCondominos7Dias.Where(x => x.DataRegistro.Day == data.Day) == null ? 0 : novosCondominos7Dias.Where(x => x.DataRegistro.Day == data.Day && x.DataRegistro.Month == data.Month).Count()
             };
 
             listanovosCondominos7DiasViewModel.Add(novosCondominos7DiasViewModel);
         }
 
+        listanovosCondominos7DiasViewModel = listanovosCondominos7DiasViewModel.OrderBy(x => x.DataRegistro).ToList();
+
         // total vendas 7 dias
-        var totalVendas7Dias = produtos.Where(x => x.Desistencia == false && x.Ativo == false && x.DataVenda >= DateTime.Now.AddDays(-7));
+        var totalVendas7Dias = produtos.Where(x => x.Desistencia == false && x.Ativo == false && x.DataVenda >= DateTime.Now.AddDays(-8));
+        datas.Clear();
+        for (int i = 7; i > 0; i--)
+        {
+            datas.Add(DateTime.Now.AddDays(-i));
+        }
         List<Vendas7DiasViewModel> listaVendas7DiasViewModel = new List<Vendas7DiasViewModel>();
         foreach (var data in datas)
         {
             Vendas7DiasViewModel vendas7DiasViewModel = new Vendas7DiasViewModel
             {
                 DataVenda = data,
-                Quantidade = totalVendas7Dias.Where(x => x.DataVenda.Value.Day == data.Day).Count()
+                Quantidade = totalVendas7Dias.Where(x => x.DataVenda.Value.Day == data.Day) == null ? 0 : totalVendas7Dias.Where(x => x.DataVenda.Value.Day == data.Day).Count()
             };
 
             listaVendas7DiasViewModel.Add(vendas7DiasViewModel);
         }
 
-        //var totalVendas7DiasAnterior = produtos.Where(x => x.Desistencia == false && x.Ativo == false && x.DataVenda >= DateTime.Now.AddMonths(-1).AddDays(-7));
-
         // total produtos 7 dias
         var totalProdutosVendidos7Dias = totalVendas7Dias;
         var totalProdutosDesistidos7Dias = produtos.Where(x => x.Desistencia == true && x.DataVenda >= DateTime.Now.AddDays(-7));
-        var totalProdutosDisponiveis7Dias = produtos.Where(x => x.Desistencia == false && x.Ativo == true && x.DataVenda >= DateTime.Now.AddDays(-7));
+        var totalProdutosDisponiveis7Dias = produtos.Where(x => x.Desistencia == false && x.Ativo == true && x.DataPublicacao >= DateTime.Now.AddDays(-7));
         var totalProdutos7Dias = totalProdutosDesistidos7Dias.Count() + totalProdutosDisponiveis7Dias.Count() + totalVendas7Dias.Count();
 
         // novas campanhas 30 dias
@@ -154,18 +160,18 @@ public class AdministradorController : MainController
         var totalCampanhas30Dias = novasCampanhasDisponiveis30Dias.Count() + novasCampanhasEncerradas30Dias.Count();
 
         DashboardViewModel dashboardViewModel = new DashboardViewModel();
-        dashboardViewModel.NovosCondominos = novosCondominos.Count();
+        dashboardViewModel.NovosCondominos = produtosDesistidos.Count();
         dashboardViewModel.ProdutosVendidos = produtosVendidos.Count();
         dashboardViewModel.ProdutosDisponiveis = produtosDisponiveis.Count();
 
         dashboardViewModel.NovosCondominos7Dias = listanovosCondominos7DiasViewModel;
         dashboardViewModel.Vendas7DiasViewModel = listaVendas7DiasViewModel;
+        
+        dashboardViewModel.TotalProdutosDesistidosUltimos7Dias = totalProdutosDesistidos7Dias.Any() == false ? 0 : ((decimal)totalProdutosDesistidos7Dias.Count() / totalProdutos7Dias) * 10000000;
+        dashboardViewModel.TotalProdutosDisponiveisUltimos7Dias = totalProdutosDisponiveis7Dias.Any() == false ? 0 : ((decimal)totalProdutosDisponiveis7Dias.Count() / totalProdutos7Dias) * 10000000;
+        dashboardViewModel.TotalProdutosVendidosUltimos7Dias = totalProdutosVendidos7Dias.Any() == false ? 0 : ((decimal)totalProdutosVendidos7Dias.Count() / totalProdutos7Dias) * 10000000;
 
-        dashboardViewModel.TotalProdutosDesistidosUltimos7Dias = (totalProdutosDesistidos7Dias.Count() / totalProdutos7Dias) * 10000000;
-        dashboardViewModel.TotalProdutosDisponiveisUltimos7Dias = (totalProdutosDisponiveis7Dias.Count() / totalProdutos7Dias) * 10000000;
-        dashboardViewModel.TotalProdutosVendidosUltimos7Dias = (totalProdutosVendidos7Dias.Count() / totalProdutos7Dias) * 10000000;
-
-        dashboardViewModel.NovasCampanhasDisponiveisUlitmos30Dias = (novasCampanhasDisponiveis30Dias.Count() / totalCampanhas30Dias) * 100;
+        dashboardViewModel.NovasCampanhasDisponiveisUlitmos30Dias = novasCampanhasDisponiveis30Dias.Any() == false ? 0 : (novasCampanhasDisponiveis30Dias.Count() / totalCampanhas30Dias) * 100;
 
         return View(dashboardViewModel);
     }

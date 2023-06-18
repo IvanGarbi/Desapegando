@@ -134,6 +134,11 @@
         if ($echartNewCustomersCharts) {
             const userOptions = getData($echartNewCustomersCharts, 'echarts');
             const chart = window.echarts.init($echartNewCustomersCharts);
+
+            var date = new Date();
+            const dataInicial = date.setDate(date.getDate() - 1);
+            const dataFinal = date.setDate(date.getDate() - 6); // se retiar o gráfico quebra kkkk
+
             const getDefaultOptions = () => ({
                 tooltip: {
                     trigger: 'axis',
@@ -152,8 +157,10 @@
                     {
                         type: 'category',
                         data: getDates(
-                            new Date('5/1/2022'),
-                            new Date('5/7/2022'),
+                            //new Date('5/1/2022'),
+                            //new Date('5/7/2022'),
+                            new Date(date),
+                            new Date(dataInicial),
                             1000 * 60 * 60 * 24
                         ),
                         show: true,
@@ -182,8 +189,10 @@
                         position: 'bottom',
                         show: true,
                         data: getDates(
-                            new Date('5/1/2022'),
-                            new Date('5/7/2022'),
+                            //new Date('5/1/2022'),
+                            //new Date('5/7/2022'),
+                            new Date(date),
+                            new Date(dataInicial),
                             1000 * 60 * 60 * 24
                         ),
                         axisLabel: {
@@ -218,7 +227,7 @@
                     {
                         type: 'line',
                         //data: [150, 100, 300, 200, 250, 180, 250],
-                        data: [novosCondominos7Dias[0], novosCondominos7Dias[1], novosCondominos7Dias[2], novosCondominos7Dias[3], novosCondominos7Dias[4], novosCondominos7Dias[5], novosCondominos7Dias[6]],
+                        data: [novosCondominos7Dias[7], novosCondominos7Dias[8], novosCondominos7Dias[9], novosCondominos7Dias[10], novosCondominos7Dias[11], novosCondominos7Dias[12], novosCondominos7Dias[13]],
                         showSymbol: false,
                         symbol: 'circle',
                         lineStyle: {
@@ -233,8 +242,8 @@
                     },
                     {
                         type: 'line',
-                        //data: [200, 150, 250, 100, 500, 400, 600],
-                        data: [novosCondominos7Dias[7], novosCondominos7Dias[8], novosCondominos7Dias[9], novosCondominos7Dias[10], novosCondominos7Dias[11], novosCondominos7Dias[12], novosCondominos7Dias[13]],
+                        //data: [200, 150, 250, 100, 500, 400, 600], Mês anterior (linha azul)
+                        data: [novosCondominos7Dias[0], novosCondominos7Dias[1], novosCondominos7Dias[2], novosCondominos7Dias[3], novosCondominos7Dias[4], novosCondominos7Dias[5], novosCondominos7Dias[6]],
                         lineStyle: {
                             width: 2,
                             color: getColor('primary')
@@ -1783,7 +1792,7 @@
                 legend: { show: false },
                 series: [
                     {
-                        name: '72%',
+                        name: Math.round(totalProdutosVDisDes7Dias[0] / 100000) + '%',//'72%',
                         type: 'pie',
                         radius: ['100%', '87%'],
                         avoidLabelOverlap: false,
@@ -1808,9 +1817,9 @@
                             //{ value: 7200000, name: 'Percentage discount' },
                             //{ value: 1800000, name: 'Fixed card discount' },
                             //{ value: 1000000, name: 'Fixed product discount' }
-                            { value: totalProdutosVDisDes7Dias[0], name: 'Percentage discount' },
-                            { value: totalProdutosVDisDes7Dias[1], name: 'Fixed card discount' },
-                            { value: totalProdutosVDisDes7Dias[2], name: 'Fixed product discount' }
+                            { value: totalProdutosVDisDes7Dias[0], name: 'Produtos Vendidos' },
+                            { value: totalProdutosVDisDes7Dias[1], name: 'Produtos Disponiveis' },
+                            { value: totalProdutosVDisDes7Dias[2], name: 'Produtos Desistidos' }
                         ]
                     }
                 ],
@@ -2034,7 +2043,7 @@
                     {
                         type: 'gauge',
                         center: ['50%', '60%'],
-                        name: 'Paying customer',
+                        name: 'Campanhas Disponiveis',
                         startAngle: 180,
                         endAngle: 0,
                         min: 0,
@@ -2104,6 +2113,10 @@
             const userOptions = getData(totalOrdersChartEl, 'echarts');
             const chart = window.echarts.init(totalOrdersChartEl);
 
+            var date = new Date();
+            const dataInicial = date.setDate(date.getDate() - 1);
+            const dataFinal = date.setDate(date.getDate()- 6);
+
             const getDefaultOptions = () => ({
                 color: getColor('primary'),
                 tooltip: {
@@ -2123,8 +2136,10 @@
                 xAxis: {
                     type: 'category',
                     data: getDates(
-                        new Date('5/1/2022'),
-                        new Date('5/7/2022'),
+                        //new Date('5/1/2022'),
+                        //new Date('5/7/2022'),
+                        new Date(dataFinal),
+                        new Date(dataInicial),
                         1000 * 60 * 60 * 24
                     ),
                     show: true,

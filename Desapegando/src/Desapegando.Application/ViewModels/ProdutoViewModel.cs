@@ -70,8 +70,11 @@ namespace Desapegando.Application.ViewModels
         [DisplayName("Desistir da Venda")]
         public bool Desistencia { get; set; }
 
-        [DisplayName("Produto Vendido")]
+        [DisplayName("Disponível para Venda")]
         public bool Ativo { get; set; }
+
+        [DisplayName("Produto Vendido")]
+        public bool ProdutoVendido { get; set; }
     }
 
     public class GetProdutoViewModel
