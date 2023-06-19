@@ -106,9 +106,7 @@ public class AdministradorController : MainController
 
         // Novos condôminos 7 dias
         var novosCondominos7Dias = condominos.Where(x => x.Ativo == false && x.DataRegistro >= DateTime.Now.AddMonths(-2)).ToArray(); // pegar de 2 meses para facilitar, pois a iteração da data é quem define
-
         var datas = new List<DateTime>();
-        //datas = novosCondominos7Dias.Select(x => x.DataRegistro).Distinct().ToList();
         for (int i = 7; i > 0; i--)
         {
             datas.Add(DateTime.Now.AddDays(-i));
@@ -159,6 +157,67 @@ public class AdministradorController : MainController
         var novasCampanhasEncerradas30Dias = campanhas.Where(x => x.Ativo == false && x.DataInicio >= DateTime.Now.AddDays(-30));
         var totalCampanhas30Dias = novasCampanhasDisponiveis30Dias.Count() + novasCampanhasEncerradas30Dias.Count();
 
+        // Produtos por período
+        var totalProdutosVendidosPeriodo = produtos.Where(x => x.Desistencia == false && x.Ativo == false && x.DataVenda >= DateTime.Now.AddMonths(-5));
+
+        // 1
+        datas.Clear();
+        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1); i.Month == (DateTime.Now.Month - 1); i = i.AddDays(1))
+        {
+            datas.Add(i);
+        }
+        List<VendasPeriodoMesViewModel> listaVendas1PeriodoMesViewModel = new List<VendasPeriodoMesViewModel>();
+        foreach (var data in datas)
+        {
+            VendasPeriodoMesViewModel vendasPeriodo1MesViewModel = new VendasPeriodoMesViewModel
+            {
+                DataVenda = data,
+                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day).Count()
+            };
+
+            listaVendas1PeriodoMesViewModel.Add(vendasPeriodo1MesViewModel);
+        }
+
+        // 2
+        datas.Clear();
+        // Loop from the first day of the month until we hit the next month, moving forward a day at a time
+        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 2, 1); i.Month == (DateTime.Now.Month - 2); i = i.AddDays(1))
+        {
+            datas.Add(i);
+        }
+        List<VendasPeriodoMesViewModel> listaVendas2PeriodoMesViewModel = new List<VendasPeriodoMesViewModel>();
+        foreach (var data in datas)
+        {
+            VendasPeriodoMesViewModel vendasPeriodo2MesViewModel = new VendasPeriodoMesViewModel
+            {
+                DataVenda = data,
+                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day).Count()
+            };
+
+            listaVendas2PeriodoMesViewModel.Add(vendasPeriodo2MesViewModel);
+        }
+
+        // 3
+        datas.Clear();
+        // Loop from the first day of the month until we hit the next month, moving forward a day at a time
+        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 3, 1); i.Month == (DateTime.Now.Month - 3); i = i.AddDays(1))
+        {
+            datas.Add(i);
+        }
+        List<VendasPeriodoMesViewModel> listaVendas3PeriodoMesViewModel = new List<VendasPeriodoMesViewModel>();
+        foreach (var data in datas)
+        {
+            VendasPeriodoMesViewModel vendasPeriodo3MesViewModel = new VendasPeriodoMesViewModel
+            {
+                DataVenda = data,
+                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day).Count()
+            };
+
+            listaVendas3PeriodoMesViewModel.Add(vendasPeriodo3MesViewModel);
+        }
+
+
+        // Adicionando na ViewModel
         DashboardViewModel dashboardViewModel = new DashboardViewModel();
         dashboardViewModel.NovosCondominos = produtosDesistidos.Count();
         dashboardViewModel.ProdutosVendidos = produtosVendidos.Count();
@@ -172,6 +231,10 @@ public class AdministradorController : MainController
         dashboardViewModel.TotalProdutosVendidosUltimos7Dias = totalProdutosVendidos7Dias.Any() == false ? 0 : ((decimal)totalProdutosVendidos7Dias.Count() / totalProdutos7Dias) * 10000000;
 
         dashboardViewModel.NovasCampanhasDisponiveisUlitmos30Dias = novasCampanhasDisponiveis30Dias.Any() == false ? 0 : (novasCampanhasDisponiveis30Dias.Count() / totalCampanhas30Dias) * 100;
+
+        dashboardViewModel.VendasPeriodo1MesViewModel = listaVendas1PeriodoMesViewModel;
+        dashboardViewModel.VendasPeriodo2MesViewModel = listaVendas2PeriodoMesViewModel;
+        dashboardViewModel.VendasPeriodo3MesViewModel = listaVendas3PeriodoMesViewModel;
 
         return View(dashboardViewModel);
     }
