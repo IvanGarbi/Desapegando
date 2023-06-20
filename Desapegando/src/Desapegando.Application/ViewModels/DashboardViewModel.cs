@@ -12,6 +12,7 @@
         public IEnumerable<VendasPeriodoMesViewModel> VendasPeriodo1MesViewModel { get; set; }
         public IEnumerable<VendasPeriodoMesViewModel> VendasPeriodo2MesViewModel { get; set; }
         public IEnumerable<VendasPeriodoMesViewModel> VendasPeriodo3MesViewModel { get; set; }
+        public IEnumerable<VendasPeriodoMesViewModel> VendasPeriodo4MesViewModel { get; set; }
 
         public decimal TotalProdutosVendidosUltimos7Dias { get; set; }
         public decimal TotalProdutosDisponiveisUltimos7Dias { get; set; }

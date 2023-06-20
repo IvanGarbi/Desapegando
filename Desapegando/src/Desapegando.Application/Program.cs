@@ -1,7 +1,9 @@
 using Desapegando.Application.Data;
 using Desapegando.Application.Services;
+using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
+using Desapegando.Business.Notifications;
 using Desapegando.Business.Services;
 using Desapegando.Data.Context;
 using Desapegando.Data.Repository;
@@ -46,6 +48,7 @@ builder.Services.AddScoped<ICampanhaRepository, CampanhaRepository>();
 builder.Services.AddScoped<ICampanhaService, CampanhaService>();
 builder.Services.AddScoped<ICampanhaImagemRepository, CampanhaImagemRepository>();
 builder.Services.AddScoped<ICampanhaImagemService, CampanhaImagemService>();
+builder.Services.AddScoped<INotificador, Notificador>();
 
 builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
 builder.Services.AddTransient<IEmailSender, AuthMessageSender>();

@@ -216,6 +216,25 @@ public class AdministradorController : MainController
             listaVendas3PeriodoMesViewModel.Add(vendasPeriodo3MesViewModel);
         }
 
+        // 4
+        datas.Clear();
+        // Loop from the first day of the month until we hit the next month, moving forward a day at a time
+        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 4, 1); i.Month == (DateTime.Now.Month - 4); i = i.AddDays(1))
+        {
+            datas.Add(i);
+        }
+        List<VendasPeriodoMesViewModel> listaVendas4PeriodoMesViewModel = new List<VendasPeriodoMesViewModel>();
+        foreach (var data in datas)
+        {
+            VendasPeriodoMesViewModel vendasPeriodo4MesViewModel = new VendasPeriodoMesViewModel
+            {
+                DataVenda = data,
+                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day).Count()
+            };
+
+            listaVendas4PeriodoMesViewModel.Add(vendasPeriodo4MesViewModel);
+        }
+
 
         // Adicionando na ViewModel
         DashboardViewModel dashboardViewModel = new DashboardViewModel();
@@ -235,6 +254,7 @@ public class AdministradorController : MainController
         dashboardViewModel.VendasPeriodo1MesViewModel = listaVendas1PeriodoMesViewModel;
         dashboardViewModel.VendasPeriodo2MesViewModel = listaVendas2PeriodoMesViewModel;
         dashboardViewModel.VendasPeriodo3MesViewModel = listaVendas3PeriodoMesViewModel;
+        dashboardViewModel.VendasPeriodo4MesViewModel = listaVendas4PeriodoMesViewModel;
 
         return View(dashboardViewModel);
     }

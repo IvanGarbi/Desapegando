@@ -2598,5 +2598,237 @@
     docReady(returningCustomerChartInit);
     docReady(payingCustomerChartInit(totalNovasCampanhas30Dias));
     docReady(totalOrdersChartInit(totalVendas));
+
+
 }));
 //# sourceMappingURL=ecommerce-dashboard.js.map
+function val() {
+    d = document.getElementById('select-gross-revenue-month').value;
+    console.log(d);
+
+    if (d == 2) {
+        totalSalesChartInit(totalVendasPeriodo, totalVendasPeriodo2);
+    }
+    else if (d == 3) {
+        totalSalesChartInit(totalVendasPeriodo, totalVendasPeriodo3);
+    }
+    else {
+        totalSalesChartInit(totalVendasPeriodo, totalVendasPeriodo4);
+    }
+}
+
+const { merge } = window._;
+const totalSalesChartInit = (totalVendasPeriodo, totalVendasPeriodo2) => {
+    const { getColor, getData, getDates } = window.phoenix.utils;
+    const $totalSalesChart = document.querySelector('.echart-total-sales-chart');
+
+    // getItemFromStore('phoenixTheme')
+
+    const dates = getDates(
+        new Date('5/1/2022'),
+        new Date('5/30/2022'),
+        1000 * 60 * 60 * 24
+    );
+
+    const currentMonthData = [
+        totalVendasPeriodo[0], totalVendasPeriodo[1], totalVendasPeriodo[2], totalVendasPeriodo[3], totalVendasPeriodo[4], totalVendasPeriodo[5], totalVendasPeriodo[6], totalVendasPeriodo[7], totalVendasPeriodo[8], totalVendasPeriodo[9], totalVendasPeriodo[10], totalVendasPeriodo[11], totalVendasPeriodo[12], totalVendasPeriodo[13], totalVendasPeriodo[14],
+        totalVendasPeriodo[15], totalVendasPeriodo[16], totalVendasPeriodo[17], totalVendasPeriodo[18], totalVendasPeriodo[19], totalVendasPeriodo[20], totalVendasPeriodo[21], totalVendasPeriodo[22], totalVendasPeriodo[23], totalVendasPeriodo[24], totalVendasPeriodo[25], totalVendasPeriodo[26], totalVendasPeriodo[27], totalVendasPeriodo[28], totalVendasPeriodo[29]
+    ];
+
+    const prevMonthData = [
+        totalVendasPeriodo2[0], totalVendasPeriodo2[1], totalVendasPeriodo2[2], totalVendasPeriodo2[3], totalVendasPeriodo2[4], totalVendasPeriodo2[5], totalVendasPeriodo2[6], totalVendasPeriodo2[7], totalVendasPeriodo2[8], totalVendasPeriodo2[9], totalVendasPeriodo2[10], totalVendasPeriodo2[11], totalVendasPeriodo2[12], totalVendasPeriodo2[13], totalVendasPeriodo2[14],
+        totalVendasPeriodo2[15], totalVendasPeriodo2[16], totalVendasPeriodo2[17], totalVendasPeriodo2[18], totalVendasPeriodo2[19], totalVendasPeriodo2[20], totalVendasPeriodo2[21], totalVendasPeriodo2[22], totalVendasPeriodo2[23], totalVendasPeriodo2[24], totalVendasPeriodo2[25], totalVendasPeriodo2[26], totalVendasPeriodo2[27], totalVendasPeriodo2[28], totalVendasPeriodo2[29]
+    ];
+
+    const tooltipFormatter = params => {
+        const currentDate = window.dayjs(params[0].axisValue);
+        const prevDate = window.dayjs(params[0].axisValue).subtract(1, 'month');
+
+        const result = params.map((param, index) => ({
+            value: param.value,
+            date: index > 0 ? prevDate : currentDate,
+            color: param.color
+        }));
+
+        let tooltipItem = ``;
+        result.forEach((el, index) => {
+            tooltipItem += `<h6 class="fs--1 text-700 ${index > 0 && 'mb-0'
+                }"><span class="fas fa-circle me-2" style="color:${el.color}"></span>
+      ${el.date.format('MMM DD')} : ${el.value}
+    </h6>`;
+        });
+        return `<div class='ms-1'>
+              ${tooltipItem}
+            </div>`;
+    };
+
+    if ($totalSalesChart) {
+        const userOptions = getData($totalSalesChart, 'echarts');
+        const chart = window.echarts.init($totalSalesChart);
+
+        const getDefaultOptions = () => ({
+            color: [getColor('primary'), getColor('info')],
+            tooltip: {
+                trigger: 'axis',
+                padding: 10,
+                backgroundColor: getColor('gray-100'),
+                borderColor: getColor('gray-300'),
+                textStyle: { color: getColor('dark') },
+                borderWidth: 1,
+                transitionDuration: 0,
+                axisPointer: {
+                    type: 'none'
+                },
+                formatter: tooltipFormatter
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: dates,
+                    axisLabel: {
+                        formatter: value => window.dayjs(value).format('DD MMM'),
+                        interval: 13,
+                        showMinLabel: true,
+                        showMaxLabel: false,
+                        color: getColor('gray-800'),
+                        align: 'left',
+                        fontFamily: 'Nunito Sans',
+                        fontWeight: 600,
+                        fontSize: 12.8
+                    },
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            color: getColor('gray-200')
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    splitLine: {
+                        show: true,
+                        interval: 0,
+                        lineStyle: {
+                            color:
+                                window.config.config.phoenixTheme === 'dark'
+                                    ? getColor('gray-100')
+                                    : getColor('gray-200')
+                        }
+                    },
+                    boundaryGap: false
+                },
+                {
+                    type: 'category',
+                    position: 'bottom',
+                    data: dates,
+                    axisLabel: {
+                        formatter: value => window.dayjs(value).format('DD MMM'),
+                        interval: 130,
+                        showMaxLabel: true,
+                        showMinLabel: false,
+                        color: getColor('gray-800'),
+                        align: 'right',
+                        fontFamily: 'Nunito Sans',
+                        fontWeight: 600,
+                        fontSize: 12.8
+                    },
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                    boundaryGap: false
+                }
+            ],
+            yAxis: {
+                position: 'right',
+                axisPointer: { type: 'none' },
+                axisTick: 'none',
+                splitLine: {
+                    show: false
+                },
+                axisLine: { show: false },
+                axisLabel: { show: false }
+            },
+            series: [
+                {
+                    name: 'd',
+                    type: 'line',
+                    // data: Array.from(Array(30).keys()).map(() =>
+                    //   getRandomNumber(100, 300)
+                    // ),
+                    data: currentMonthData,
+                    showSymbol: false,
+                    symbol: 'circle'
+                },
+                {
+                    name: 'e',
+                    type: 'line',
+                    // data: Array.from(Array(30).keys()).map(() =>
+                    //   getRandomNumber(100, 300)
+                    // ),
+                    data: prevMonthData,
+                    // symbol: 'none',
+                    lineStyle: {
+                        type: 'dashed',
+                        width: 1,
+                        color: getColor('info')
+                    },
+                    showSymbol: false,
+                    symbol: 'circle'
+                }
+            ],
+            grid: {
+                right: 2,
+                left: 5,
+                bottom: '20px',
+                top: '2%',
+                containLabel: false
+            },
+            animation: false
+        });
+        echartSetOption(chart, userOptions, getDefaultOptions);
+    }
+};
+const echartSetOption = (
+    chart,
+    userOptions,
+    getDefaultOptions,
+    responsiveOptions
+) => {
+    const { breakpoints, resize } = window.phoenix.utils;
+    const handleResize = options => {
+        Object.keys(options).forEach(item => {
+            if (window.innerWidth > breakpoints[item]) {
+                chart.setOption(options[item]);
+            }
+        });
+    };
+
+    const themeController = document.body;
+    // Merge user options with lodash
+    chart.setOption(merge(getDefaultOptions(), userOptions));
+
+    resize(() => {
+        chart.resize();
+        if (responsiveOptions) {
+            handleResize(responsiveOptions);
+        }
+    });
+    if (responsiveOptions) {
+        handleResize(responsiveOptions);
+    }
+
+    themeController.addEventListener(
+        'clickControl',
+        ({ detail: { control } }) => {
+            if (control === 'phoenixTheme') {
+                chart.setOption(window._.merge(getDefaultOptions(), userOptions));
+            }
+        }
+    );
+};

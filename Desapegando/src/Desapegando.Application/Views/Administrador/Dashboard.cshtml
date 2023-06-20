@@ -4,26 +4,156 @@
     Layout = "_Layout";
 }
 @{
-    int[] teste = {1100, 1500, 1600 };
+    var mes1 = DateTime.Now.AddMonths(-1);
+    var mes2 = DateTime.Now.AddMonths(-2);
+    var mes3 = DateTime.Now.AddMonths(-3);
+
+    var mes1Ano = DateTime.Now.Year;
+    var mes2Ano = DateTime.Now.Year;
+    var mes3Ano = DateTime.Now.Year;
+
+    var mes1Dias = DateTime.DaysInMonth(DateTime.Now.Year, mes1.Month);
+    var mes2Dias = DateTime.DaysInMonth(DateTime.Now.Year, mes2.Month);
+    var mes3Dias = DateTime.DaysInMonth(DateTime.Now.Year, mes3.Month);
+
 
     int produtosDesistidos = Model.NovosCondominos;
     int produtosVendidos = Model.ProdutosVendidos;
     int produtosParaVender = Model.ProdutosDisponiveis;
 
-    int totalVendasPeriodo = 100;
+    //int totalVendasPeriodo = 100;
     Random randNum = new Random();
-    int[] totalVendasPorPeriodo = new int[30];
-    for (int i = 0; i < 30; i++)
+    //int[] totalVendasPorPeriodo = new int[30];
+    //for (int i = 0; i < 30; i++)
+    //{
+    //    totalVendasPorPeriodo[i] = randNum.Next(150);
+    //}
+
+    var totalVendasPeriodo1 = Model.VendasPeriodo1MesViewModel.ToArray();
+    var totalVendasPeriodo2 = Model.VendasPeriodo2MesViewModel.ToArray();
+    var totalVendasPeriodo3 = Model.VendasPeriodo3MesViewModel.ToArray();
+    var totalVendasPeriodo4 = Model.VendasPeriodo4MesViewModel.ToArray();
+    int[] totalVendasPorPeriodo = { totalVendasPeriodo1[0].Quantidade,
+                                    totalVendasPeriodo1[1].Quantidade,
+                                    totalVendasPeriodo1[2].Quantidade,
+                                    totalVendasPeriodo1[3].Quantidade,
+                                    totalVendasPeriodo1[4].Quantidade,
+                                    totalVendasPeriodo1[5].Quantidade,
+                                    totalVendasPeriodo1[6].Quantidade,
+                                    totalVendasPeriodo1[7].Quantidade,
+                                    totalVendasPeriodo1[8].Quantidade,
+                                    totalVendasPeriodo1[9].Quantidade,
+                                    totalVendasPeriodo1[10].Quantidade,
+                                    totalVendasPeriodo1[11].Quantidade,
+                                    totalVendasPeriodo1[12].Quantidade,
+                                    totalVendasPeriodo1[13].Quantidade,
+                                    totalVendasPeriodo1[14].Quantidade,
+                                    totalVendasPeriodo1[15].Quantidade,
+                                    totalVendasPeriodo1[16].Quantidade,
+                                    totalVendasPeriodo1[17].Quantidade,
+                                    totalVendasPeriodo1[18].Quantidade,
+                                    totalVendasPeriodo1[19].Quantidade,
+                                    totalVendasPeriodo1[20].Quantidade,
+                                    totalVendasPeriodo1[21].Quantidade,
+                                    totalVendasPeriodo1[22].Quantidade,
+                                    totalVendasPeriodo1[23].Quantidade,
+                                    totalVendasPeriodo1[24].Quantidade,
+                                    totalVendasPeriodo1[25].Quantidade,
+                                    totalVendasPeriodo1[26].Quantidade,
+                                    mes1Dias >= 28 ? totalVendasPeriodo1[27].Quantidade : 0,
+                                    mes1Dias >= 29 ? totalVendasPeriodo1[28].Quantidade : 0,
+                                    mes1Dias >= 30 ? totalVendasPeriodo1[29].Quantidade : 0,
+                                    mes1Dias >= 31 ? totalVendasPeriodo1[30].Quantidade : 0
+
+    };
+
+    //    int[] totalVendasPorPeriodo2 = { totalVendasPeriodo2[0].Quantidade,
+    //                                     totalVendasPeriodo2[1].Quantidade,
+    //                                     totalVendasPeriodo2[2].Quantidade,
+    //                                     totalVendasPeriodo2[3].Quantidade,
+    //                                     totalVendasPeriodo2[4].Quantidade,
+    //                                     totalVendasPeriodo2[5].Quantidade,
+    //                                     totalVendasPeriodo2[6].Quantidade,
+    //                                     totalVendasPeriodo2[7].Quantidade,
+    //                                     totalVendasPeriodo2[8].Quantidade,
+    //                                     totalVendasPeriodo2[9].Quantidade,
+    //                                     totalVendasPeriodo2[10].Quantidade,
+    //                                     totalVendasPeriodo2[11].Quantidade,
+    //                                     totalVendasPeriodo2[12].Quantidade,
+    //                                     totalVendasPeriodo2[13].Quantidade,
+    //                                     totalVendasPeriodo2[14].Quantidade,
+    //                                     totalVendasPeriodo2[15].Quantidade,
+    //                                     totalVendasPeriodo2[16].Quantidade,
+    //                                     totalVendasPeriodo2[17].Quantidade,
+    //                                     totalVendasPeriodo2[18].Quantidade,
+    //                                     totalVendasPeriodo2[19].Quantidade,
+    //                                     totalVendasPeriodo2[20].Quantidade,
+    //                                     totalVendasPeriodo2[21].Quantidade,
+    //                                     totalVendasPeriodo2[22].Quantidade,
+    //                                     totalVendasPeriodo2[23].Quantidade,
+    //                                     totalVendasPeriodo2[24].Quantidade,
+    //                                     totalVendasPeriodo2[25].Quantidade,
+    //                                     totalVendasPeriodo2[26].Quantidade,
+    //                                     mes2Dias >= 28 ? totalVendasPeriodo2[27].Quantidade : 0,
+    //                                     mes2Dias >= 29 ? totalVendasPeriodo2[28].Quantidade : 0,
+    //                                     mes2Dias >= 30 ? totalVendasPeriodo2[29].Quantidade : 0,
+    //                                     mes2Dias >= 31 ? totalVendasPeriodo2[30].Quantidade : 0
+    //};
+
+    //int[] totalVendasPorPeriodo3 = { totalVendasPeriodo3[0].Quantidade,
+    //                                 totalVendasPeriodo3[1].Quantidade,
+    //                                 totalVendasPeriodo3[2].Quantidade,
+    //                                 totalVendasPeriodo3[3].Quantidade,
+    //                                 totalVendasPeriodo3[4].Quantidade,
+    //                                 totalVendasPeriodo3[5].Quantidade,
+    //                                 totalVendasPeriodo3[6].Quantidade,
+    //                                 totalVendasPeriodo3[7].Quantidade,
+    //                                 totalVendasPeriodo3[8].Quantidade,
+    //                                 totalVendasPeriodo3[9].Quantidade,
+    //                                 totalVendasPeriodo3[10].Quantidade,
+    //                                 totalVendasPeriodo3[11].Quantidade,
+    //                                 totalVendasPeriodo3[12].Quantidade,
+    //                                 totalVendasPeriodo3[13].Quantidade,
+    //                                 totalVendasPeriodo3[14].Quantidade,
+    //                                 totalVendasPeriodo3[15].Quantidade,
+    //                                 totalVendasPeriodo3[16].Quantidade,
+    //                                 totalVendasPeriodo3[17].Quantidade,
+    //                                 totalVendasPeriodo3[18].Quantidade,
+    //                                 totalVendasPeriodo3[19].Quantidade,
+    //                                 totalVendasPeriodo3[20].Quantidade,
+    //                                 totalVendasPeriodo3[21].Quantidade,
+    //                                 totalVendasPeriodo3[22].Quantidade,
+    //                                 totalVendasPeriodo3[23].Quantidade,
+    //                                 totalVendasPeriodo3[24].Quantidade,
+    //                                 totalVendasPeriodo3[25].Quantidade,
+    //                                 totalVendasPeriodo3[26].Quantidade,
+    //                                 mes3Dias >= 28 ? totalVendasPeriodo3[27].Quantidade : 0,
+    //                                 mes3Dias >= 29 ? totalVendasPeriodo3[28].Quantidade : 0,
+    //                                 mes3Dias >= 30 ? totalVendasPeriodo3[29].Quantidade : 0,
+    //                                 mes3Dias >= 31 ? totalVendasPeriodo3[30].Quantidade : 0
+
+    //};
+
+
+
+
+    int[] totalVendasPorPeriodo2 = new int[31];
+    for (int i = 0; i < 31; i++)
     {
-        totalVendasPorPeriodo[i] = randNum.Next(150);
+        totalVendasPorPeriodo2[i] = randNum.Next(10);
     }
 
-    int[] totalVendasPorPeriodo2 = new int[30];
-    for (int i = 0; i < 30; i++)
+    int[] totalVendasPorPeriodo3 = new int[31];
+    for (int i = 0; i < 31; i++)
     {
-        totalVendasPorPeriodo2[i] = randNum.Next(150);
+        totalVendasPorPeriodo3[i] = randNum.Next(10);
     }
 
+    int[] totalVendasPorPeriodo4 = new int[31];
+    for (int i = 0; i < 31; i++)
+    {
+        totalVendasPorPeriodo4[i] = randNum.Next(10);
+    }
 
     var vendas7DiasViewModelArray = Model.Vendas7DiasViewModel.ToArray();
     int valorProduto = 0;
@@ -125,10 +255,10 @@
                             <p class="text-700 lh-sm mb-0">Por período</p>
                         </div>
                         <div class="col-8 col-sm-4">
-                            <select class="form-select form-select-sm mt-2" id="select-gross-revenue-month">
-                                <option>Mar 1 - 31, 2022</option>
-                                <option>April 1 - 30, 2022</option>
-                                <option>May 1 - 31, 2022</option>
+                            <select class="form-select form-select-sm mt-2" id="select-gross-revenue-month" onchange="val()">
+                                <option value="1">@mes1.ToString("MMM")  1 - @mes1Dias, @mes1Ano</option>
+                                <option value="2">@mes2.ToString("MMM") 1 - @mes2Dias, @mes2Ano</option>
+                                <option value="3">@mes3.ToString("MMM") 1 - @mes3Dias, @mes3Ano</option>
                             </select>
                         </div>
                     </div>
@@ -266,7 +396,8 @@
 @*    <script src="~/public/assets/js/ecommerce-dashboard.js"></script>*@
 
     <script>
-        const dados = [@teste[0], @teste[1], @teste[2]];
+
+       
 
         const totalVendas = [@totalVendasUltimos7Dias[0], 
                              @totalVendasUltimos7Dias[1], 
@@ -327,7 +458,8 @@
                                     @totalVendasPorPeriodo[26],
                                     @totalVendasPorPeriodo[27],
                                     @totalVendasPorPeriodo[28],
-                                    @totalVendasPorPeriodo[29]];
+                                    @totalVendasPorPeriodo[29],
+                                    @totalVendasPorPeriodo[30]];
 
         const totalVendasPeriodo2 = [@totalVendasPorPeriodo2[0],
                                      @totalVendasPorPeriodo2[1],
@@ -358,7 +490,72 @@
                                      @totalVendasPorPeriodo2[26],
                                      @totalVendasPorPeriodo2[27],
                                      @totalVendasPorPeriodo2[28],
-                                     @totalVendasPorPeriodo2[29]];
+                                     @totalVendasPorPeriodo2[29],
+                                     @totalVendasPorPeriodo2[30]];
+
+        const totalVendasPeriodo3 = [@totalVendasPorPeriodo3[0],
+                                     @totalVendasPorPeriodo3[1],
+                                     @totalVendasPorPeriodo3[2],
+                                     @totalVendasPorPeriodo3[3],
+                                     @totalVendasPorPeriodo3[4],
+                                     @totalVendasPorPeriodo3[5],
+                                     @totalVendasPorPeriodo3[6],
+                                     @totalVendasPorPeriodo3[7],
+                                     @totalVendasPorPeriodo3[8],
+                                     @totalVendasPorPeriodo3[9],
+                                     @totalVendasPorPeriodo3[10],
+                                     @totalVendasPorPeriodo3[11],
+                                     @totalVendasPorPeriodo3[12],
+                                     @totalVendasPorPeriodo3[13],
+                                     @totalVendasPorPeriodo3[14],
+                                     @totalVendasPorPeriodo3[15],
+                                     @totalVendasPorPeriodo3[16],
+                                     @totalVendasPorPeriodo3[17],
+                                     @totalVendasPorPeriodo3[18],
+                                     @totalVendasPorPeriodo3[19],
+                                     @totalVendasPorPeriodo3[20],
+                                     @totalVendasPorPeriodo3[21],
+                                     @totalVendasPorPeriodo3[22],
+                                     @totalVendasPorPeriodo3[23],
+                                     @totalVendasPorPeriodo3[24],
+                                     @totalVendasPorPeriodo3[25],
+                                     @totalVendasPorPeriodo3[26],
+                                     @totalVendasPorPeriodo3[27],
+                                     @totalVendasPorPeriodo3[28],
+                                     @totalVendasPorPeriodo3[29],
+                                     @totalVendasPorPeriodo3[30]];
+
+        const totalVendasPeriodo4 = [@totalVendasPorPeriodo4[0],
+                                     @totalVendasPorPeriodo4[1],
+                                     @totalVendasPorPeriodo4[2],
+                                     @totalVendasPorPeriodo4[3],
+                                     @totalVendasPorPeriodo4[4],
+                                     @totalVendasPorPeriodo4[5],
+                                     @totalVendasPorPeriodo4[6],
+                                     @totalVendasPorPeriodo4[7],
+                                     @totalVendasPorPeriodo4[8],
+                                     @totalVendasPorPeriodo4[9],
+                                     @totalVendasPorPeriodo4[10],
+                                     @totalVendasPorPeriodo4[11],
+                                     @totalVendasPorPeriodo4[12],
+                                     @totalVendasPorPeriodo4[13],
+                                     @totalVendasPorPeriodo4[14],
+                                     @totalVendasPorPeriodo4[15],
+                                     @totalVendasPorPeriodo4[16],
+                                     @totalVendasPorPeriodo4[17],
+                                     @totalVendasPorPeriodo4[18],
+                                     @totalVendasPorPeriodo4[19],
+                                     @totalVendasPorPeriodo4[20],
+                                     @totalVendasPorPeriodo4[21],
+                                     @totalVendasPorPeriodo4[22],
+                                     @totalVendasPorPeriodo4[23],
+                                     @totalVendasPorPeriodo4[24],
+                                     @totalVendasPorPeriodo4[25],
+                                     @totalVendasPorPeriodo4[26],
+                                     @totalVendasPorPeriodo4[27],
+                                     @totalVendasPorPeriodo4[28],
+                                     @totalVendasPorPeriodo4[29],
+                                     @totalVendasPorPeriodo4[30]];
 
     </script>
     @*<script src="~/src/js/dashboard.js"></script>*@
