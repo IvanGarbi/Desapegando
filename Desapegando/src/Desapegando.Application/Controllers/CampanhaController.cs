@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Desapegando.Application.ViewModels;
+using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
+using Desapegando.Business.Notifications;
 using Desapegando.Business.Validations;
 using Desapegando.Data.Repository;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +20,12 @@ namespace Desapegando.Application.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IMapper _mapper;
 
-        public CampanhaController(ICampanhaRepository campanhaRepository, ICampanhaService campanhaService, IMapper mapper, UserManager<IdentityUser> userManager, ICampanhaImagemService campanhaImagemService)
+        public CampanhaController(ICampanhaRepository campanhaRepository, 
+                                  ICampanhaService campanhaService,
+                                  IMapper mapper, 
+                                  UserManager<IdentityUser> userManager, 
+                                  ICampanhaImagemService campanhaImagemService,
+                                  INotificador notificador) : base(notificador)
         {
             _campanhaRepository = campanhaRepository;
             _campanhaService = campanhaService;
@@ -40,7 +47,7 @@ namespace Desapegando.Application.Controllers
                 return View(campanhaViewModel);
             }
 
-            if (campanhaViewModel.ImagensUpload.Count > 4)
+            if (campanhaViewModel.ImagensUpload.Any() && campanhaViewModel.ImagensUpload.Count > 4)
             {
                 ModelState.AddModelError("ImagensUpload", "Só é possível adicionar no máximo 4 imagens.");
                 return View(campanhaViewModel);
@@ -50,43 +57,39 @@ namespace Desapegando.Application.Controllers
 
             campanha.CondominoId = Guid.Parse(_userManager.GetUserId(this.User));
 
-            var validator = new CampanhaValidation();
-            var resultValidation = validator.Validate(campanha);
-
-            if (!resultValidation.IsValid)
-            {
-                foreach (var error in resultValidation.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-
-                return View(campanhaViewModel);
-            }
-
             await _campanhaService.Create(campanha);
 
-            foreach (var imagem in campanhaViewModel.ImagensUpload)
+            if (!_notificador.TemNotificacao())
             {
-                var imgPrefixo = Guid.NewGuid() + "_";
-                if (!await UploadArquivo(imagem, imgPrefixo))
+                foreach (var imagem in campanhaViewModel.ImagensUpload)
                 {
-                    await _campanhaService.Delete(campanha.Id);
+                    var imgPrefixo = Guid.NewGuid() + "_";
+                    if (!await UploadArquivo(imagem, imgPrefixo))
+                    {
+                        await _campanhaService.Delete(campanha.Id);
 
-                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
 
-                    return View(campanhaViewModel);
+                        return View(campanhaViewModel);
+                    }
+
+                    var campanhaImagem = new CampanhaImagem();
+                    campanhaImagem.FileName = imgPrefixo + imagem.FileName;
+                    campanhaImagem.CampanhaId = campanha.Id;
+
+                    await _campanhaImagemService.Create(campanhaImagem);
+
                 }
 
-                var campanhaImagem = new CampanhaImagem();
-                campanhaImagem.FileName = imgPrefixo + imagem.FileName;
-                campanhaImagem.CampanhaId = campanha.Id;
-
-                await _campanhaImagemService.Create(campanhaImagem);
-
+                return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("Index", "Home");
+            foreach (var error in _notificador.GetNotifications())
+            {
+                ModelState.AddModelError(error.Propriedade, error.Mensagem);
+            }
 
+            return View(campanhaViewModel);
         }
 
         public async Task<IActionResult> MinhasCampanhas()
@@ -141,10 +144,7 @@ namespace Desapegando.Application.Controllers
                 return View(campanhaViewModel);
             }
 
-
             var campanhaDb = await _campanhaRepository.ReadById(campanhaViewModel.Id);
-
-            var listaCampanhaImagensDb = campanhaDb.CampanhaImagens;
 
             if (campanhaDb == null)
             {
@@ -162,66 +162,62 @@ namespace Desapegando.Application.Controllers
             campanhaDb.NomeResponsavel = campanhaViewModel.NomeResponsavel;
             campanhaDb.TelefoneResponsavel = campanhaViewModel.TelefoneResponsavel;
 
-            var validator = new CampanhaValidation();
-            var resultValidation = validator.Validate(campanhaDb);
-
-            if (!resultValidation.IsValid)
-            {
-                foreach (var error in resultValidation.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-
-                return View(campanhaViewModel);
-            }
-
             await _campanhaService.Update(campanhaDb);
 
-            if (novasImagens)
+
+            if (!_notificador.TemNotificacao())
             {
-                var imagensAntigasIdLista = new List<Guid>();
-                // Deletando imagens antigas
-                foreach (var imagem in listaCampanhaImagensDb)
+                if (novasImagens)
                 {
-                    bool result = await DeletarArquivo(imagem.FileName);
-
-                    if (!result)
+                    var listaCampanhaImagensDb = campanhaDb.CampanhaImagens;
+                    var imagensAntigasIdLista = new List<Guid>();
+                    // Deletando imagens antigas
+                    foreach (var imagem in listaCampanhaImagensDb)
                     {
-                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                        bool result = await DeletarArquivo(imagem.FileName);
+
+                        if (!result)
+                        {
+                            ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                        }
+
+                        imagensAntigasIdLista.Add(imagem.Id);
                     }
 
-                    imagensAntigasIdLista.Add(imagem.Id);
-
-
-                }
-
-                // Adicionando as imagens novas
-                foreach (var imagem in campanhaViewModel.ImagensUpload)
-                {
-                    var imgPrefixo = Guid.NewGuid() + "_";
-                    if (!await UploadArquivo(imagem, imgPrefixo))
+                    // Adicionando as imagens novas
+                    foreach (var imagem in campanhaViewModel.ImagensUpload)
                     {
-                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                        var imgPrefixo = Guid.NewGuid() + "_";
+                        if (!await UploadArquivo(imagem, imgPrefixo))
+                        {
+                            ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
 
-                        return View(campanhaViewModel);
+                            return View(campanhaViewModel);
+                        }
+
+                        var campanhaImagem = new CampanhaImagem();
+                        campanhaImagem.FileName = imgPrefixo + imagem.FileName;
+                        campanhaImagem.CampanhaId = campanhaDb.Id;
+
+                        await _campanhaImagemService.Create(campanhaImagem);
                     }
 
-                    var campanhaImagem = new CampanhaImagem();
-                    campanhaImagem.FileName = imgPrefixo + imagem.FileName;
-                    campanhaImagem.CampanhaId = campanhaDb.Id;
+                    foreach (var imagemId in imagensAntigasIdLista)
+                    {
+                        await _campanhaImagemService.Delete(imagemId);
+                    }
 
-                    await _campanhaImagemService.Create(campanhaImagem);
                 }
 
-                foreach (var imagemId in imagensAntigasIdLista)
-                {
-                    await _campanhaImagemService.Delete(imagemId);
-                }
-
+                return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("Index", "Home");
+            foreach (var error in _notificador.GetNotifications())
+            {
+                ModelState.AddModelError(error.Propriedade, error.Mensagem);
+            }
 
+            return View(campanhaViewModel);
         }
 
         public async Task<IActionResult> Visualizar(Guid id)
@@ -240,18 +236,14 @@ namespace Desapegando.Application.Controllers
 
         public async Task<IActionResult> Deletar(Guid id)
         {
-            var campanhaDb = await _campanhaRepository.ReadById(id);
+            await _campanhaService.Delete(id);
 
-            if (campanhaDb == null)
+            if (!_notificador.TemNotificacao())
             {
-                return View();
+                return RedirectToAction("MinhasCampanhas");
             }
 
-            campanhaDb.Ativo = false;
-
-            await _campanhaService.Update(campanhaDb);
-
-            return RedirectToAction("MinhasCampanhas");
+            return View();
         }
 
         private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Desapegando.Application.ViewModels;
+using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
 using Desapegando.Business.Validations;
@@ -14,7 +15,10 @@ public class RegisterController : MainController
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IMapper _mapper;
 
-    public RegisterController(UserManager<IdentityUser> userManager, ICondominoService condominoService, IMapper mapper)
+    public RegisterController(UserManager<IdentityUser> userManager, 
+                              ICondominoService condominoService, 
+                              IMapper mapper, 
+                              INotificador notificador) : base(notificador)
     {
         _userManager = userManager;
         _condominoService = condominoService;

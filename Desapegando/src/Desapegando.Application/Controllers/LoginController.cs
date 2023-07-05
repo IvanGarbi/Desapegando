@@ -1,4 +1,5 @@
 ﻿using Desapegando.Application.ViewModels;
+using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Models;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +13,9 @@ public class LoginController : MainController
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly ICondominoRepository _condominoRepository;
 
-    public LoginController(SignInManager<IdentityUser> signInManager, ICondominoRepository condominoRepository)
+    public LoginController(SignInManager<IdentityUser> signInManager, 
+                           ICondominoRepository condominoRepository, 
+                           INotificador notificador) : base(notificador)
     {
         _signInManager = signInManager;
         _condominoRepository = condominoRepository;

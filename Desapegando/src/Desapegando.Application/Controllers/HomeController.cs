@@ -4,8 +4,7 @@ using System.Diagnostics;
 using Desapegando.Business.Interfaces.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Desapegando.Data.Repository;
-using Desapegando.Business.Interfaces.Services;
+using Desapegando.Business.Interfaces.Notifications;
 
 namespace Desapegando.Application.Controllers
 {
@@ -17,7 +16,12 @@ namespace Desapegando.Application.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public HomeController(ICondominoRepository condominoRepository, IMapper mapper, UserManager<IdentityUser> userManager, IProdutoRepository produtoRepository, ICampanhaRepository campanhaRepository)
+        public HomeController(ICondominoRepository condominoRepository, 
+                              IMapper mapper, 
+                              UserManager<IdentityUser> userManager, 
+                              IProdutoRepository produtoRepository, 
+                              ICampanhaRepository campanhaRepository,
+                              INotificador notificador) : base(notificador)
         {
             _condominoRepository = condominoRepository;
             _mapper = mapper;
@@ -45,8 +49,6 @@ namespace Desapegando.Application.Controllers
             getHomeViewModel.GetCampanhaViewModels = campanhasViewModels.ToList();
 
             return View(getHomeViewModel);
-
-            //return View(_mapper.Map<IEnumerable<GetProdutoViewModel>>(await _produtoRepository.Read()));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

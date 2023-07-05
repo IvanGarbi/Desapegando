@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Desapegando.Application.ViewModels;
+using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
@@ -16,7 +17,11 @@ public class CondominoController : MainController
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IMapper _mapper;
 
-    public CondominoController(ICondominoRepository condominoRepository, IMapper mapper, UserManager<IdentityUser> userManager, ICondominoService condominoService)
+    public CondominoController(ICondominoRepository condominoRepository, 
+                               IMapper mapper, 
+                               UserManager<IdentityUser> userManager, 
+                               ICondominoService condominoService,
+                               INotificador notificador) : base(notificador)
     {
         _condominoRepository = condominoRepository;
         _mapper = mapper;

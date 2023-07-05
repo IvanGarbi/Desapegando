@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
 using Desapegando.Application.ViewModels;
+using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
-using Desapegando.Business.Services;
-using Desapegando.Business.Validations;
-using Desapegando.Data.Repository;
+using Desapegando.Business.Notifications;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Security.Claims;
 
 namespace Desapegando.Application.Controllers
 {
@@ -21,7 +18,12 @@ namespace Desapegando.Application.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IMapper _mapper;
 
-        public ProdutoController(IProdutoRepository produtoRepository, IProdutoService produtoService, IMapper mapper, UserManager<IdentityUser> userManager, IProdutoImagemService produtoImagemService)
+        public ProdutoController(IProdutoRepository produtoRepository,
+                                 IProdutoService produtoService, 
+                                 IMapper mapper, 
+                                 UserManager<IdentityUser> userManager, 
+                                 IProdutoImagemService produtoImagemService,
+                                 INotificador notificador) : base(notificador)
         {
             _produtoRepository = produtoRepository;
             _produtoService = produtoService;
@@ -37,14 +39,14 @@ namespace Desapegando.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Criar(/*List<IFormFile> images, */ProdutoViewModel produtoViewModel)
+        public async Task<IActionResult> Criar(ProdutoViewModel produtoViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return View(produtoViewModel);
             }
 
-            if (produtoViewModel.ImagensUpload.Count > 4)
+            if (produtoViewModel.ImagensUpload.Any() && produtoViewModel.ImagensUpload.Count > 4)
             {
                 ModelState.AddModelError("ImagensUpload", "Só é possível adicionar no máximo 4 imagens.");
                 return View(produtoViewModel);
@@ -52,46 +54,41 @@ namespace Desapegando.Application.Controllers
 
             var produto = _mapper.Map<Produto>(produtoViewModel);
 
-            produto.DataPublicacao = DateTime.Now;
             produto.CondominoId = Guid.Parse(_userManager.GetUserId(this.User));
-
-            var validator = new ProdutoValidation();
-            var resultValidation = validator.Validate(produto);
-
-            if (!resultValidation.IsValid)
-            {
-                foreach (var error in resultValidation.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-
-                return View(produtoViewModel);
-            }
 
             await _produtoService.Create(produto);
 
-            foreach (var imagem in produtoViewModel.ImagensUpload)
+            if (!_notificador.TemNotificacao())
             {
-                var imgPrefixo = Guid.NewGuid() + "_";
-                if (!await UploadArquivo(imagem, imgPrefixo))
+                foreach (var imagem in produtoViewModel.ImagensUpload)
                 {
-                    await _produtoService.Delete(produto.Id);
+                    var imgPrefixo = Guid.NewGuid() + "_";
+                    if (!await UploadArquivo(imagem, imgPrefixo))
+                    {
+                        await _produtoService.Delete(produto.Id);
 
-                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
 
-                    return View(produtoViewModel);
+                        return View(produtoViewModel);
+                    }
+
+                    var produtoImagem = new ProdutoImagem();
+                    produtoImagem.FileName = imgPrefixo + imagem.FileName;
+                    produtoImagem.ProdutoId = produto.Id;
+
+                    await _produtoImagemService.Create(produtoImagem);
+
                 }
 
-                var produtoImagem = new ProdutoImagem();
-                produtoImagem.FileName = imgPrefixo + imagem.FileName;
-                produtoImagem.ProdutoId = produto.Id;
-
-                await _produtoImagemService.Create(produtoImagem);
-
+                return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("Index", "Home");
+            foreach (var error in _notificador.GetNotifications())
+            {
+                ModelState.AddModelError(error.Propriedade, error.Mensagem);
+            }
 
+            return View(produtoViewModel);
         }
 
         public async Task<IActionResult> MeusProdutos()
@@ -148,13 +145,11 @@ namespace Desapegando.Application.Controllers
 
             var produtoDb = await _produtoRepository.ReadById(produtoViewModel.Id);
 
-            var listaProdutoImagensDb = produtoDb.ProdutoImagens;
-
             if (produtoDb == null) 
             { 
                 return View(produtoViewModel);
             }
-
+            
             produtoDb.Nome = produtoViewModel.Nome;
             produtoDb.Descricao = produtoViewModel.Descricao;
             produtoDb.Preco = produtoViewModel.Preco.Value;
@@ -168,65 +163,64 @@ namespace Desapegando.Application.Controllers
                 produtoDb.DataVenda = DateTime.Now;
             }
 
-            var validator = new ProdutoValidation();
-            var resultValidation = validator.Validate(produtoDb);
-
-            if (!resultValidation.IsValid)
-            {
-                foreach (var error in resultValidation.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-
-                return View(produtoViewModel);
-            }
-
             await _produtoService.Update(produtoDb);
 
-            if (novasImagens)
+
+            if (!_notificador.TemNotificacao())
             {
-                var imagensAntigasIdLista = new List<Guid>();
-                // Deletando imagens antigas
-                foreach (var imagem in listaProdutoImagensDb)
+                if (novasImagens)
                 {
-                    bool result = await DeletarArquivo(imagem.FileName);
-
-                    if (!result)
+                    var listaProdutoImagensDb = produtoDb.ProdutoImagens;
+                    var imagensAntigasIdLista = new List<Guid>();
+                    // Deletando imagens antigas
+                    foreach (var imagem in listaProdutoImagensDb)
                     {
-                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                        bool result = await DeletarArquivo(imagem.FileName);
+
+                        if (!result)
+                        {
+                            ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                        }
+
+                        imagensAntigasIdLista.Add(imagem.Id);
+
+
                     }
 
-                    imagensAntigasIdLista.Add(imagem.Id);
-
-                    
-                }
-
-                // Adicionando as imagens novas
-                foreach (var imagem in produtoViewModel.ImagensUpload)
-                {
-                    var imgPrefixo = Guid.NewGuid() + "_";
-                    if (!await UploadArquivo(imagem, imgPrefixo))
+                    // Adicionando as imagens novas
+                    foreach (var imagem in produtoViewModel.ImagensUpload)
                     {
-                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                        var imgPrefixo = Guid.NewGuid() + "_";
+                        if (!await UploadArquivo(imagem, imgPrefixo))
+                        {
+                            ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
 
-                        return View(produtoViewModel);
+                            return View(produtoViewModel);
+                        }
+
+                        var produtoImagem = new ProdutoImagem();
+                        produtoImagem.FileName = imgPrefixo + imagem.FileName;
+                        produtoImagem.ProdutoId = produtoDb.Id;
+
+                        await _produtoImagemService.Create(produtoImagem);
                     }
 
-                    var produtoImagem = new ProdutoImagem();
-                    produtoImagem.FileName = imgPrefixo + imagem.FileName;
-                    produtoImagem.ProdutoId = produtoDb.Id;
+                    foreach (var imagemId in imagensAntigasIdLista)
+                    {
+                        await _produtoImagemService.Delete(imagemId);
+                    }
 
-                    await _produtoImagemService.Create(produtoImagem);
                 }
 
-                foreach (var imagemId in imagensAntigasIdLista)
-                {
-                    await _produtoImagemService.Delete(imagemId);
-                }
-
+                return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("Index", "Home");
+            foreach (var error in _notificador.GetNotifications())
+            {
+                ModelState.AddModelError(error.Propriedade, error.Mensagem);
+            }
+
+            return View(produtoViewModel);
 
         }
 
@@ -293,20 +287,32 @@ namespace Desapegando.Application.Controllers
 
         public async Task<IActionResult> Deletar(Guid id)
         {
-            var produtoDb = await _produtoRepository.ReadById(id);
+            await _produtoService.Delete(id);
 
-            if (produtoDb == null)
+            if (!_notificador.TemNotificacao())
             {
-                return View();
+                return RedirectToAction("MeusProdutos");
             }
 
-            produtoDb.Ativo = false;
-
-            await _produtoService.Update(produtoDb);
-
-            return RedirectToAction("MeusProdutos");
+            return View();
         }
 
+        public async Task<IActionResult> Curtir(Guid id)
+        {
+            await _produtoService.Curtir(id);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> Descurtir(Guid id)
+        {
+            await _produtoService.Descurtir(id);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        #region MétodosPrivados
         private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)
         {
             if (arquivo.Length <= 0) return false;
@@ -345,5 +351,8 @@ namespace Desapegando.Application.Controllers
 
             return false;
         }
+
+        #endregion
+
     }
 }

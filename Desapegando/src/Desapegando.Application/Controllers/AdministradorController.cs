@@ -4,6 +4,7 @@ using Desapegando.Application.Services;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using Desapegando.Business.Interfaces.Notifications;
 
 namespace Desapegando.Application.Controllers;
 
@@ -21,7 +22,8 @@ public class AdministradorController : MainController
                                    ICondominoService condominoService, 
                                    IEmailSender emailSender, 
                                    ICampanhaRepository campanhaRepository, 
-                                   IProdutoRepository produtoRepository)
+                                   IProdutoRepository produtoRepository,
+                                   INotificador notificador) : base(notificador)
     {
         _condominoRepository = condominoRepository;
         _mapper = mapper;
@@ -35,12 +37,9 @@ public class AdministradorController : MainController
     {
         var condominosInativos = await _condominoRepository.ReadWithExpressionList(x => x.Ativo == false);
 
-        //var condominosInativos = condominos.Where(x => x.Ativo == false);
-
         return View(_mapper.Map<IEnumerable<CondominoInativoViewModel>>(condominosInativos));
     }
 
-    //[HttpPost]
     public async Task<IActionResult> AtivarCondomino(Guid id)
     {
         var condomino = await _condominoRepository.ReadById(id);
