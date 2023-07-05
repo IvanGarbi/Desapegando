@@ -49,6 +49,8 @@ builder.Services.AddScoped<ICampanhaService, CampanhaService>();
 builder.Services.AddScoped<ICampanhaImagemRepository, CampanhaImagemRepository>();
 builder.Services.AddScoped<ICampanhaImagemService, CampanhaImagemService>();
 builder.Services.AddScoped<INotificador, Notificador>();
+builder.Services.AddScoped<IProdutoCurtidaRepository, ProdutoCurtidaRepository>();
+builder.Services.AddScoped<IProdutoCurtidaService, ProdutoCurtidaService>();
 
 builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
 builder.Services.AddTransient<IEmailSender, AuthMessageSender>();

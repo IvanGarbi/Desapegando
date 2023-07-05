@@ -60,8 +60,13 @@ public class ProdutoMapping : IEntityTypeConfiguration<Produto>
             .HasColumnType("UNIQUEIDENTIFIER");
 
         builder.HasMany(x => x.ProdutoImagens)
-        .WithOne(a => a.Produto)
-        .HasForeignKey(k => k.ProdutoId);
+            .WithOne(a => a.Produto)
+            .HasForeignKey(k => k.ProdutoId);
+
+        builder.HasMany(x => x.ProdutoCurtidas)
+            .WithOne(a => a.Produto)
+            .HasForeignKey(k => k.ProdutoId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.ToTable("Produto");
     }

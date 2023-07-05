@@ -123,9 +123,24 @@
                                             <div class="d-flex flex-column justify-content-between h-100">
                                                 <div>
                                                     <div class="border border-1 rounded-3 position-relative mb-3">
-@*                                                        <button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Curtir">
-                                                            <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
-                                                        </button>*@
+                                                        @if (produto.ProdutoCurtidaViewModels.Any(x => x.ProdutoId == produto.Id && x.CondominoId == Guid.Parse(User.Claims.First().Value)))
+                                                        {
+                                                            <a asp-action="Descurtir" asp-controller="Produto" asp-route-id="@produto.Id" class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Descurtir" 
+                                                                style="color: var(--phoenix-btn-hover-color);
+                                                                       background-color: var(--phoenix-btn-hover-bg);
+                                                                       border-color: var(--phoenix-btn-hover-border-color);
+                                                                       outline: 0;
+                                                                       -webkit-box-shadow: var(--phoenix-btn-box-shadow),var(--phoenix-btn-focus-box-shadow);
+                                                                       box-shadow: var(--phoenix-btn-box-shadow),var(--phoenix-btn-focus-box-shadow);">
+                                                                <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a asp-action="Curtir" asp-controller="Produto" asp-route-id="@produto.Id" class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Curtir">
+                                                                <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
+                                                            </a>
+                                                        }
                                                         <img class="img-fluid" src="~/Imagens/@produto.ProdutoImagemViewModels[0].FileName" alt="" />
                                                     </div><a class="stretched-link text-decoration-none" asp-action="Visualizar" asp-controller="Produto" asp-route-id="@produto.Id">
                                                         <h6 class="mb-2 lh-sm line-clamp-3 product-name">@produto.Nome</h6>

@@ -59,6 +59,11 @@ public class CondominoMapping : IEntityTypeConfiguration<Condomino>
             .WithOne(a => a.Condomino)
             .HasForeignKey(k => k.CondominoId);
 
+        builder.HasMany(x => x.ProdutoCurtidas)
+            .WithOne(a => a.Condomino)
+            .HasForeignKey(k => k.CondominoId)
+            .OnDelete(DeleteBehavior.NoAction);
+
         builder.ToTable("Condomino");
     }
 }

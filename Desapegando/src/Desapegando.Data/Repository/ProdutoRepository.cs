@@ -18,6 +18,7 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
     {
         return await DbSet.AsNoTracking()
                             .Include(x => x.ProdutoImagens)
+                            .Include(y => y.ProdutoCurtidas)
                             .ToListAsync();
     }
 

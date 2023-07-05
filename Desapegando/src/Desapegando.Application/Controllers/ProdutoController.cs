@@ -14,6 +14,7 @@ namespace Desapegando.Application.Controllers
     {
         private readonly IProdutoRepository _produtoRepository;
         private readonly IProdutoService _produtoService;
+        private readonly IProdutoCurtidaService _produtoCurtidaService;
         private readonly IProdutoImagemService _produtoImagemService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IMapper _mapper;
@@ -23,6 +24,7 @@ namespace Desapegando.Application.Controllers
                                  IMapper mapper, 
                                  UserManager<IdentityUser> userManager, 
                                  IProdutoImagemService produtoImagemService,
+                                 IProdutoCurtidaService produtoCurtidaService,
                                  INotificador notificador) : base(notificador)
         {
             _produtoRepository = produtoRepository;
@@ -30,6 +32,7 @@ namespace Desapegando.Application.Controllers
             _mapper = mapper;
             _userManager = userManager;
             _produtoImagemService = produtoImagemService;
+            _produtoCurtidaService = produtoCurtidaService;
         }
 
         public async Task<IActionResult> Criar()
@@ -299,14 +302,14 @@ namespace Desapegando.Application.Controllers
 
         public async Task<IActionResult> Curtir(Guid id)
         {
-            await _produtoService.Curtir(id);
+            await _produtoCurtidaService.Curtir(id, Guid.Parse(_userManager.GetUserId(this.User)));
 
             return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Descurtir(Guid id)
         {
-            await _produtoService.Descurtir(id);
+            await _produtoCurtidaService.Descurtir(id, Guid.Parse(_userManager.GetUserId(this.User)));
 
             return RedirectToAction("Index", "Home");
         }

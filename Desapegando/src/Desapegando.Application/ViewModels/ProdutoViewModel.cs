@@ -94,6 +94,7 @@ namespace Desapegando.Application.ViewModels
         public int Curtida { get; set; }
 
         public List<ProdutoImagemViewModel> ProdutoImagemViewModels { get; set; }
+        public List<ProdutoCurtidaViewModel> ProdutoCurtidaViewModels { get; set; }
         public CondominoViewModel CondominoViewModel { get; set; }
     }
 

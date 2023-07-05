@@ -73,24 +73,6 @@ public class ProdutoService : IProdutoService, IDisposable
         await _repository.Update(produto);
     }
 
-    public async Task Curtir(Guid id)
-    {
-        var produtoDb = await _repository.ReadById(id);
-
-        produtoDb.Curtida--;
-
-        await _repository.Update(produtoDb);
-    }
-
-    public async Task Descurtir(Guid id)
-    {
-        var produtoDb = await _repository.ReadById(id);
-
-        produtoDb.Curtida++;
-
-        await _repository.Update(produtoDb);
-    }
-
     public async void Dispose()
     {
         _repository?.Dispose();

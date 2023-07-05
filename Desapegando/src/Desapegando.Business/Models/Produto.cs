@@ -20,4 +20,5 @@ public class Produto : Entity
     /* EF Relation */
     public Condomino Condomino { get; set; }
     public ICollection<ProdutoImagem> ProdutoImagens { get; set; }
+    public ICollection<ProdutoCurtida> ProdutoCurtidas { get; set; }
 }

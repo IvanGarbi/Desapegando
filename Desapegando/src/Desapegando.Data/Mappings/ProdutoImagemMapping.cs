@@ -1,5 +1,4 @@
 ﻿using Desapegando.Business.Models;
-using Desapegando.Business.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
