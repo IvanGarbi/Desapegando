@@ -4,9 +4,6 @@ using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
-using Desapegando.Business.Notifications;
-using Desapegando.Business.Validations;
-using Desapegando.Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -94,16 +91,9 @@ namespace Desapegando.Application.Controllers
 
         public async Task<IActionResult> MinhasCampanhas()
         {
-            var todosCampanhaDb = await _campanhaRepository.Read();
+            var todosCampanhaDb = await _campanhaRepository.ReadExpression(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)) && x.Ativo == true);
 
-            var minhasCampanhasDb = todosCampanhaDb.Where(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)) && x.Ativo == true);
-
-            if (minhasCampanhasDb == null)
-            {
-                return View();
-            }
-
-            var meusCampanhasDbViewModel = _mapper.Map<IEnumerable<GetCampanhaViewModel>>(minhasCampanhasDb);
+            var meusCampanhasDbViewModel = _mapper.Map<IEnumerable<GetCampanhaViewModel>>(todosCampanhaDb);
 
             return View(meusCampanhasDbViewModel);
         }
@@ -151,19 +141,9 @@ namespace Desapegando.Application.Controllers
                 return View(campanhaViewModel);
             }
 
-            campanhaDb.Nome = campanhaViewModel.Nome;
-            campanhaDb.Descricao = campanhaViewModel.Descricao;
-            campanhaDb.Ativo = campanhaViewModel.Ativo;
-            campanhaDb.NomeInstituicao = campanhaViewModel.NomeInstituicao;
-            campanhaDb.DataInicio = campanhaViewModel.DataInicio.Value;
-            campanhaDb.DataFinal = campanhaViewModel.DataFinal.Value;
-            campanhaDb.EmailResponsavel = campanhaViewModel.EmailResponsavel;
-            campanhaDb.LocalDeEncontro = campanhaViewModel.LocalDeEncontro;
-            campanhaDb.NomeResponsavel = campanhaViewModel.NomeResponsavel;
-            campanhaDb.TelefoneResponsavel = campanhaViewModel.TelefoneResponsavel;
+            MapearCampanha(campanhaDb, campanhaViewModel);
 
             await _campanhaService.Update(campanhaDb);
-
 
             if (!_notificador.TemNotificacao())
             {
@@ -246,6 +226,7 @@ namespace Desapegando.Application.Controllers
             return View();
         }
 
+        #region MétodosPrivados
         private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)
         {
             if (arquivo.Length <= 0) return false;
@@ -284,5 +265,20 @@ namespace Desapegando.Application.Controllers
 
             return false;
         }
+
+        private static void MapearCampanha(Campanha campanha, UpdateCampanhaViewModel campanhaViewModel)
+        {
+            campanha.Nome = campanhaViewModel.Nome;
+            campanha.Descricao = campanhaViewModel.Descricao;
+            campanha.Ativo = campanhaViewModel.Ativo;
+            campanha.NomeInstituicao = campanhaViewModel.NomeInstituicao;
+            campanha.DataInicio = campanhaViewModel.DataInicio.Value;
+            campanha.DataFinal = campanhaViewModel.DataFinal.Value;
+            campanha.EmailResponsavel = campanhaViewModel.EmailResponsavel;
+            campanha.LocalDeEncontro = campanhaViewModel.LocalDeEncontro;
+            campanha.NomeResponsavel = campanhaViewModel.NomeResponsavel;
+            campanha.TelefoneResponsavel = campanhaViewModel.TelefoneResponsavel;
+        }
+        #endregion
     }
 }

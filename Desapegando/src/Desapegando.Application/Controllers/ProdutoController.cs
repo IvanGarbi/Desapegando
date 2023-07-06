@@ -4,7 +4,6 @@ using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
-using Desapegando.Business.Notifications;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -96,16 +95,9 @@ namespace Desapegando.Application.Controllers
 
         public async Task<IActionResult> MeusProdutos()
         {
-            var todosProdutoDb = await _produtoRepository.Read();
+            var todosProdutoDb = await _produtoRepository.ReadExpression(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)) && x.Ativo == true);
 
-            var meusProdutosDb = todosProdutoDb.Where(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)) && x.Ativo == true);
-
-            if (meusProdutosDb == null)
-            {
-                return View();
-            }
-
-            var meusProdutosDbViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(meusProdutosDb);
+            var meusProdutosDbViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(todosProdutoDb);
 
             return View(meusProdutosDbViewModel);
         }
@@ -152,14 +144,8 @@ namespace Desapegando.Application.Controllers
             { 
                 return View(produtoViewModel);
             }
-            
-            produtoDb.Nome = produtoViewModel.Nome;
-            produtoDb.Descricao = produtoViewModel.Descricao;
-            produtoDb.Preco = produtoViewModel.Preco.Value;
-            produtoDb.EstadoProduto = produtoViewModel.EstadoProduto.Value;
-            produtoDb.Categoria = produtoViewModel.Categoria.Value;
-            produtoDb.Desistencia = produtoViewModel.Desistencia;
-            produtoDb.Ativo = produtoViewModel.Ativo;
+
+            MapearProduto(produtoDb, produtoViewModel);
 
             if (!produtoViewModel.Ativo && !produtoViewModel.Desistencia)
             {
@@ -243,9 +229,7 @@ namespace Desapegando.Application.Controllers
 
         public async Task<IActionResult> Produtos()
         {
-            var produtosDb = await _produtoRepository.Read();
-
-            produtosDb = produtosDb.Where(x => x.Ativo);
+            var produtosDb = await _produtoRepository.ReadExpression(x => x.Ativo);
 
             ViewBag.produtos = Enumerable.Empty<GetProdutoViewModel>();
 
@@ -260,7 +244,6 @@ namespace Desapegando.Application.Controllers
 
 
             return View();
-            //return View(produtosViewModel);
         }
 
         [HttpPost]
@@ -285,7 +268,6 @@ namespace Desapegando.Application.Controllers
             ViewBag.produtos = produtosViewModel;
 
             return View();
-            //return View(produtosViewModel);
         }
 
         public async Task<IActionResult> Deletar(Guid id)
@@ -304,12 +286,36 @@ namespace Desapegando.Application.Controllers
         {
             await _produtoCurtidaService.Curtir(id, Guid.Parse(_userManager.GetUserId(this.User)));
 
+            if (!_notificador.TemNotificacao())
+            {
+                List<string> errors = new List<string>();
+
+                foreach (var error in _notificador.GetNotifications())
+                {
+                    errors.Add(error.Mensagem);
+                }
+
+                ViewBag.Errors = errors;
+            }
+
             return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Descurtir(Guid id)
         {
             await _produtoCurtidaService.Descurtir(id, Guid.Parse(_userManager.GetUserId(this.User)));
+
+            if (!_notificador.TemNotificacao())
+            {
+                List<string> errors = new List<string>();
+
+                foreach (var error in _notificador.GetNotifications())
+                {
+                    errors.Add(error.Mensagem);
+                }
+
+                ViewBag.Errors = errors;
+            }
 
             return RedirectToAction("Index", "Home");
         }
@@ -353,6 +359,17 @@ namespace Desapegando.Application.Controllers
             }
 
             return false;
+        }
+
+        private static void MapearProduto(Produto produto, UpdateProdutoViewModel produtoViewModel)
+        {
+            produto.Nome = produtoViewModel.Nome;
+            produto.Descricao = produtoViewModel.Descricao;
+            produto.Preco = produtoViewModel.Preco.Value;
+            produto.EstadoProduto = produtoViewModel.EstadoProduto.Value;
+            produto.Categoria = produtoViewModel.Categoria.Value;
+            produto.Desistencia = produtoViewModel.Desistencia;
+            produto.Ativo = produtoViewModel.Ativo;
         }
 
         #endregion

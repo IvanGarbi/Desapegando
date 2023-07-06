@@ -2,6 +2,7 @@
 using Desapegando.Business.Models;
 using Desapegando.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Desapegando.Data.Repository
 {
@@ -13,12 +14,25 @@ namespace Desapegando.Data.Repository
 
         public override async Task<IEnumerable<Campanha>> Read()
         {
-            return await DbSet.AsNoTracking().Include(x => x.CampanhaImagens).ToListAsync();
+            return await DbSet.AsNoTracking()
+                              .Include(x => x.CampanhaImagens)
+                              .ToListAsync();
         }
 
         public override async Task<Campanha> ReadById(Guid id)
         {
-            return await DbSet.AsNoTracking().Where(x => x.Id == id).Include(x => x.CampanhaImagens).FirstOrDefaultAsync();
+            return await DbSet.AsNoTracking()
+                              .Where(x => x.Id == id)
+                              .Include(x => x.CampanhaImagens)
+                              .FirstOrDefaultAsync();
+        }
+
+        public override async Task<IEnumerable<Campanha>> ReadExpression(Expression<Func<Campanha, bool>> predicateExpression)
+        {
+            return await DbSet.AsNoTracking()
+                                .Where(predicateExpression)
+                                .Include(x => x.CampanhaImagens)
+                                .ToListAsync();
         }
     }
 }

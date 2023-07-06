@@ -1,4 +1,5 @@
 using Desapegando.Application.Data;
+using Desapegando.Application.HostedService;
 using Desapegando.Application.Services;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
@@ -51,6 +52,8 @@ builder.Services.AddScoped<ICampanhaImagemService, CampanhaImagemService>();
 builder.Services.AddScoped<INotificador, Notificador>();
 builder.Services.AddScoped<IProdutoCurtidaRepository, ProdutoCurtidaRepository>();
 builder.Services.AddScoped<IProdutoCurtidaService, ProdutoCurtidaService>();
+
+builder.Services.AddHostedService<CampanhaHostedService>();
 
 builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
 builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
