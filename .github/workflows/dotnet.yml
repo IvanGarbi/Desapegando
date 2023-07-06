@@ -23,4 +23,4 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./Desapegando/Desapegando.sln --no-restore
+      run: dotnet build ./Desapegando/Desapegando/Desapegando.sln --no-restore
