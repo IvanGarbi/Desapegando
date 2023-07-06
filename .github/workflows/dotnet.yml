@@ -21,6 +21,6 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet ./Desapegando/Desapegando.sln restore
+      run: dotnet restore ./Desapegando/Desapegando.sln
     - name: Build
       run: dotnet build ./Desapegando/Desapegando.sln --no-restore
