@@ -61,7 +61,7 @@
         <div class="container px-xl-0 px-xxl-3">
             <div class="row g-3 mb-9">
                 <div class="col-12">
-                    <div class="whooping-banner w-100 rounded-3 overflow-hidden">
+@*                    <div class="whooping-banner w-100 rounded-3 overflow-hidden">
                         <div class="bg-holder z-index--1 product-bg" style="background-image:url(../public/assets/img/e-commerce/whooping_banner_product.png);background-position: bottom right;">
                         </div>
                         <!--/.bg-holder-->
@@ -74,7 +74,7 @@
                             <h2 class="text-warning-300 fw-bolder fs-lg-5 fs-xxl-6">Whooping <span class="gradient-text">60% </span>Off</h2>
                             <h3 class="fw-bolder fs-lg-3 fs-xxl-5 text-white light">on everyday items</h3>
                         </div><a class="btn btn-lg btn-primary rounded-pill banner-button" href="#!">Shop Now</a>
-                    </div>
+                    </div>*@
                 </div>
                 <div class="col-12 col-xl-6">
                     <div class="gift-items-banner w-100 rounded-3 overflow-hidden">
@@ -110,7 +110,7 @@
                         <div class="d-flex">
                             <span class="fas fa-bolt text-warning fs-2"></span>
                             <h3 class="mx-2">Produtos em Desapego!</h3><span class="fas fa-bolt text-warning fs-2"></span>
-                        </div><a class="btn btn-link btn-lg p-0 d-none d-md-block" href="#!">Explore more<span class="fas fa-chevron-right fs--1 ms-1"></span></a>
+                        </div><a class="btn btn-link btn-lg p-0 d-none d-md-block" asp-action="Produtos" asp-controller="Produto">Explore more<span class="fas fa-chevron-right fs--1 ms-1"></span></a>
                     </div>
                     <div class="swiper-theme-container products-slider">
                         <div class="swiper swiper-container theme-slider" data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"768":{"slidesPerView":3,"spaceBetween":20},"1200":{"slidesPerView":4,"spaceBetween":16},"1540":{"slidesPerView":5,"spaceBetween":16}}}'>
@@ -125,8 +125,8 @@
                                                     <div class="border border-1 rounded-3 position-relative mb-3">
                                                         @if (produto.ProdutoCurtidaViewModels.Any(x => x.ProdutoId == produto.Id && x.CondominoId == Guid.Parse(User.Claims.First().Value)))
                                                         {
-                                                            <a asp-action="Descurtir" asp-controller="Produto" asp-route-id="@produto.Id" class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Descurtir" 
-                                                                style="color: var(--phoenix-btn-hover-color);
+                                                            <a asp-action="Descurtir" asp-controller="Produto" asp-route-id="@produto.Id" asp-route-returnUrl="@Url.Page("/Home")" class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Descurtir"
+                                                               style="color: var(--phoenix-btn-hover-color);
                                                                        background-color: var(--phoenix-btn-hover-bg);
                                                                        border-color: var(--phoenix-btn-hover-border-color);
                                                                        outline: 0;
@@ -137,7 +137,7 @@
                                                         }
                                                         else
                                                         {
-                                                            <a asp-action="Curtir" asp-controller="Produto" asp-route-id="@produto.Id" class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Curtir">
+                                                            <a asp-action="Curtir" asp-controller="Produto" asp-route-id="@produto.Id" asp-route-returnUrl="@Url.Page("/Home")" class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Curtir">
                                                                 <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
                                                             </a>
                                                         }

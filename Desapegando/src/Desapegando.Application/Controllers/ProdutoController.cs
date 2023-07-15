@@ -282,7 +282,7 @@ namespace Desapegando.Application.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Curtir(Guid id)
+        public async Task<IActionResult> Curtir(Guid id, string returnUrl)
         {
             await _produtoCurtidaService.Curtir(id, Guid.Parse(_userManager.GetUserId(this.User)));
 
@@ -298,10 +298,10 @@ namespace Desapegando.Application.Controllers
                 ViewBag.Errors = errors;
             }
 
-            return RedirectToAction("Index", "Home");
+            return LocalRedirect(returnUrl);
         }
 
-        public async Task<IActionResult> Descurtir(Guid id)
+        public async Task<IActionResult> Descurtir(Guid id, string returnUrl)
         {
             await _produtoCurtidaService.Descurtir(id, Guid.Parse(_userManager.GetUserId(this.User)));
 
@@ -317,7 +317,7 @@ namespace Desapegando.Application.Controllers
                 ViewBag.Errors = errors;
             }
 
-            return RedirectToAction("Index", "Home");
+            return LocalRedirect(returnUrl);
         }
 
 

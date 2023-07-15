@@ -36,6 +36,7 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
         return await DbSet.AsNoTracking()
                             .Where(predicateExpression)
                             .Include(x => x.ProdutoImagens)
+                            .Include(y => y.ProdutoCurtidas)
                             .ToListAsync();
     }
 }
