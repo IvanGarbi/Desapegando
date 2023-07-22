@@ -4,8 +4,10 @@ using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
+using Desapegando.Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Desapegando.Application.Controllers
 {
@@ -222,6 +224,49 @@ namespace Desapegando.Application.Controllers
             {
                 return RedirectToAction("MinhasCampanhas");
             }
+
+            return View();
+        }
+
+        public async Task<IActionResult> Campanhas()
+        {
+            var campanhasDb = await _campanhaRepository.ReadExpression(x => x.Ativo);
+
+            ViewBag.Campanhas = Enumerable.Empty<GetCampanhaViewModel>();
+
+            if (!campanhasDb.Any())
+            {
+                return View();
+            }
+
+            var campanhasViewModel = _mapper.Map<IEnumerable<GetCampanhaViewModel>>(campanhasDb);
+
+            ViewBag.Campanhas = campanhasViewModel;
+
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Campanhas(FiltrarCampanhaViewModel filtrarCampanhaViewModel)
+        {
+            if (filtrarCampanhaViewModel.Nome == null || string.IsNullOrEmpty(filtrarCampanhaViewModel.Nome))
+            {
+                return RedirectToAction("Campanhas");
+            }
+
+            var campanhasDb = await _campanhaRepository.ReadExpression(x => x.Nome.ToLower().Trim().Contains(filtrarCampanhaViewModel.Nome.ToLower().Trim()) && x.Ativo == true);
+
+            ViewBag.Campanhas = Enumerable.Empty<GetCampanhaViewModel>();
+
+            if (!campanhasDb.Any())
+            {
+                return View();
+            }
+
+            var campanhasViewModel = _mapper.Map<IEnumerable<GetCampanhaViewModel>>(campanhasDb);
+
+            ViewBag.Campanhas = campanhasViewModel;
 
             return View();
         }

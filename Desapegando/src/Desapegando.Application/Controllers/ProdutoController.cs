@@ -231,7 +231,7 @@ namespace Desapegando.Application.Controllers
         {
             var produtosDb = await _produtoRepository.ReadExpression(x => x.Ativo);
 
-            ViewBag.produtos = Enumerable.Empty<GetProdutoViewModel>();
+            ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
 
             if (!produtosDb.Any())
             {
@@ -240,7 +240,7 @@ namespace Desapegando.Application.Controllers
 
             var produtosViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(produtosDb);
 
-            ViewBag.produtos = produtosViewModel;
+            ViewBag.Produtos = produtosViewModel;
 
 
             return View();
@@ -256,7 +256,7 @@ namespace Desapegando.Application.Controllers
 
             var produtosDb = await _produtoRepository.ReadExpression(x => filtrarProdutoViewModel.Categorias.Contains(x.Categoria) && x.Ativo == true);
 
-            ViewBag.produtos = Enumerable.Empty<GetProdutoViewModel>();
+            ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
 
             if (!produtosDb.Any())
             {
@@ -265,7 +265,7 @@ namespace Desapegando.Application.Controllers
 
             var produtosViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(produtosDb);
 
-            ViewBag.produtos = produtosViewModel;
+            ViewBag.Produtos = produtosViewModel;
 
             return View();
         }

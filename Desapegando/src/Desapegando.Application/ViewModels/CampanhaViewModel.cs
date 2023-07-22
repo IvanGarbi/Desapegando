@@ -114,4 +114,9 @@ namespace Desapegando.Application.ViewModels
         public bool Ativo { get; set; }
         public List<CampanhaImagemViewModel> CampanhaImagemViewModels { get; set; }
     }
+
+    public class FiltrarCampanhaViewModel
+    {
+        public string Nome { get; set; }
+    }
 }
