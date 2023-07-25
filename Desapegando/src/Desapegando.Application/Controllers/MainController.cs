@@ -1,9 +1,10 @@
 ﻿using Desapegando.Business.Interfaces.Notifications;
-using Desapegando.Business.Notifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desapegando.Application.Controllers;
 
+[Authorize]
 public abstract class MainController : Controller
 {
     protected readonly INotificador _notificador;

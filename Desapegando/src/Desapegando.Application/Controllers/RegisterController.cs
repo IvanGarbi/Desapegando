@@ -4,11 +4,13 @@ using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
 using Desapegando.Business.Validations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desapegando.Application.Controllers;
 
+[AllowAnonymous]
 public class RegisterController : MainController
 {
     private readonly ICondominoService _condominoService;

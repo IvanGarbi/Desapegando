@@ -1,5 +1,4 @@
-﻿using Desapegando.Business.Models.Enums;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Desapegando.Application.ViewModels

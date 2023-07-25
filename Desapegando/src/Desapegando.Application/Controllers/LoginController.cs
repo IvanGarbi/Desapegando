@@ -1,13 +1,13 @@
 ﻿using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
-using Desapegando.Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Desapegando.Application.Controllers;
 
+[AllowAnonymous]
 public class LoginController : MainController
 {
     private readonly SignInManager<IdentityUser> _signInManager;
@@ -21,14 +21,19 @@ public class LoginController : MainController
         _condominoRepository = condominoRepository;
     }
 
-    public async Task<IActionResult> Index()
+    [Route("")]
+    [Route("Login")]
+    public async Task<IActionResult> Index(string returnUrl = null)
     {
+        ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(CondominoLoginViewModel condominoLoginViewModel)
+    [Route("Login")]
+    public async Task<IActionResult> Index(CondominoLoginViewModel condominoLoginViewModel, string? returnUrl = null)
     {
+        ViewData["ReturnUrl"] = returnUrl;
         if (!ModelState.IsValid)
         {
             return View(condominoLoginViewModel);
@@ -44,7 +49,10 @@ public class LoginController : MainController
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
+
+                    return LocalRedirect(returnUrl);
+                    //return RedirectToAction("Index", "Home");
                 }
                 if (result.IsLockedOut)
                 {

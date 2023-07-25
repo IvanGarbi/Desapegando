@@ -35,6 +35,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>()
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login";
+    //options.AccessDeniedPath = "/Identity/Account/AccessDenied"; /acesso-negado
+});
+
 
 // Dependcy Injection
 //builder.Services.AddScoped<ApplicationDbContext>();
