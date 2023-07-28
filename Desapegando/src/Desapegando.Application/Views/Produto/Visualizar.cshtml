@@ -30,8 +30,19 @@
                             </div>
                         </div>
                         <div class="d-flex">
+                            @if (Model.ProdutoCurtidaViewModels.Any(x => x.ProdutoId == Model.Id && x.CondominoId == Guid.Parse(User.Claims.First().Value)))
+                            {
+                                <a asp-action="Descurtir" asp-controller="Produto" asp-route-id="Model.Id" asp-route-returnUrl="@Url.Page("/Produto/Visualizar/" + Model.Id)" class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0" style="background-color:#e5780b;color:#fff;"><span class="me-2 far fa-heart"></span>Descurtir</a>
+                            }
+                            else
+                            {
+                                <a asp-action="Curtir" asp-controller="Produto" asp-route-id="Model.Id" asp-route-returnUrl="@Url.Page("/Produto/Visualizar/" + Model.Id)" class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</a>
+                            }
+
+
+                            @*<button class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</button>*@
                             @*<button class="btn btn-lg btn-outline-warning rounded-pill w-100 me-3 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</button>*@
-  @*                          <button class="btn btn-lg btn-warning rounded-pill w-100 fs--1 fs-sm-0"><span class="fas fa-shopping-cart me-2"></span>Add to cart</button>*@
+                            @*<button class="btn btn-lg btn-warning rounded-pill w-100 fs--1 fs-sm-0"><span class="fas fa-shopping-cart me-2"></span>Add to cart</button>*@
                         </div>
                     </div>
                     <div class="col-12 col-lg-6">

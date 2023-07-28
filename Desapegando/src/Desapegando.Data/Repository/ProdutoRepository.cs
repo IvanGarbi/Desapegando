@@ -27,6 +27,7 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
         return await DbSet.AsNoTracking()
                             .Where(x => x.Id == id)
                             .Include(x => x.ProdutoImagens)
+                            .Include(y => y.ProdutoCurtidas)
                             .Include(y => y.Condomino)
                             .FirstOrDefaultAsync();
     }
