@@ -5,6 +5,7 @@ using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Desapegando.Business.Interfaces.Notifications;
+using System.Net;
 
 namespace Desapegando.Application.Controllers;
 
@@ -67,6 +68,32 @@ public class AdministradorController : MainController
         return RedirectToAction("NovosCondominos", "Administrador");
     }
 
+    //public async Task<IActionResult> ExcluirCondomino(Guid id)
+    //{
+    //    var condomino = await _condominoRepository.ReadById(id);
+
+    //    if (condomino == null)
+    //    {
+    //        return RedirectToAction("NovosCondominos", "Administrador");
+    //    }
+
+    //    await _condominoService.Delete(id);
+
+    //    try
+    //    {
+    //        await _emailSender.SendEmailAsync(condomino.Email, "Condômino não aprovado", "O seu cadastro em Desapegando não foi aprovado.");
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        Console.WriteLine(e);
+    //        throw;
+    //    }
+
+
+    //    return RedirectToAction("NovosCondominos", "Administrador");
+    //}
+
+    [HttpPost]
     public async Task<IActionResult> ExcluirCondomino(Guid id)
     {
         var condomino = await _condominoRepository.ReadById(id);
@@ -76,8 +103,7 @@ public class AdministradorController : MainController
             return RedirectToAction("NovosCondominos", "Administrador");
         }
 
-        await _condominoService.Delete(id);
-
+        // verificar a melhor forma de fazer caso o email ou deletar apontar um erro.
         try
         {
             await _emailSender.SendEmailAsync(condomino.Email, "Condômino não aprovado", "O seu cadastro em Desapegando não foi aprovado.");
@@ -85,11 +111,21 @@ public class AdministradorController : MainController
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            return Json(HttpStatusCode.NotFound);
+        }
+
+        try
+        {
+            await _condominoService.Delete(id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return Json(HttpStatusCode.NotFound);
         }
 
 
-        return RedirectToAction("NovosCondominos", "Administrador");
+        return Json(HttpStatusCode.OK);
     }
 
     public async Task<IActionResult> Dashboard()

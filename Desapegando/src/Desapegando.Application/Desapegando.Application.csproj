@@ -28,6 +28,7 @@
     <Folder Include="AutoMapper\" />
     <Folder Include="Extensions\" />
     <Folder Include="Services\" />
+    <Folder Include="wwwroot\src\js\Administrador\" />
   </ItemGroup>
 
   <ItemGroup>

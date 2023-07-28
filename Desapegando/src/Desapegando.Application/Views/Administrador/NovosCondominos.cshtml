@@ -90,7 +90,6 @@
                     </thead>
                   <tbody class="list" id="customers-table-body">
                   
-                  
                   @foreach (var condomino in Model)
                   {
                       <tr class="hover-actions-trigger btn-reveal-trigger position-static">
@@ -111,7 +110,8 @@
                           <td class="city align-middle white-space-nowrap text-1000 ps-7">@condomino.Cpf</td>
                           <td class="last-seen align-middle white-space-nowrap text-700 text-end">@condomino.Telefone</td>
                           <td class="last-order align-middle white-space-nowrap text-700 text-end">@condomino.Sexo</td>
-                          <td class="email align-middle white-space-nowrap pe-3 text-700 text-end"><a class="fw-semi-bold" asp-controller="Administrador" asp-action="ExcluirCondomino" asp-route-id="@condomino.Id">Excluir</a></td>
+                          @*<td class="email align-middle white-space-nowrap pe-3 text-700 text-end"><a class="fw-semi-bold" asp-controller="Administrador" asp-action="ExcluirCondomino" asp-route-id="@condomino.Id">Excluir</a></td>*@
+                          <td class="email align-middle white-space-nowrap pe-3 text-700 text-end"><div class="spinner-border" hidden role="status"><span class="visually-hidden">Loading...</span></div><a class="fw-semi-bold" id="btnExcluirCondomino" onclick="ExcluirCondomino('@condomino.Id')">Excluir</a></td>
                       </tr>
                   }
 
@@ -150,3 +150,9 @@
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/src/js/Administrador/NovosCondominos.js"></script>
+}

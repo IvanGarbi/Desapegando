@@ -249,10 +249,10 @@
                                                     <ul class="nav d-flex flex-column mb-2 pb-1">
                                                         <li class="nav-item"><a class="nav-link px-3" asp-controller="Condomino" asp-action="Index"> <span class="me-2 text-900" data-feather="user"></span><span>Perfil</span></a></li>
                                                         <li class="nav-item"><a class="nav-link px-3" asp-controller="Produto" asp-action="Criar"> <span class="me-2 text-900" data-feather="file-plus"></span><span>Novo Produto</span></a></li>
-                                                        <li class="nav-item"><a class="nav-link px-3" asp-controller="Campanha" asp-action="Criar"> <span class="me-2 text-900" data-feather="file-plus"></span><span>Nova Campanha</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link px-3" asp-controller="Campanha" asp-action="Criar"> <span class="me-2 text-900" data-feather="shopping-bag"></span><span>Nova Campanha</span></a></li>
                                                         @if (User.HasClaim("Role", "Sindico"))
                                                         {
-                                                            <li class="nav-item"><a class="nav-link px-3" asp-controller="Administrador" asp-action="NovosCondominos"><span class="me-2 text-900" data-feather="pie-chart"></span>Novos Condôminos</a></li>
+                                                            <li class="nav-item"><a class="nav-link px-3" asp-controller="Administrador" asp-action="NovosCondominos"><span class="me-2 text-900" data-feather="user-plus"></span>Novos Condôminos</a></li>
                                                             <li class="nav-item"><a class="nav-link px-3" asp-controller="Administrador" asp-action="DashBoard"><span class="me-2 text-900" data-feather="pie-chart"></span>Dashboard</a></li>
                                                         }
 
