@@ -286,7 +286,7 @@ public class ProdutoController : MainController
     {
         await _produtoCurtidaService.Curtir(id, Guid.Parse(_userManager.GetUserId(this.User)));
 
-        if (!_notificador.TemNotificacao())
+        if (_notificador.TemNotificacao())
         {
             List<string> errors = new List<string>();
 
@@ -298,6 +298,11 @@ public class ProdutoController : MainController
             ViewBag.Errors = errors;
         }
 
+        if (!string.IsNullOrEmpty(returnUrl) && returnUrl.Contains("Produto"))
+        {
+            return RedirectToAction("Visualizar", new { id = id });
+        }
+
         return LocalRedirect(returnUrl);
     }
 
@@ -305,7 +310,7 @@ public class ProdutoController : MainController
     {
         await _produtoCurtidaService.Descurtir(id, Guid.Parse(_userManager.GetUserId(this.User)));
 
-        if (!_notificador.TemNotificacao())
+        if (_notificador.TemNotificacao())
         {
             List<string> errors = new List<string>();
 
@@ -315,6 +320,12 @@ public class ProdutoController : MainController
             }
 
             ViewBag.Errors = errors;
+        }
+
+
+        if (!string.IsNullOrEmpty(returnUrl) && returnUrl.Contains("Produto"))
+        {
+            return RedirectToAction("Visualizar", new { id = id });
         }
 
         return LocalRedirect(returnUrl);

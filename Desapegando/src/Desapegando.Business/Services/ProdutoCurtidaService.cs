@@ -76,6 +76,7 @@ namespace Desapegando.Business.Services
             await _produtoCurtidaRepository.Delete(produtoCurtida.First().Id);
 
             produtoDb.Curtida--;
+            produtoDb.ProdutoCurtidas = null; // colocar nulo para não querer o update do produto no banco. Pois ele atualizaria com o ProdutoCurtidas junto.
 
             await _produtoRepository.Update(produtoDb);
         }
