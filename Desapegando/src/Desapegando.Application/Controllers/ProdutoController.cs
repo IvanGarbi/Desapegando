@@ -295,6 +295,7 @@ public class ProdutoController : MainController
                 errors.Add(error.Mensagem);
             }
 
+            // não funciona
             ViewBag.Errors = errors;
         }
 
@@ -319,6 +320,7 @@ public class ProdutoController : MainController
                 errors.Add(error.Mensagem);
             }
 
+            // não funciona
             ViewBag.Errors = errors;
         }
 
