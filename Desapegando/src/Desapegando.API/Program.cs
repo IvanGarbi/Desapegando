@@ -1,6 +1,12 @@
 using Desapegando.API.Data;
 using Desapegando.API.Extensions;
+using Desapegando.Business.Interfaces.Notifications;
+using Desapegando.Business.Interfaces.Repository;
+using Desapegando.Business.Interfaces.Services;
+using Desapegando.Business.Notifications;
+using Desapegando.Business.Services;
 using Desapegando.Data.Context;
+using Desapegando.Data.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -15,7 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -44,7 +50,6 @@ builder.Services.AddSwaggerGen(options =>
             }
         });
 });
-builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddDbContext<DesapegandoDbContext>(options =>
 {
@@ -61,6 +66,33 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 ConfigureJwt(builder);
 
+
+// Dependcy Injection
+//builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddTransient<DesapegandoDbContext>();
+builder.Services.AddScoped<ICondominoService, CondominoService>();
+builder.Services.AddScoped<ICondominoRepository, CondominoRepository>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<IProdutoImagemRepository, ProdutoImagemRepository>();
+builder.Services.AddScoped<IProdutoImagemService, ProdutoImagemService>();
+builder.Services.AddScoped<ICampanhaRepository, CampanhaRepository>();
+builder.Services.AddScoped<ICampanhaService, CampanhaService>();
+builder.Services.AddScoped<ICampanhaImagemRepository, CampanhaImagemRepository>();
+builder.Services.AddScoped<ICampanhaImagemService, CampanhaImagemService>();
+builder.Services.AddScoped<INotificador, Notificador>();
+builder.Services.AddScoped<IProdutoCurtidaRepository, ProdutoCurtidaRepository>();
+builder.Services.AddScoped<IProdutoCurtidaService, ProdutoCurtidaService>();
+
+//builder.Services.AddHostedService<CampanhaHostedService>();
+
+//builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
+//builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
+
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -72,6 +104,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

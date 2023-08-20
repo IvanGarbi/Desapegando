@@ -16,7 +16,7 @@ namespace Desapegando.Business.Notifications
             _notificacoes.Add(notificacao);
         }
 
-        public List<Notificacao> GetNotifications()
+        public List<Notificacao> GetNotificacoes()
         {
             return _notificacoes;
         }

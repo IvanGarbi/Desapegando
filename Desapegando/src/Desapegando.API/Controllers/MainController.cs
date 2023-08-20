@@ -16,7 +16,7 @@ namespace Desapegando.API.Controllers
 
         protected ActionResult Response(object result = null)
         {
-            if (_notificador.TemNotificacao())
+            if (!_notificador.TemNotificacao())
             {
                 return Ok(new
                 {
@@ -30,7 +30,7 @@ namespace Desapegando.API.Controllers
                 success = false,
                 errors = new Dictionary<string, string[]>
             {
-                { "Messages", _notificador.GetNotifications().Select(n => n.Mensagem).ToArray() }
+                { "Messages", _notificador.GetNotificacoes().Select(n => n.Mensagem).ToArray() }
             }
             });
         }

@@ -85,7 +85,7 @@ public class ProdutoController : MainController
             return RedirectToAction("Index", "Home");
         }
 
-        foreach (var error in _notificador.GetNotifications())
+        foreach (var error in _notificador.GetNotificacoes())
         {
             ModelState.AddModelError(error.Propriedade, error.Mensagem);
         }
@@ -204,7 +204,7 @@ public class ProdutoController : MainController
             return RedirectToAction("Index", "Home");
         }
 
-        foreach (var error in _notificador.GetNotifications())
+        foreach (var error in _notificador.GetNotificacoes())
         {
             ModelState.AddModelError(error.Propriedade, error.Mensagem);
         }
@@ -290,7 +290,7 @@ public class ProdutoController : MainController
         {
             List<string> errors = new List<string>();
 
-            foreach (var error in _notificador.GetNotifications())
+            foreach (var error in _notificador.GetNotificacoes())
             {
                 errors.Add(error.Mensagem);
             }
@@ -315,7 +315,7 @@ public class ProdutoController : MainController
         {
             List<string> errors = new List<string>();
 
-            foreach (var error in _notificador.GetNotifications())
+            foreach (var error in _notificador.GetNotificacoes())
             {
                 errors.Add(error.Mensagem);
             }

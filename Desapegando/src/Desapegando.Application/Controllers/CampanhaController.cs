@@ -81,7 +81,7 @@ public class CampanhaController : MainController
             return RedirectToAction("Index", "Home");
         }
 
-        foreach (var error in _notificador.GetNotifications())
+        foreach (var error in _notificador.GetNotificacoes())
         {
             ModelState.AddModelError(error.Propriedade, error.Mensagem);
         }
@@ -192,7 +192,7 @@ public class CampanhaController : MainController
             return RedirectToAction("Index", "Home");
         }
 
-        foreach (var error in _notificador.GetNotifications())
+        foreach (var error in _notificador.GetNotificacoes())
         {
             ModelState.AddModelError(error.Propriedade, error.Mensagem);
         }

@@ -1,4 +1,6 @@
+using Desapegando.Application.Controllers;
 using Desapegando.Application.Data;
+using Desapegando.Application.Extensions;
 using Desapegando.Application.HostedService;
 using Desapegando.Application.Services;
 using Desapegando.Business.Interfaces.Notifications;
@@ -69,6 +71,15 @@ builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
+
+
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+builder.Services.Configure<AppSettings>(builder.Configuration);
+builder.Services.AddHttpClient<RegisterController>();
+
+
 
 var app = builder.Build();
 
