@@ -126,3 +126,26 @@ public class CondominoViewModel
     public bool Administrador { get; set; }
     public bool Ativo { get; set; }
 }
+
+public class GetCondominoResponse
+{
+    public bool Success { get; set; }
+    public IEnumerable<CondominoViewModel> Data { get; set; }
+}
+
+public class GetCondominoResponseId
+{
+    public bool Success { get; set; }
+    public CondominoViewModel Data { get; set; }
+}
+
+public class CondominoResponse
+{
+    public bool Success { get; set; }
+    public DataCondomino Data { get; set; }
+}
+
+public class DataCondomino
+{
+    public ResponseResult ResponseResult { get; set; }
+}

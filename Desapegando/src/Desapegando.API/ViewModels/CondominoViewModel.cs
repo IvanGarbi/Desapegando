@@ -126,3 +126,33 @@ public class CondominoViewModel
     public bool Administrador { get; set; }
     public bool Ativo { get; set; }
 }
+
+public class GetCondominoViewModel
+{
+    public Guid Id { get; set; }
+    public string Nome { get; set; }
+    public string Sobrenome { get; set; }
+    public Sexo Sexo { get; set; }
+    public string Telefone { get; set; }
+    public string Email { get; set; }
+    public string Cpf { get; set; }
+    public string Apartamento { get; set; }
+    public DateTime DataNascimento { get; set; }
+    public bool Administrador { get; set; }
+    public bool Ativo { get; set; }
+}
+
+public class PostCondominoViewModel
+{
+    public Guid Id { get; set; }
+    public string Nome { get; set; }
+    public string Sobrenome { get; set; }
+    public Sexo Sexo { get; set; }
+    public string Telefone { get; set; }
+    public string Email { get; set; }
+    public string Cpf { get; set; }
+    public string Apartamento { get; set; }
+    public DateTime DataNascimento { get; set; }
+    public bool Administrador { get; set; }
+    public bool Ativo { get; set; }
+}

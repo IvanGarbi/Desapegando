@@ -8,6 +8,10 @@ namespace Desapegando.API.AutoMapper
     {
         public AutoMapperConfig()
         {
+            CreateMap<GetCondominoViewModel, Condomino>().ReverseMap();
+            
+            CreateMap<PostCondominoViewModel, Condomino>().ReverseMap();
+
             CreateMap<CondominoRegisterViewModel, Condomino>().ReverseMap();
 
             CreateMap<CondominoInativoViewModel, Condomino>().ReverseMap();
