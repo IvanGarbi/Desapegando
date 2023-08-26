@@ -1,24 +1,27 @@
 ﻿using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
-using Desapegando.Business.Interfaces.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Desapegando.Application.Extensions;
+using System.Text.Json;
+using System.Text;
 
 namespace Desapegando.Application.Controllers;
 
 [AllowAnonymous]
 public class LoginController : MainController
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly ICondominoRepository _condominoRepository;
+    private readonly HttpClient _httpClient;
 
-    public LoginController(SignInManager<IdentityUser> signInManager, 
-                           ICondominoRepository condominoRepository, 
+    public LoginController(HttpClient httpClient,
+                           IOptions<AppSettings> settings,
                            INotificador notificador) : base(notificador)
     {
-        _signInManager = signInManager;
-        _condominoRepository = condominoRepository;
+        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
+        _httpClient = httpClient;
     }
 
     [Route("")]
@@ -39,60 +42,46 @@ public class LoginController : MainController
             return View(condominoLoginViewModel);
         }
 
-        var condomino = await _condominoRepository.ReadWithExpression(x => x.Email == condominoLoginViewModel.Email);
+        var loginContent = new StringContent(
+            JsonSerializer.Serialize(condominoLoginViewModel),
+            Encoding.UTF8,
+            "application/json");
+        var response = await _httpClient.PostAsync("Auth/Auth/Login", loginContent);
 
-        if (condomino != null)
+        UserResponseAuth userResponse;
+
+        if (!VerifyResponseErros(response))
         {
-            if (condomino.Ativo)
+            userResponse = new UserResponseAuth
             {
-                var result = await _signInManager.PasswordSignInAsync(condominoLoginViewModel.Email, condominoLoginViewModel.Senha, false, true);
-
-                if (result.Succeeded)
+                Success = false,
+                Data = new DataAuth
                 {
-                    if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
-
-                    return LocalRedirect(returnUrl);
-                    //return RedirectToAction("Index", "Home");
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
                 }
-                if (result.IsLockedOut)
-                {
-                    ViewData.ModelState.AddModelError(string.Empty, "Usuário temporariamente bloqueado por tentativas inválidas.");
-                    return View(condominoLoginViewModel);
-                }
-
-                ViewData.ModelState.AddModelError(string.Empty, "Usuário ou Senha incorretos.");
-                return View(condominoLoginViewModel);
-            }
-            else
+            };
+            foreach (var error in userResponse.Data.ResponseResult.Errors.Messages)
             {
-                // Adicionando na ViewData para ser mostrado no View Component.
-                ViewData.ModelState.AddModelError(string.Empty, "Usuário não ativado pelo síndico.");
-
-                return View(condominoLoginViewModel);
+                ModelState.AddModelError(string.Empty, error);
             }
-        }
-        else
-        {
-            // Adicionar erro de problema
-            ViewData.ModelState.AddModelError(string.Empty, "Usuário ou Senha incorretos.");
-            return View();
+
+            return View(condominoLoginViewModel);
+
         }
 
+        userResponse = await DeserializeObjectResponse<UserResponseAuth>(response);
+
+        // Fazer Login
+        await Login(userResponse);
+
+        if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
+
+        return LocalRedirect(returnUrl);
     }
 
     public async Task<IActionResult> SignOut()
     {
-        var result = _signInManager.SignOutAsync();
-
-        if (result.IsCompletedSuccessfully)
-        {
-            return RedirectToAction("Index", "Login");
-        }
-        else
-        {
-            // Verificar tratamento de erros...
-            return RedirectToAction("Index", "Home");
-        }
-
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Login");
     }
 }

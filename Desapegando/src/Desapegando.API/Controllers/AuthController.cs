@@ -2,6 +2,7 @@
 using Desapegando.API.Extensions;
 using Desapegando.API.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
+using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
 using Desapegando.Business.Notifications;
@@ -20,6 +21,7 @@ namespace Desapegando.API.Controllers
     public class AuthController : MainController
     {
         private readonly ICondominoService _condominoService;
+        private readonly ICondominoRepository _condominoRepository;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
@@ -29,6 +31,7 @@ namespace Desapegando.API.Controllers
                               UserManager<IdentityUser> userManager,
                               IOptions<AppSettings> appSettings,
                               ICondominoService condominoService,
+                              ICondominoRepository condominoRepository,
                               IMapper mapper,
                               INotificador notificador) : base(notificador)
         {
@@ -37,6 +40,7 @@ namespace Desapegando.API.Controllers
             _condominoService = condominoService;
             _appSettings = appSettings.Value;
             _mapper = mapper;
+            _condominoRepository = condominoRepository;
         }
 
         [HttpPost("Register")]
@@ -131,17 +135,30 @@ namespace Desapegando.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var result = await _signInManager.PasswordSignInAsync(condominoLoginViewModel.Email, condominoLoginViewModel.Senha, false, true);
+            var condomino = await _condominoRepository.ReadWithExpression(x => x.Email == condominoLoginViewModel.Email);
 
-            if (result.Succeeded)
+            if (condomino != null)
             {
-                return Response(await CreateJwt(condominoLoginViewModel.Email));
-            }
+                if (condomino.Ativo)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(condominoLoginViewModel.Email, condominoLoginViewModel.Senha, false, true);
 
-            if (result.IsLockedOut)
-            {
-                _notificador.AdicionarNotificacao(new Notificacao("Usuário temporariamente bloqueado por tentativas inválidas"));
-                return Response();
+                    if (result.Succeeded)
+                    {
+                        return Response(await CreateJwt(condominoLoginViewModel.Email));
+                    }
+
+                    if (result.IsLockedOut)
+                    {
+                        _notificador.AdicionarNotificacao(new Notificacao("Usuário temporariamente bloqueado por tentativas inválidas"));
+                        return Response();
+                    }
+                }
+                else
+                {
+                    _notificador.AdicionarNotificacao(new Notificacao("Usuário não ativado pelo síndico."));
+                    return Response();
+                }
             }
 
             _notificador.AdicionarNotificacao(new Notificacao("Usuário ou Senha incorretos"));

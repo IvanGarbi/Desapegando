@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using Desapegando.Application.ViewModels;
 
 namespace Desapegando.Application.Controllers;
 

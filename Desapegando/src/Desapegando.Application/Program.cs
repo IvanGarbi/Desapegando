@@ -10,6 +10,7 @@ using Desapegando.Business.Notifications;
 using Desapegando.Business.Services;
 using Desapegando.Data.Context;
 using Desapegando.Data.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -39,11 +40,18 @@ builder.Services.AddDefaultIdentity<IdentityUser>()
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Login";
-    //options.AccessDeniedPath = "/Identity/Account/AccessDenied"; /acesso-negado
-});
+//builder.Services.ConfigureApplicationCookie(options =>
+//{
+//    options.LoginPath = "/Login";
+//    //options.AccessDeniedPath = "/Identity/Account/AccessDenied"; /acesso-negado
+//});
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login";
+        //options.AccessDeniedPath = "/acesso-negado";
+    });
 
 
 // Dependcy Injection
