@@ -31,6 +31,8 @@ namespace Desapegando.API.AutoMapper
 
             CreateMap<UpdateProdutoViewModel, Produto>().ReverseMap();
 
+            CreateMap<PostProdutoViewModel, Produto>().ReverseMap();
+
             CreateMap<CampanhaViewModel, Campanha>().ReverseMap();
 
             CreateMap<GetCampanhaViewModel, Campanha>().ForMember(x => x.CampanhaImagens, z => z.MapFrom(a => a.CampanhaImagemViewModels))

@@ -17,6 +17,8 @@ public class AutoMapperConfig : Profile
 
         CreateMap<ProdutoViewModel, Produto>().ReverseMap();
 
+        CreateMap<ProdutoViewModel, PostProdutoViewModel>().ReverseMap();
+
         CreateMap<GetProdutoViewModel, Produto>().ForMember(x => x.ProdutoImagens, z => z.MapFrom(a => a.ProdutoImagemViewModels))
                                                  .ForMember(y => y.Condomino, c => c.MapFrom(w => w.CondominoViewModel))
                                                  .ForMember(z => z.ProdutoCurtidas, l => l.MapFrom(i => i.ProdutoCurtidaViewModels))

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Desapegando.Application.Extensions;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
@@ -6,11 +7,16 @@ using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.Text;
+using System.Text.Json;
 
 namespace Desapegando.Application.Controllers;
 
 public class ProdutoController : MainController
 {
+    private readonly HttpClient _httpClient;
+
     private readonly IProdutoRepository _produtoRepository;
     private readonly IProdutoService _produtoService;
     private readonly IProdutoCurtidaService _produtoCurtidaService;
@@ -18,7 +24,9 @@ public class ProdutoController : MainController
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IMapper _mapper;
 
-    public ProdutoController(IProdutoRepository produtoRepository,
+    public ProdutoController(HttpClient httpClient,
+                             IOptions<AppSettings> settings, 
+                             IProdutoRepository produtoRepository,
                              IProdutoService produtoService, 
                              IMapper mapper, 
                              UserManager<IdentityUser> userManager, 
@@ -32,6 +40,9 @@ public class ProdutoController : MainController
         _userManager = userManager;
         _produtoImagemService = produtoImagemService;
         _produtoCurtidaService = produtoCurtidaService;
+
+        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
+        _httpClient = httpClient;
     }
 
     public async Task<IActionResult> Criar()
@@ -39,6 +50,59 @@ public class ProdutoController : MainController
         ProdutoViewModel model = new ProdutoViewModel();
         return View(model);
     }
+
+    //[HttpPost]
+    //public async Task<IActionResult> Criar(ProdutoViewModel produtoViewModel)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return View(produtoViewModel);
+    //    }
+
+    //    if (produtoViewModel.ImagensUpload.Any() && produtoViewModel.ImagensUpload.Count > 4)
+    //    {
+    //        ModelState.AddModelError("ImagensUpload", "Só é possível adicionar no máximo 4 imagens.");
+    //        return View(produtoViewModel);
+    //    }
+
+    //    var produto = _mapper.Map<Produto>(produtoViewModel);
+
+    //    produto.CondominoId = Guid.Parse(_userManager.GetUserId(this.User));
+
+    //    await _produtoService.Create(produto);
+
+    //    if (!_notificador.TemNotificacao())
+    //    {
+    //        foreach (var imagem in produtoViewModel.ImagensUpload)
+    //        {
+    //            var imgPrefixo = Guid.NewGuid() + "_";
+    //            if (!await UploadArquivo(imagem, imgPrefixo))
+    //            {
+    //                await _produtoService.Delete(produto.Id);
+
+    //                ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+
+    //                return View(produtoViewModel);
+    //            }
+
+    //            var produtoImagem = new ProdutoImagem();
+    //            produtoImagem.FileName = imgPrefixo + imagem.FileName;
+    //            produtoImagem.ProdutoId = produto.Id;
+
+    //            await _produtoImagemService.Create(produtoImagem);
+
+    //        }
+
+    //        return RedirectToAction("Index", "Home");
+    //    }
+
+    //    foreach (var error in _notificador.GetNotificacoes())
+    //    {
+    //        ModelState.AddModelError(error.Propriedade, error.Mensagem);
+    //    }
+
+    //    return View(produtoViewModel);
+    //}
 
     [HttpPost]
     public async Task<IActionResult> Criar(ProdutoViewModel produtoViewModel)
@@ -54,33 +118,95 @@ public class ProdutoController : MainController
             return View(produtoViewModel);
         }
 
-        var produto = _mapper.Map<Produto>(produtoViewModel);
+        //
 
-        produto.CondominoId = Guid.Parse(_userManager.GetUserId(this.User));
+        var postProdutoViewModel = _mapper.Map<PostProdutoViewModel>(produtoViewModel);
 
-        await _produtoService.Create(produto);
+        postProdutoViewModel.CondominoId = Guid.Parse(User.FindFirst("sub")?.Value);
+
+        postProdutoViewModel.ImagensUploadNames = new List<string>();
+
+        foreach (var imagem in produtoViewModel.ImagensUpload)
+        {
+            var imgPrefixo = Guid.NewGuid() + "_";
+            if (!await UploadArquivo(imagem, imgPrefixo))
+            {
+                ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+
+                return View(produtoViewModel);
+            }
+            
+            postProdutoViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
+        }
+
+        //var produtoContentImagem = new MultipartFormDataContent();
+
+        //foreach (var file in produtoViewModel.ImagensUpload)
+        //{
+        //    produtoContentImagem.Add(new StreamContent(file.OpenReadStream()), "file", file.FileName);
+        //}
+
+
+        var produtoContent = new StringContent(
+                JsonSerializer.Serialize(postProdutoViewModel),
+                Encoding.UTF8,
+                "application/json");
+
+        var response = await _httpClient.PostAsync("Produto/Produto/", produtoContent);
+
+        ProdutoResponse produtoResponse;
+
+        if (!VerifyResponseErros(response))
+        {
+            produtoResponse = new ProdutoResponse
+            {
+                Success = false,
+                Data = new DataProduto
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                }
+            };
+
+            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            ViewBag.Error = "Ocorreu um erro ao salvar";
+
+            return View(produtoViewModel);
+        }
+
+        produtoResponse = await DeserializeObjectResponse<ProdutoResponse>(response);
+        //
+
+        //var produto = _mapper.Map<Produto>(produtoViewModel);
+
+        //produto.CondominoId = Guid.Parse(_userManager.GetUserId(this.User));
+
+        //await _produtoService.Create(produto);
 
         if (!_notificador.TemNotificacao())
         {
-            foreach (var imagem in produtoViewModel.ImagensUpload)
-            {
-                var imgPrefixo = Guid.NewGuid() + "_";
-                if (!await UploadArquivo(imagem, imgPrefixo))
-                {
-                    await _produtoService.Delete(produto.Id);
+            //foreach (var imagem in produtoViewModel.ImagensUpload)
+            //{
+            //    var imgPrefixo = Guid.NewGuid() + "_";
+            //    if (!await UploadArquivo(imagem, imgPrefixo))
+            //    {
+            //        await _produtoService.Delete(postProdutoViewModel.Id);
 
-                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+            //        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
 
-                    return View(produtoViewModel);
-                }
+            //        return View(produtoViewModel);
+            //    }
 
-                var produtoImagem = new ProdutoImagem();
-                produtoImagem.FileName = imgPrefixo + imagem.FileName;
-                produtoImagem.ProdutoId = produto.Id;
+            //    var produtoImagem = new ProdutoImagem();
+            //    produtoImagem.FileName = imgPrefixo + imagem.FileName;
+            //    produtoImagem.ProdutoId = postProdutoViewModel.Id;
 
-                await _produtoImagemService.Create(produtoImagem);
+            //    await _produtoImagemService.Create(produtoImagem);
 
-            }
+            //}
 
             return RedirectToAction("Index", "Home");
         }
@@ -95,25 +221,64 @@ public class ProdutoController : MainController
 
     public async Task<IActionResult> MeusProdutos()
     {
-        var todosProdutoDb = await _produtoRepository.ReadExpression(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)) && x.Ativo == true);
+        var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
-        var meusProdutosDbViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(todosProdutoDb);
+        var response = await _httpClient.GetAsync("Produto/Produto/MeusProdutos/" + condominoId);
 
-        return View(meusProdutosDbViewModel);
+        GetMeusProdutoResponse produtosResponse;
+
+        produtosResponse = await DeserializeObjectResponse<GetMeusProdutoResponse>(response);
+
+        return View(produtosResponse.Data);
+
     }
+
+    //public async Task<IActionResult> Editar(Guid id)
+    //{
+    //    var produtoDb = await _produtoRepository.ReadById(id);
+
+    //    if (produtoDb == null)
+    //    {
+    //        return View();
+    //    }
+
+    //    var produtoViewModel = _mapper.Map<UpdateProdutoViewModel>(produtoDb);
+
+    //    return View(produtoViewModel);
+    //}
 
     public async Task<IActionResult> Editar(Guid id)
     {
-        var produtoDb = await _produtoRepository.ReadById(id);
+        var response = await _httpClient.GetAsync("Produto/Produto/" + id);
 
-        if (produtoDb == null)
-        {
-            return View();
-        }
+        GetProdutoResponseId produtoResponse;
 
-        var produtoViewModel = _mapper.Map<UpdateProdutoViewModel>(produtoDb);
+        //ProdutoResponse condominoResponse;
 
-        return View(produtoViewModel);
+        //if (!VerifyResponseErros(response))
+        //{
+        //    condominoResponse = new ProdutoResponse
+        //    {
+        //        Success = false,
+        //        Data = new DataProduto
+        //        {
+        //            ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+        //        }
+        //    };
+
+        //    foreach (var error in condominoResponse.Data.ResponseResult.Errors.Messages)
+        //    {
+        //        ModelState.AddModelError(string.Empty, error);
+        //    }
+
+        //    ViewBag.Error = "Ocorreu um erro ao salvar";
+
+        //    return View();
+        //}
+
+        produtoResponse = await DeserializeObjectResponse<GetProdutoResponseId>(response);
+
+        return View(produtoResponse.Data);
     }
 
     [HttpPost]
@@ -213,18 +378,29 @@ public class ProdutoController : MainController
 
     }
 
+    //public async Task<IActionResult> Visualizar(Guid id)
+    //{
+    //    var produtoDb = await _produtoRepository.ReadById(id);
+
+    //    if (produtoDb == null)
+    //    {
+    //        return View();
+    //    }
+
+    //    var produtoViewModel = _mapper.Map<GetProdutoViewModel>(produtoDb);
+
+    //    return View(produtoViewModel);
+    //}
+
     public async Task<IActionResult> Visualizar(Guid id)
     {
-        var produtoDb = await _produtoRepository.ReadById(id);
+        var response = await _httpClient.GetAsync("Produto/Produto/" + id);
 
-        if (produtoDb == null)
-        {
-            return View();
-        }
+        GetProdutoResponseId produtoResponse;
 
-        var produtoViewModel = _mapper.Map<GetProdutoViewModel>(produtoDb);
+        produtoResponse = await DeserializeObjectResponse<GetProdutoResponseId>(response);
 
-        return View(produtoViewModel);
+        return View(produtoResponse.Data);
     }
 
     public async Task<IActionResult> Produtos()
@@ -270,9 +446,44 @@ public class ProdutoController : MainController
         return View();
     }
 
+    //public async Task<IActionResult> Deletar(Guid id)
+    //{
+    //    await _produtoService.Delete(id);
+
+    //    if (!_notificador.TemNotificacao())
+    //    {
+    //        return RedirectToAction("MeusProdutos");
+    //    }
+
+    //    return View();
+    //}
+
     public async Task<IActionResult> Deletar(Guid id)
     {
         await _produtoService.Delete(id);
+
+        var response = await _httpClient.DeleteAsync("Produto/Produto/" + id);
+
+        ProdutoResponse produtoResponse;
+
+        if (!VerifyResponseErros(response))
+        {
+            produtoResponse = new ProdutoResponse
+            {
+                Success = false,
+                Data = new DataProduto
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                }
+            };
+
+            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            return View();
+        }
 
         if (!_notificador.TemNotificacao())
         {

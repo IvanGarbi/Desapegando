@@ -102,4 +102,54 @@ namespace Desapegando.Application.ViewModels
     {
         public List<Categoria> Categorias { get; set; }
     }
+
+    public class PostProdutoViewModel
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+        public string Descricao { get; set; }
+        public Categoria? Categoria { get; set; }
+        public EstadoProduto? EstadoProduto { get; set; }
+        public decimal? Preco { get; set; }
+        public int? Quantidade { get; set; }
+        //public List<IFormFile> ImagensUpload { get; set; }
+        public List<string> ImagensUploadNames { get; set; }
+        public bool Desistencia { get; set; }
+        //public bool Ativo { get; set; }
+        public bool ProdutoVendido { get; set; }
+        public DateTime DataPublicacao { get; set; }
+        public DateTime? DataVenda { get; set; }
+        public int Curtida { get; set; } = 0;
+        public Guid CondominoId { get; set; }
+    }
+
+    public class GetProdutoResponse
+    {
+        public bool Success { get; set; }
+        public IEnumerable<ProdutoViewModel> Data { get; set; }
+    }
+
+    public class GetProdutoResponseId
+    {
+        public bool Success { get; set; }
+        //public ProdutoViewModel Data { get; set; }
+        public GetProdutoViewModel Data { get; set; }
+    }
+
+    public class ProdutoResponse
+    {
+        public bool Success { get; set; }
+        public DataProduto Data { get; set; }
+    }
+    
+    public class DataProduto
+    {
+        public ResponseResult ResponseResult { get; set; }
+    }
+
+    public class GetMeusProdutoResponse
+    {
+        public bool Success { get; set; }
+        public IEnumerable<GetProdutoViewModel> Data { get; set; }
+    }
 }

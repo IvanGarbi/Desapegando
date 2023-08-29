@@ -13,8 +13,6 @@ public class CondominoController : MainController
 {
     private readonly HttpClient _httpClient;
 
-    private readonly UserManager<IdentityUser> _userManager;
-
     public CondominoController(HttpClient httpClient,
                                IOptions<AppSettings> settings,
                                INotificador notificador) : base(notificador)
