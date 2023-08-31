@@ -96,6 +96,8 @@ namespace Desapegando.Application.ViewModels
         public List<ProdutoImagemViewModel> ProdutoImagemViewModels { get; set; }
         public List<ProdutoCurtidaViewModel> ProdutoCurtidaViewModels { get; set; }
         public CondominoViewModel CondominoViewModel { get; set; }
+
+        public bool Ativo { get; set; }
     }
 
     public class FiltrarProdutoViewModel
@@ -147,6 +149,12 @@ namespace Desapegando.Application.ViewModels
     {
         public bool Success { get; set; }
         public IEnumerable<ProdutoViewModel> Data { get; set; }
+    }
+
+    public class GetAllProdutoResponse
+    {
+        public bool Success { get; set; }
+        public IEnumerable<GetProdutoViewModel> Data { get; set; }
     }
 
     public class GetProdutoResponseId

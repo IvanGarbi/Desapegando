@@ -524,9 +524,34 @@ public class ProdutoController : MainController
         return View(produtoResponse.Data);
     }
 
+    //public async Task<IActionResult> Produtos()
+    //{
+    //    var produtosDb = await _produtoRepository.ReadExpression(x => x.Ativo);
+
+    //    ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
+
+    //    if (!produtosDb.Any())
+    //    {
+    //        return View();
+    //    }
+
+    //    var produtosViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(produtosDb);
+
+    //    ViewBag.Produtos = produtosViewModel;
+
+
+    //    return View();
+    //}
+
     public async Task<IActionResult> Produtos()
     {
-        var produtosDb = await _produtoRepository.ReadExpression(x => x.Ativo);
+        var response = await _httpClient.GetAsync("Produto/Produto");
+
+        GetAllProdutoResponse produtoResponse;
+
+        produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(response);
+
+        var produtosDb = produtoResponse.Data.Where(x => x.Ativo);
 
         ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
 
@@ -535,10 +560,9 @@ public class ProdutoController : MainController
             return View();
         }
 
-        var produtosViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(produtosDb);
+        //var produtosViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(produtosDb);
 
-        ViewBag.Produtos = produtosViewModel;
-
+        ViewBag.Produtos = produtosDb;
 
         return View();
     }

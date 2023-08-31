@@ -96,6 +96,8 @@ namespace Desapegando.API.ViewModels
         public List<ProdutoImagemViewModel> ProdutoImagemViewModels { get; set; }
         public List<ProdutoCurtidaViewModel> ProdutoCurtidaViewModels { get; set; }
         public CondominoViewModel CondominoViewModel { get; set; }
+
+        public bool Ativo { get; set; }
     }
 
     public class FiltrarProdutoViewModel
