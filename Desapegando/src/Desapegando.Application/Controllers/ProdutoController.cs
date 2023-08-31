@@ -278,7 +278,11 @@ public class ProdutoController : MainController
 
         produtoResponse = await DeserializeObjectResponse<GetProdutoResponseId>(response);
 
-        return View(produtoResponse.Data);
+        var produto = _mapper.Map<Produto>(produtoResponse.Data);
+
+        var updateProdutoViewModel = _mapper.Map<UpdateProdutoViewModel>(produto);
+
+        return View(updateProdutoViewModel);
     }
 
     //[HttpPost]
@@ -395,7 +399,7 @@ public class ProdutoController : MainController
     [HttpPost]
     public async Task<IActionResult> Editar(UpdateProdutoViewModel produtoViewModel)
     {
-        var novasImagens = produtoViewModel.ImagensUpload != null;
+        bool novasImagens = produtoViewModel.ImagensUpload != null;
 
         if (!novasImagens)
         {
@@ -414,72 +418,89 @@ public class ProdutoController : MainController
             return View(produtoViewModel);
         }
 
-        var produtoDb = await _produtoRepository.ReadById(produtoViewModel.Id);
 
-        if (produtoDb == null)
+        var patchProdutoViewModel = _mapper.Map<PatchProdutoViewModel>(produtoViewModel);
+
+        patchProdutoViewModel.CondominoId = Guid.Parse(User.FindFirst("sub")?.Value);
+
+        patchProdutoViewModel.ImagensUploadNames = new List<string>();
+
+        if (novasImagens)
         {
+            foreach (var imagem in produtoViewModel.ImagensUpload)
+            {
+                var imgPrefixo = Guid.NewGuid() + "_";
+                if (!await UploadArquivo(imagem, imgPrefixo))
+                {
+                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+
+                    return View(produtoViewModel);
+                }
+
+                patchProdutoViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
+            }
+
+            var responseProduto = await _httpClient.GetAsync("Produto/Produto/" + produtoViewModel.Id);
+
+            GetProdutoResponseId produtoDb;
+
+            produtoDb = await DeserializeObjectResponse<GetProdutoResponseId>(responseProduto);
+
+
+            if (!produtoDb.Success)
+            {
+                return View(produtoViewModel);
+            }
+
+            var listaProdutoImagensDb = produtoDb.Data.ProdutoImagemViewModels;
+            // Deletando imagens antigas
+            foreach (var imagem in listaProdutoImagensDb)
+            {
+                bool result = await DeletarArquivo(imagem.FileName);
+
+                if (!result)
+                {
+                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                }
+            }
+        }
+
+        //
+        var produtoContent = new StringContent(
+        JsonSerializer.Serialize(patchProdutoViewModel),
+        Encoding.UTF8,
+        "application/json");
+
+        var response = await _httpClient.PatchAsync("Produto/Produto/", produtoContent);
+
+        ProdutoResponse produtoResponse;
+
+        if (!VerifyResponseErros(response))
+        {
+            produtoResponse = new ProdutoResponse
+            {
+                Success = false,
+                Data = new DataProduto
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                }
+            };
+
+            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            ViewBag.Error = "Ocorreu um erro ao salvar";
+
             return View(produtoViewModel);
         }
 
-        MapearProduto(produtoDb, produtoViewModel);
-
-        if (!produtoViewModel.Ativo && !produtoViewModel.Desistencia)
-        {
-            produtoDb.DataVenda = DateTime.Now;
-        }
-
-
-
-
-        await _produtoService.Update(produtoDb);
-
+        produtoResponse = await DeserializeObjectResponse<ProdutoResponse>(response);
+        //
 
         if (!_notificador.TemNotificacao())
         {
-            if (novasImagens)
-            {
-                var listaProdutoImagensDb = produtoDb.ProdutoImagens;
-                var imagensAntigasIdLista = new List<Guid>();
-                // Deletando imagens antigas
-                foreach (var imagem in listaProdutoImagensDb)
-                {
-                    bool result = await DeletarArquivo(imagem.FileName);
-
-                    if (!result)
-                    {
-                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
-                    }
-
-                    imagensAntigasIdLista.Add(imagem.Id);
-
-
-                }
-
-                // Adicionando as imagens novas
-                foreach (var imagem in produtoViewModel.ImagensUpload)
-                {
-                    var imgPrefixo = Guid.NewGuid() + "_";
-                    if (!await UploadArquivo(imagem, imgPrefixo))
-                    {
-                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
-
-                        return View(produtoViewModel);
-                    }
-
-                    var produtoImagem = new ProdutoImagem();
-                    produtoImagem.FileName = imgPrefixo + imagem.FileName;
-                    produtoImagem.ProdutoId = produtoDb.Id;
-
-                    await _produtoImagemService.Create(produtoImagem);
-                }
-
-                foreach (var imagemId in imagensAntigasIdLista)
-                {
-                    await _produtoImagemService.Delete(imagemId);
-                }
-
-            }
-
             return RedirectToAction("Index", "Home");
         }
 

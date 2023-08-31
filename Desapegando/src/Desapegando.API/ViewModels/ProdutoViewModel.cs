@@ -137,7 +137,7 @@ namespace Desapegando.API.ViewModels
         public bool Desistencia { get; set; }
         public bool Ativo { get; set; }
         public bool ProdutoVendido { get; set; }
-        public DateTime DataPublicacao { get; set; }
+        //public DateTime DataPublicacao { get; set; }
         public DateTime? DataVenda { get; set; }
         public int Curtida { get; set; } = 0;
         public Guid CondominoId { get; set; }

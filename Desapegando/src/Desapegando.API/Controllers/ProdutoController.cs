@@ -125,7 +125,8 @@ namespace Desapegando.API.Controllers
         [HttpPatch]
         public async Task<IActionResult> Patch([FromBody] PatchProdutoViewModel produtoViewModel)
         {
-            var novasImagens = produtoViewModel.ImagensUploadNames != null;
+            //bool novasImagens = produtoViewModel.ImagensUploadNames != null;
+            bool novasImagens = produtoViewModel.ImagensUploadNames.Any();
 
             if (!novasImagens)
             {
@@ -167,48 +168,24 @@ namespace Desapegando.API.Controllers
                 if (novasImagens)
                 {
                     var listaProdutoImagensDb = produtoDb.ProdutoImagens;
-                    var imagensAntigasIdLista = new List<Guid>();
                     // Deletando imagens antigas
                     foreach (var imagem in listaProdutoImagensDb)
                     {
-                        //bool result = await DeletarArquivo(imagem.FileName);
-
-                        //if (!result)
-                        //{
-                        //    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
-                        //}
-
-                        //imagensAntigasIdLista.Add(imagem.Id);
-
-
+                        await _produtoImagemService.Delete(imagem.Id);
                     }
 
                     // Adicionando as imagens novas
-                    foreach (var imagem in produtoViewModel.ImagensUploadNames)
+                    foreach (var imagemNome in produtoViewModel.ImagensUploadNames)
                     {
-                        var imgPrefixo = Guid.NewGuid() + "_";
-                        //if (!await UploadArquivo(imagem, imgPrefixo))
-                        //{
-                        //    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
-
-                        //    return View(produtoViewModel);
-                        //}
-
                         var produtoImagem = new ProdutoImagem();
-                        //produtoImagem.FileName = imgPrefixo + imagem.FileName;
+                        produtoImagem.FileName = imagemNome;
                         produtoImagem.ProdutoId = produtoDb.Id;
 
                         await _produtoImagemService.Create(produtoImagem);
                     }
-
-                    foreach (var imagemId in imagensAntigasIdLista)
-                    {
-                        await _produtoImagemService.Delete(imagemId);
-                    }
-
                 }
 
-                return RedirectToAction("Index", "Home");
+                return Response();
             }
 
             foreach (var error in _notificador.GetNotificacoes())
@@ -219,8 +196,6 @@ namespace Desapegando.API.Controllers
             return Response(produtoViewModel);
 
         }
-
-
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)

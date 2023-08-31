@@ -30,6 +30,8 @@ public class AutoMapperConfig : Profile
 
         CreateMap<UpdateProdutoViewModel, Produto>().ReverseMap();
 
+        CreateMap<UpdateProdutoViewModel, PatchProdutoViewModel>().ReverseMap();
+
         CreateMap<CampanhaViewModel, Campanha>().ReverseMap();
 
         CreateMap<GetCampanhaViewModel, Campanha>().ForMember(x => x.CampanhaImagens, z => z.MapFrom(a => a.CampanhaImagemViewModels))
