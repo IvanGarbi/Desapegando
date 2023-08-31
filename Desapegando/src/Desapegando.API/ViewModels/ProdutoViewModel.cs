@@ -122,4 +122,24 @@ namespace Desapegando.API.ViewModels
         public int Curtida { get; set; } = 0;
         public Guid CondominoId { get; set; }
     }
+
+    public class PatchProdutoViewModel
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+        public string Descricao { get; set; }
+        public Categoria? Categoria { get; set; }
+        public EstadoProduto? EstadoProduto { get; set; }
+        public decimal? Preco { get; set; }
+        public int? Quantidade { get; set; }
+        //public List<IFormFile> ImagensUpload { get; set; }
+        public List<string> ImagensUploadNames { get; set; }
+        public bool Desistencia { get; set; }
+        public bool Ativo { get; set; }
+        public bool ProdutoVendido { get; set; }
+        public DateTime DataPublicacao { get; set; }
+        public DateTime? DataVenda { get; set; }
+        public int Curtida { get; set; } = 0;
+        public Guid CondominoId { get; set; }
+    }
 }

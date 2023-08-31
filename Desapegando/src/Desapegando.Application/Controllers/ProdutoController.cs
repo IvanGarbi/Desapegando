@@ -281,6 +281,117 @@ public class ProdutoController : MainController
         return View(produtoResponse.Data);
     }
 
+    //[HttpPost]
+    //public async Task<IActionResult> Editar(UpdateProdutoViewModel produtoViewModel)
+    //{
+    //    var novasImagens = produtoViewModel.ImagensUpload != null;
+
+    //    if (!novasImagens)
+    //    {
+    //        ModelState.ClearValidationState("ImagensUpload");
+    //        ModelState.MarkFieldValid("ImagensUpload");
+    //    }
+
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return View(produtoViewModel);
+    //    }
+
+    //    if (novasImagens && produtoViewModel.ImagensUpload.Count > 4)
+    //    {
+    //        ModelState.AddModelError("ImagensUpload", "Só é possível adicionar no máximo 4 imagens.");
+    //        return View(produtoViewModel);
+    //    }
+
+    //    var produtoDb = await _produtoRepository.ReadById(produtoViewModel.Id);
+
+    //    if (produtoDb == null) 
+    //    { 
+    //        return View(produtoViewModel);
+    //    }
+
+    //    MapearProduto(produtoDb, produtoViewModel);
+
+    //    if (!produtoViewModel.Ativo && !produtoViewModel.Desistencia)
+    //    {
+    //        produtoDb.DataVenda = DateTime.Now;
+    //    }
+
+    //    await _produtoService.Update(produtoDb);
+
+
+    //    if (!_notificador.TemNotificacao())
+    //    {
+    //        if (novasImagens)
+    //        {
+    //            var listaProdutoImagensDb = produtoDb.ProdutoImagens;
+    //            var imagensAntigasIdLista = new List<Guid>();
+    //            // Deletando imagens antigas
+    //            foreach (var imagem in listaProdutoImagensDb)
+    //            {
+    //                bool result = await DeletarArquivo(imagem.FileName);
+
+    //                if (!result)
+    //                {
+    //                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+    //                }
+
+    //                imagensAntigasIdLista.Add(imagem.Id);
+
+
+    //            }
+
+    //            // Adicionando as imagens novas
+    //            foreach (var imagem in produtoViewModel.ImagensUpload)
+    //            {
+    //                var imgPrefixo = Guid.NewGuid() + "_";
+    //                if (!await UploadArquivo(imagem, imgPrefixo))
+    //                {
+    //                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+
+    //                    return View(produtoViewModel);
+    //                }
+
+    //                var produtoImagem = new ProdutoImagem();
+    //                produtoImagem.FileName = imgPrefixo + imagem.FileName;
+    //                produtoImagem.ProdutoId = produtoDb.Id;
+
+    //                await _produtoImagemService.Create(produtoImagem);
+    //            }
+
+    //            foreach (var imagemId in imagensAntigasIdLista)
+    //            {
+    //                await _produtoImagemService.Delete(imagemId);
+    //            }
+
+    //        }
+
+    //        return RedirectToAction("Index", "Home");
+    //    }
+
+    //    foreach (var error in _notificador.GetNotificacoes())
+    //    {
+    //        ModelState.AddModelError(error.Propriedade, error.Mensagem);
+    //    }
+
+    //    return View(produtoViewModel);
+
+    //}
+
+    //public async Task<IActionResult> Visualizar(Guid id)
+    //{
+    //    var produtoDb = await _produtoRepository.ReadById(id);
+
+    //    if (produtoDb == null)
+    //    {
+    //        return View();
+    //    }
+
+    //    var produtoViewModel = _mapper.Map<GetProdutoViewModel>(produtoDb);
+
+    //    return View(produtoViewModel);
+    //}
+
     [HttpPost]
     public async Task<IActionResult> Editar(UpdateProdutoViewModel produtoViewModel)
     {
@@ -305,8 +416,8 @@ public class ProdutoController : MainController
 
         var produtoDb = await _produtoRepository.ReadById(produtoViewModel.Id);
 
-        if (produtoDb == null) 
-        { 
+        if (produtoDb == null)
+        {
             return View(produtoViewModel);
         }
 
@@ -316,6 +427,9 @@ public class ProdutoController : MainController
         {
             produtoDb.DataVenda = DateTime.Now;
         }
+
+
+
 
         await _produtoService.Update(produtoDb);
 
@@ -377,20 +491,6 @@ public class ProdutoController : MainController
         return View(produtoViewModel);
 
     }
-
-    //public async Task<IActionResult> Visualizar(Guid id)
-    //{
-    //    var produtoDb = await _produtoRepository.ReadById(id);
-
-    //    if (produtoDb == null)
-    //    {
-    //        return View();
-    //    }
-
-    //    var produtoViewModel = _mapper.Map<GetProdutoViewModel>(produtoDb);
-
-    //    return View(produtoViewModel);
-    //}
 
     public async Task<IActionResult> Visualizar(Guid id)
     {

@@ -68,11 +68,11 @@ namespace Desapegando.API.Controllers
             //var imagensUploadNames = new List<string>();
             //imagensUploadNames.AddRange(postProdutoViewModel.ImagensUploadNames);
 
-            //if (postProdutoViewModel.ImagensUpload.Any() && postProdutoViewModel.ImagensUpload.Count > 4)
-            //{
-            //    ModelState.AddModelError("ImagensUpload", "Só é possível adicionar no máximo 4 imagens.");
-            //    return Response(postProdutoViewModel);
-            //}
+            if (postProdutoViewModel.ImagensUploadNames.Any() && postProdutoViewModel.ImagensUploadNames.Count > 4)
+            {
+                ModelState.AddModelError("ImagensUploadNames", "Só é possível adicionar no máximo 4 imagens.");
+                return Response(postProdutoViewModel);
+            }
 
             var produto = _mapper.Map<Produto>(postProdutoViewModel);
 
@@ -122,6 +122,106 @@ namespace Desapegando.API.Controllers
             return Response(postProdutoViewModel);
         }
 
+        [HttpPatch]
+        public async Task<IActionResult> Patch([FromBody] PatchProdutoViewModel produtoViewModel)
+        {
+            var novasImagens = produtoViewModel.ImagensUploadNames != null;
+
+            if (!novasImagens)
+            {
+                ModelState.ClearValidationState("ImagensUpload");
+                ModelState.MarkFieldValid("ImagensUpload");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Response(produtoViewModel);
+            }
+
+            if (novasImagens && produtoViewModel.ImagensUploadNames.Count > 4)
+            {
+                ModelState.AddModelError("ImagensUploadNames", "Só é possível adicionar no máximo 4 imagens.");
+                return Response(produtoViewModel);
+            }
+
+            var produtoDb = await _produtoRepository.ReadById(produtoViewModel.Id);
+
+            if (produtoDb == null)
+            {
+                ModelState.AddModelError(string.Empty, "Produto não encontrado.");
+                return Response(produtoViewModel);
+            }
+
+            MapearProduto(produtoDb, produtoViewModel);
+
+            if (!produtoViewModel.Ativo && !produtoViewModel.Desistencia)
+            {
+                produtoDb.DataVenda = DateTime.Now;
+            }
+
+            await _produtoService.Update(produtoDb);
+
+
+            if (!_notificador.TemNotificacao())
+            {
+                if (novasImagens)
+                {
+                    var listaProdutoImagensDb = produtoDb.ProdutoImagens;
+                    var imagensAntigasIdLista = new List<Guid>();
+                    // Deletando imagens antigas
+                    foreach (var imagem in listaProdutoImagensDb)
+                    {
+                        //bool result = await DeletarArquivo(imagem.FileName);
+
+                        //if (!result)
+                        //{
+                        //    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                        //}
+
+                        //imagensAntigasIdLista.Add(imagem.Id);
+
+
+                    }
+
+                    // Adicionando as imagens novas
+                    foreach (var imagem in produtoViewModel.ImagensUploadNames)
+                    {
+                        var imgPrefixo = Guid.NewGuid() + "_";
+                        //if (!await UploadArquivo(imagem, imgPrefixo))
+                        //{
+                        //    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+
+                        //    return View(produtoViewModel);
+                        //}
+
+                        var produtoImagem = new ProdutoImagem();
+                        //produtoImagem.FileName = imgPrefixo + imagem.FileName;
+                        produtoImagem.ProdutoId = produtoDb.Id;
+
+                        await _produtoImagemService.Create(produtoImagem);
+                    }
+
+                    foreach (var imagemId in imagensAntigasIdLista)
+                    {
+                        await _produtoImagemService.Delete(imagemId);
+                    }
+
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            foreach (var error in _notificador.GetNotificacoes())
+            {
+                ModelState.AddModelError(error.Propriedade, error.Mensagem);
+            }
+
+            return Response(produtoViewModel);
+
+        }
+
+
+
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -139,5 +239,20 @@ namespace Desapegando.API.Controllers
 
             return Response();
         }
+
+        #region Métodos Privados
+        private static void MapearProduto(Produto produto, PatchProdutoViewModel produtoViewModel)
+        {
+            produto.Nome = produtoViewModel.Nome;
+            produto.Descricao = produtoViewModel.Descricao;
+            produto.Preco = produtoViewModel.Preco.Value;
+            produto.EstadoProduto = produtoViewModel.EstadoProduto.Value;
+            produto.Categoria = produtoViewModel.Categoria.Value;
+            produto.Desistencia = produtoViewModel.Desistencia;
+            produto.Ativo = produtoViewModel.Ativo;
+        }
+
+        #endregion
+
     }
 }
