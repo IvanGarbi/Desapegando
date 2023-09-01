@@ -180,4 +180,15 @@ namespace Desapegando.Application.ViewModels
         public bool Success { get; set; }
         public IEnumerable<GetProdutoViewModel> Data { get; set; }
     }
+
+    public class CurtidaViewModel
+    {
+        public Guid ProdutoId { get; set; }
+        public Guid CondominoId { get; set; }
+    }
+    public class DescurtidaViewModel
+    {
+        public Guid ProdutoId { get; set; }
+        public Guid CondominoId { get; set; }
+    }
 }

@@ -215,6 +215,42 @@ namespace Desapegando.API.Controllers
             return Response();
         }
 
+        [HttpPost("Curtir")]
+        public async Task<IActionResult> Curtir([FromBody] CurtidaViewModel curtidaViewModel)
+        {
+            await _produtoCurtidaService.Curtir(curtidaViewModel.ProdutoId, curtidaViewModel.CondominoId);
+
+            if (_notificador.TemNotificacao())
+            {
+                List<string> errors = new List<string>();
+
+                foreach (var error in _notificador.GetNotificacoes())
+                {
+                    errors.Add(error.Mensagem);
+                }
+            }
+
+            return Response();
+        }
+
+        [HttpPost("Descurtir")]
+        public async Task<IActionResult> Descurtir(DescurtidaViewModel descurtidaViewModel)
+        {
+            await _produtoCurtidaService.Descurtir(descurtidaViewModel.ProdutoId, descurtidaViewModel.CondominoId);
+
+            if (_notificador.TemNotificacao())
+            {
+                List<string> errors = new List<string>();
+
+                foreach (var error in _notificador.GetNotificacoes())
+                {
+                    errors.Add(error.Mensagem);
+                }
+            }
+
+            return Response();
+        }
+
         #region Métodos Privados
         private static void MapearProduto(Produto produto, PatchProdutoViewModel produtoViewModel)
         {

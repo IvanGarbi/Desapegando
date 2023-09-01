@@ -123,7 +123,7 @@
                                             <div class="d-flex flex-column justify-content-between h-100">
                                                 <div>
                                                     <div class="border border-1 rounded-3 position-relative mb-3">
-                                                        @if (produto.ProdutoCurtidaViewModels.Any(x => x.ProdutoId == produto.Id && x.CondominoId == Guid.Parse(User.Claims.First().Value)))
+                                                        @if (produto.ProdutoCurtidaViewModels.Any(x => x.ProdutoId == produto.Id && x.CondominoId == Guid.Parse(User.FindFirst("sub")?.Value)))
                                                         {
                                                             <a asp-action="Descurtir" asp-controller="Produto" asp-route-id="@produto.Id" asp-route-returnUrl="@Url.Page("/Home")" class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Descurtir"
                                                                style="color: var(--phoenix-btn-hover-color);

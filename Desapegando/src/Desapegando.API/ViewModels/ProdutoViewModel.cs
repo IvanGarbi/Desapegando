@@ -144,4 +144,15 @@ namespace Desapegando.API.ViewModels
         public int Curtida { get; set; } = 0;
         public Guid CondominoId { get; set; }
     }
+
+    public class CurtidaViewModel
+    {
+        public Guid ProdutoId { get; set; }
+        public Guid CondominoId { get; set; }
+    }
+    public class DescurtidaViewModel
+    {
+        public Guid ProdutoId { get; set; }
+        public Guid CondominoId { get; set; }
+    }
 }
