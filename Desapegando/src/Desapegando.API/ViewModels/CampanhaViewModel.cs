@@ -118,4 +118,38 @@ namespace Desapegando.API.ViewModels
     {
         public string Nome { get; set; }
     }
+
+    public class PostCampanhaViewModel
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+        public string NomeInstituicao { get; set; }
+        public string Descricao { get; set; }
+        public string NomeResponsavel { get; set; }
+        public string EmailResponsavel { get; set; }
+        public string TelefoneResponsavel { get; set; }
+        public string LocalDeEncontro { get; set; }
+        public DateTime DataInicio { get; set; }
+        public DateTime DataFinal { get; set; }
+        public List<string> ImagensUploadNames { get; set; }
+        //public bool Ativo { get; set; }
+        public Guid CondominoId { get; set; }
+    }
+
+    public class PatchCampanhaViewModel
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+        public string NomeInstituicao { get; set; }
+        public string Descricao { get; set; }
+        public string NomeResponsavel { get; set; }
+        public string EmailResponsavel { get; set; }
+        public string TelefoneResponsavel { get; set; }
+        public string LocalDeEncontro { get; set; }
+        public DateTime? DataInicio { get; set; }
+        public DateTime? DataFinal { get; set; }
+        public List<string> ImagensUploadNames { get; set; }
+        public bool Ativo { get; set; }
+        public Guid CondominoId { get; set; }
+    }
 }

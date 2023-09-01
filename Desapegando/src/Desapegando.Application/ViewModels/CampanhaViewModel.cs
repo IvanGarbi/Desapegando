@@ -118,4 +118,74 @@ namespace Desapegando.Application.ViewModels
     {
         public string Nome { get; set; }
     }
+
+    public class PostCampanhaViewModel
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+        public string NomeInstituicao { get; set; }
+        public string Descricao { get; set; }
+        public string NomeResponsavel { get; set; }
+        public string EmailResponsavel { get; set; }
+        public string TelefoneResponsavel { get; set; }
+        public string LocalDeEncontro { get; set; }
+        public DateTime DataInicio { get; set; }
+        public DateTime DataFinal { get; set; }
+        public List<string> ImagensUploadNames { get; set; }
+        //public bool Ativo { get; set; }
+        public Guid CondominoId { get; set; }
+    }
+
+    public class GetCampanhaResponse
+    {
+        public bool Success { get; set; }
+        public IEnumerable<CampanhaViewModel> Data { get; set; }
+    }
+
+    public class GetAllCampanhaResponse
+    {
+        public bool Success { get; set; }
+        public IEnumerable<GetCampanhaViewModel> Data { get; set; }
+    }
+
+    public class GetCampanhaResponseId
+    {
+        public bool Success { get; set; }
+        //public CampanhaViewModel Data { get; set; }
+        public GetCampanhaViewModel Data { get; set; }
+    }
+
+    public class CampanhaResponse
+    {
+        public bool Success { get; set; }
+        public DataCampanha Data { get; set; }
+    }
+
+    public class DataCampanha
+    {
+        public ResponseResult ResponseResult { get; set; }
+    }
+
+    public class GetMinhasCampanhasResponse
+    {
+        public bool Success { get; set; }
+        public IEnumerable<GetCampanhaViewModel> Data { get; set; }
+    }
+
+    public class PatchCampanhaViewModel
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+        public string NomeInstituicao { get; set; }
+        public string Descricao { get; set; }
+        public string NomeResponsavel { get; set; }
+        public string EmailResponsavel { get; set; }
+        public string TelefoneResponsavel { get; set; }
+        public string LocalDeEncontro { get; set; }
+        public DateTime? DataInicio { get; set; }
+        public DateTime? DataFinal { get; set; }
+        public List<string> ImagensUploadNames { get; set; }
+        public bool Ativo { get; set; }
+        public Guid CondominoId { get; set; }
+    }
 }

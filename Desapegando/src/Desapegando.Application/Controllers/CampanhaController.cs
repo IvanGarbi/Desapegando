@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Desapegando.Application.Extensions;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
@@ -6,18 +7,26 @@ using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 
 namespace Desapegando.Application.Controllers;
 
 public class CampanhaController : MainController
 {
+    private readonly HttpClient _httpClient;
+
     private readonly ICampanhaRepository _campanhaRepository;
     private readonly ICampanhaService _campanhaService;
     private readonly ICampanhaImagemService _campanhaImagemService;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IMapper _mapper;
 
-    public CampanhaController(ICampanhaRepository campanhaRepository,
+    public CampanhaController(HttpClient httpClient,
+                              IOptions<AppSettings> settings,
+                              ICampanhaRepository campanhaRepository,
                               ICampanhaService campanhaService,
                               IMapper mapper,
                               UserManager<IdentityUser> userManager,
@@ -29,6 +38,9 @@ public class CampanhaController : MainController
         _mapper = mapper;
         _userManager = userManager;
         _campanhaImagemService = campanhaImagemService;
+
+        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
+        _httpClient = httpClient;
     }
 
     public async Task<IActionResult> Criar()
@@ -50,33 +62,95 @@ public class CampanhaController : MainController
             return View(campanhaViewModel);
         }
 
-        var campanha = _mapper.Map<Campanha>(campanhaViewModel);
+        //
 
-        campanha.CondominoId = Guid.Parse(_userManager.GetUserId(this.User));
+        var postCampanhaViewModel = _mapper.Map<PostCampanhaViewModel>(campanhaViewModel);
 
-        await _campanhaService.Create(campanha);
+        postCampanhaViewModel.CondominoId = Guid.Parse(User.FindFirst("sub")?.Value);
+
+        postCampanhaViewModel.ImagensUploadNames = new List<string>();
+
+        foreach (var imagem in campanhaViewModel.ImagensUpload)
+        {
+            var imgPrefixo = Guid.NewGuid() + "_";
+            if (!await UploadArquivo(imagem, imgPrefixo))
+            {
+                ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+
+                return View(campanhaViewModel);
+            }
+
+            postCampanhaViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
+        }
+
+        //var produtoContentImagem = new MultipartFormDataContent();
+
+        //foreach (var file in produtoViewModel.ImagensUpload)
+        //{
+        //    produtoContentImagem.Add(new StreamContent(file.OpenReadStream()), "file", file.FileName);
+        //}
+
+
+        var campanhaContent = new StringContent(
+                JsonSerializer.Serialize(postCampanhaViewModel),
+                Encoding.UTF8,
+        "application/json");
+
+        var response = await _httpClient.PostAsync("Campanha/Campanha/", campanhaContent);
+
+        CampanhaResponse campanhaResponse;
+
+        if (!VerifyResponseErros(response))
+        {
+            campanhaResponse = new CampanhaResponse
+            {
+                Success = false,
+                Data = new DataCampanha
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                }
+            };
+
+            foreach (var error in campanhaResponse.Data.ResponseResult.Errors.Messages)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            ViewBag.Error = "Ocorreu um erro ao salvar";
+
+            return View(campanhaViewModel);
+        }
+
+        campanhaResponse = await DeserializeObjectResponse<CampanhaResponse>(response);
+        //
+
+        //var produto = _mapper.Map<Produto>(produtoViewModel);
+
+        //produto.CondominoId = Guid.Parse(_userManager.GetUserId(this.User));
+
+        //await _produtoService.Create(produto);
 
         if (!_notificador.TemNotificacao())
         {
-            foreach (var imagem in campanhaViewModel.ImagensUpload)
-            {
-                var imgPrefixo = Guid.NewGuid() + "_";
-                if (!await UploadArquivo(imagem, imgPrefixo))
-                {
-                    await _campanhaService.Delete(campanha.Id);
+            //foreach (var imagem in produtoViewModel.ImagensUpload)
+            //{
+            //    var imgPrefixo = Guid.NewGuid() + "_";
+            //    if (!await UploadArquivo(imagem, imgPrefixo))
+            //    {
+            //        await _produtoService.Delete(postProdutoViewModel.Id);
 
-                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+            //        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
 
-                    return View(campanhaViewModel);
-                }
+            //        return View(produtoViewModel);
+            //    }
 
-                var campanhaImagem = new CampanhaImagem();
-                campanhaImagem.FileName = imgPrefixo + imagem.FileName;
-                campanhaImagem.CampanhaId = campanha.Id;
+            //    var produtoImagem = new ProdutoImagem();
+            //    produtoImagem.FileName = imgPrefixo + imagem.FileName;
+            //    produtoImagem.ProdutoId = postProdutoViewModel.Id;
 
-                await _campanhaImagemService.Create(campanhaImagem);
+            //    await _produtoImagemService.Create(produtoImagem);
 
-            }
+            //}
 
             return RedirectToAction("Index", "Home");
         }
@@ -91,31 +165,59 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> MinhasCampanhas()
     {
-        var todosCampanhaDb = await _campanhaRepository.ReadExpression(x => x.CondominoId == Guid.Parse(_userManager.GetUserId(this.User)) && x.Ativo == true);
+        var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
-        var meusCampanhasDbViewModel = _mapper.Map<IEnumerable<GetCampanhaViewModel>>(todosCampanhaDb);
+        var response = await _httpClient.GetAsync("Campanha/Campanha/MinhasCampanhas/" + condominoId);
 
-        return View(meusCampanhasDbViewModel);
+        GetMinhasCampanhasResponse campanhasResponse;
+
+        campanhasResponse = await DeserializeObjectResponse<GetMinhasCampanhasResponse>(response);
+
+        return View(campanhasResponse.Data);
     }
 
     public async Task<IActionResult> Editar(Guid id)
     {
-        var campanhaDb = await _campanhaRepository.ReadById(id);
+        var response = await _httpClient.GetAsync("Campanha/Campanha/" + id);
 
-        if (campanhaDb == null)
-        {
-            return View();
-        }
+        GetCampanhaResponseId campanhaResponse;
 
-        var campanhaViewModel = _mapper.Map<UpdateCampanhaViewModel>(campanhaDb);
+        //ProdutoResponse condominoResponse;
 
-        return View(campanhaViewModel);
+        //if (!VerifyResponseErros(response))
+        //{
+        //    condominoResponse = new ProdutoResponse
+        //    {
+        //        Success = false,
+        //        Data = new DataProduto
+        //        {
+        //            ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+        //        }
+        //    };
+
+        //    foreach (var error in condominoResponse.Data.ResponseResult.Errors.Messages)
+        //    {
+        //        ModelState.AddModelError(string.Empty, error);
+        //    }
+
+        //    ViewBag.Error = "Ocorreu um erro ao salvar";
+
+        //    return View();
+        //}
+
+        campanhaResponse = await DeserializeObjectResponse<GetCampanhaResponseId>(response);
+
+        var campanha = _mapper.Map<Campanha>(campanhaResponse.Data);
+
+        var updateCampanhaViewModel = _mapper.Map<UpdateCampanhaViewModel>(campanha);
+
+        return View(updateCampanhaViewModel);
     }
 
     [HttpPost]
     public async Task<IActionResult> Editar(UpdateCampanhaViewModel campanhaViewModel)
     {
-        var novasImagens = campanhaViewModel.ImagensUpload != null;
+        bool novasImagens = campanhaViewModel.ImagensUpload != null;
 
         if (!novasImagens)
         {
@@ -134,61 +236,89 @@ public class CampanhaController : MainController
             return View(campanhaViewModel);
         }
 
-        var campanhaDb = await _campanhaRepository.ReadById(campanhaViewModel.Id);
 
-        if (campanhaDb == null)
+        var patchCampanhaViewModel = _mapper.Map<PatchCampanhaViewModel>(campanhaViewModel);
+
+        patchCampanhaViewModel.CondominoId = Guid.Parse(User.FindFirst("sub")?.Value);
+
+        patchCampanhaViewModel.ImagensUploadNames = new List<string>();
+
+        if (novasImagens)
         {
+            foreach (var imagem in campanhaViewModel.ImagensUpload)
+            {
+                var imgPrefixo = Guid.NewGuid() + "_";
+                if (!await UploadArquivo(imagem, imgPrefixo))
+                {
+                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+
+                    return View(campanhaViewModel);
+                }
+
+                patchCampanhaViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
+            }
+
+            var responseCampanha = await _httpClient.GetAsync("Campanha/Campanha/" + campanhaViewModel.Id);
+
+            GetCampanhaResponseId campanhaDb;
+
+            campanhaDb = await DeserializeObjectResponse<GetCampanhaResponseId>(responseCampanha);
+
+
+            if (!campanhaDb.Success)
+            {
+                return View(campanhaViewModel);
+            }
+
+            var listaProdutoImagensDb = campanhaDb.Data.CampanhaImagemViewModels;
+            // Deletando imagens antigas
+            foreach (var imagem in listaProdutoImagensDb)
+            {
+                bool result = await DeletarArquivo(imagem.FileName);
+
+                if (!result)
+                {
+                    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+                }
+            }
+        }
+
+        //
+        var campanhaContent = new StringContent(
+        JsonSerializer.Serialize(patchCampanhaViewModel),
+        Encoding.UTF8,
+        "application/json");
+
+        var response = await _httpClient.PatchAsync("Campanha/Campanha/", campanhaContent);
+
+        CampanhaResponse campanhaResponse;
+
+        if (!VerifyResponseErros(response))
+        {
+            campanhaResponse = new CampanhaResponse
+            {
+                Success = false,
+                Data = new DataCampanha
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                }
+            };
+
+            foreach (var error in campanhaResponse.Data.ResponseResult.Errors.Messages)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            ViewBag.Error = "Ocorreu um erro ao salvar";
+
             return View(campanhaViewModel);
         }
 
-        MapearCampanha(campanhaDb, campanhaViewModel);
-
-        await _campanhaService.Update(campanhaDb);
+        campanhaResponse = await DeserializeObjectResponse<CampanhaResponse>(response);
+        //
 
         if (!_notificador.TemNotificacao())
         {
-            if (novasImagens)
-            {
-                var listaCampanhaImagensDb = campanhaDb.CampanhaImagens;
-                var imagensAntigasIdLista = new List<Guid>();
-                // Deletando imagens antigas
-                foreach (var imagem in listaCampanhaImagensDb)
-                {
-                    bool result = await DeletarArquivo(imagem.FileName);
-
-                    if (!result)
-                    {
-                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
-                    }
-
-                    imagensAntigasIdLista.Add(imagem.Id);
-                }
-
-                // Adicionando as imagens novas
-                foreach (var imagem in campanhaViewModel.ImagensUpload)
-                {
-                    var imgPrefixo = Guid.NewGuid() + "_";
-                    if (!await UploadArquivo(imagem, imgPrefixo))
-                    {
-                        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
-
-                        return View(campanhaViewModel);
-                    }
-
-                    var campanhaImagem = new CampanhaImagem();
-                    campanhaImagem.FileName = imgPrefixo + imagem.FileName;
-                    campanhaImagem.CampanhaId = campanhaDb.Id;
-
-                    await _campanhaImagemService.Create(campanhaImagem);
-                }
-
-                foreach (var imagemId in imagensAntigasIdLista)
-                {
-                    await _campanhaImagemService.Delete(imagemId);
-                }
-
-            }
-
             return RedirectToAction("Index", "Home");
         }
 
@@ -202,21 +332,39 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> Visualizar(Guid id)
     {
-        var campanhaDb = await _campanhaRepository.ReadById(id);
+        var response = await _httpClient.GetAsync("Campanha/Campanha/" + id);
 
-        if (campanhaDb == null)
-        {
-            return View();
-        }
+        GetCampanhaResponseId campanhaResponse;
 
-        var campanhaViewModel = _mapper.Map<GetCampanhaViewModel>(campanhaDb);
+        campanhaResponse = await DeserializeObjectResponse<GetCampanhaResponseId>(response);
 
-        return View(campanhaViewModel);
+        return View(campanhaResponse.Data);
     }
 
     public async Task<IActionResult> Deletar(Guid id)
     {
-        await _campanhaService.Delete(id);
+        var response = await _httpClient.DeleteAsync("Campanha/Campanha/" + id);
+
+        CampanhaResponse campanhaResponse;
+
+        if (!VerifyResponseErros(response))
+        {
+            campanhaResponse = new CampanhaResponse
+            {
+                Success = false,
+                Data = new DataCampanha
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                }
+            };
+
+            foreach (var error in campanhaResponse.Data.ResponseResult.Errors.Messages)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            return View();
+        }
 
         if (!_notificador.TemNotificacao())
         {
@@ -228,7 +376,13 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> Campanhas()
     {
-        var campanhasDb = await _campanhaRepository.ReadExpression(x => x.Ativo);
+        var response = await _httpClient.GetAsync("Campanha/Campanha");
+
+        GetAllCampanhaResponse campanhaResponse;
+
+        campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(response);
+
+        var campanhasDb = campanhaResponse.Data.Where(x => x.Ativo);
 
         ViewBag.Campanhas = Enumerable.Empty<GetCampanhaViewModel>();
 
@@ -237,10 +391,7 @@ public class CampanhaController : MainController
             return View();
         }
 
-        var campanhasViewModel = _mapper.Map<IEnumerable<GetCampanhaViewModel>>(campanhasDb);
-
-        ViewBag.Campanhas = campanhasViewModel;
-
+        ViewBag.Campanhas = campanhasDb;
 
         return View();
     }
@@ -253,7 +404,13 @@ public class CampanhaController : MainController
             return RedirectToAction("Campanhas");
         }
 
-        var campanhasDb = await _campanhaRepository.ReadExpression(x => x.Nome.ToLower().Trim().Contains(filtrarCampanhaViewModel.Nome.ToLower().Trim()) && x.Ativo == true);
+        var response = await _httpClient.GetAsync("Campanha/Campanha");
+
+        GetAllCampanhaResponse campanhaResponse;
+
+        campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(response);
+
+        var campanhasDb = campanhaResponse.Data.Where(x => x.Nome.ToLower().Trim().Contains(filtrarCampanhaViewModel.Nome.ToLower().Trim()) && x.Ativo == true);
 
         ViewBag.Campanhas = Enumerable.Empty<GetCampanhaViewModel>();
 

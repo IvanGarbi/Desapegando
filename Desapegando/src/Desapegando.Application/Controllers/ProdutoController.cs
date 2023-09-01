@@ -18,28 +18,16 @@ public class ProdutoController : MainController
     private readonly HttpClient _httpClient;
 
     private readonly IProdutoRepository _produtoRepository;
-    private readonly IProdutoService _produtoService;
-    private readonly IProdutoCurtidaService _produtoCurtidaService;
-    private readonly IProdutoImagemService _produtoImagemService;
-    private readonly UserManager<IdentityUser> _userManager;
     private readonly IMapper _mapper;
 
     public ProdutoController(HttpClient httpClient,
                              IOptions<AppSettings> settings, 
                              IProdutoRepository produtoRepository,
-                             IProdutoService produtoService, 
                              IMapper mapper, 
-                             UserManager<IdentityUser> userManager, 
-                             IProdutoImagemService produtoImagemService,
-                             IProdutoCurtidaService produtoCurtidaService,
                              INotificador notificador) : base(notificador)
     {
         _produtoRepository = produtoRepository;
-        _produtoService = produtoService;
         _mapper = mapper;
-        _userManager = userManager;
-        _produtoImagemService = produtoImagemService;
-        _produtoCurtidaService = produtoCurtidaService;
 
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
         _httpClient = httpClient;
@@ -177,7 +165,6 @@ public class ProdutoController : MainController
         produtosResponse = await DeserializeObjectResponse<GetMeusProdutoResponse>(response);
 
         return View(produtosResponse.Data);
-
     }
 
     public async Task<IActionResult> Editar(Guid id)
@@ -363,8 +350,6 @@ public class ProdutoController : MainController
             return View();
         }
 
-        //var produtosViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(produtosDb);
-
         ViewBag.Produtos = produtosDb;
 
         return View();
@@ -378,7 +363,13 @@ public class ProdutoController : MainController
             return RedirectToAction("Produtos");
         }
 
-        var produtosDb = await _produtoRepository.ReadExpression(x => filtrarProdutoViewModel.Categorias.Contains(x.Categoria) && x.Ativo == true);
+        var response = await _httpClient.GetAsync("Produto/Produto");
+
+        GetAllProdutoResponse produtoResponse;
+
+        produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(response);
+
+        var produtosDb = produtoResponse.Data.Where(x => filtrarProdutoViewModel.Categorias.Contains(x.Categoria) && x.Ativo == true);
 
         ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
 
