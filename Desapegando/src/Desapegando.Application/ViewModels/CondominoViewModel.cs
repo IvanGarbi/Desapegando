@@ -149,3 +149,9 @@ public class DataCondomino
 {
     public ResponseResult ResponseResult { get; set; }
 }
+
+public class GetAllCondominoResponse
+{
+    public bool Success { get; set; }
+    public IEnumerable<CondominoViewModel> Data { get; set; }
+}

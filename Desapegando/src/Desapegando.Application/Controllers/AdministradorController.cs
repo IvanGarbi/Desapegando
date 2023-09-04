@@ -1,138 +1,150 @@
 ﻿using AutoMapper;
 using Desapegando.Application.ViewModels;
-using Desapegando.Application.Services;
 using Desapegando.Business.Interfaces.Repository;
-using Desapegando.Business.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Desapegando.Business.Interfaces.Notifications;
 using System.Net;
+using Microsoft.Extensions.Options;
+using Desapegando.Application.Extensions;
+using System.Text;
+using System.Text.Json;
+using Desapegando.Business.Models;
 
 namespace Desapegando.Application.Controllers;
 
 public class AdministradorController : MainController
 {
-    private readonly ICondominoRepository _condominoRepository;
-    private readonly ICampanhaRepository _campanhaRepository;
-    private readonly IProdutoRepository _produtoRepository;
-    private readonly ICondominoService _condominoService;
+    private readonly HttpClient _httpClient;
     private readonly IMapper _mapper;
 
-    private readonly IEmailSender _emailSender;
-    public AdministradorController(ICondominoRepository condominoRepository, 
+    public AdministradorController(HttpClient httpClient,
+                                   IOptions<AppSettings> settings,
                                    IMapper mapper, 
-                                   ICondominoService condominoService, 
-                                   IEmailSender emailSender, 
-                                   ICampanhaRepository campanhaRepository, 
-                                   IProdutoRepository produtoRepository,
                                    INotificador notificador) : base(notificador)
     {
-        _condominoRepository = condominoRepository;
         _mapper = mapper;
-        _condominoService = condominoService;
-        _emailSender = emailSender;
-        _campanhaRepository = campanhaRepository;
-        _produtoRepository = produtoRepository;
+        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
+        _httpClient = httpClient;
     }
 
     public async Task<IActionResult> NovosCondominos()
     {
-        var condominosInativos = await _condominoRepository.ReadWithExpressionList(x => x.Ativo == false);
+        var response = await _httpClient.GetAsync("Condomino/Condomino");
 
-        return View(_mapper.Map<IEnumerable<CondominoInativoViewModel>>(condominosInativos));
+        GetAllCondominoResponse condominoResponse;
+
+        condominoResponse = await DeserializeObjectResponse<GetAllCondominoResponse>(response);
+
+        var condominosDb = condominoResponse.Data.Where(x => x.Ativo == false);
+
+        return View(_mapper.Map<IEnumerable<CondominoInativoViewModel>>(condominosDb));
     }
 
     public async Task<IActionResult> AtivarCondomino(Guid id)
     {
-        var condomino = await _condominoRepository.ReadById(id);
+        var ativarCondominoContent = new StringContent(
+            JsonSerializer.Serialize(id),
+            Encoding.UTF8,
+            "application/json");
 
-        if (condomino == null)
+        var response = await _httpClient.PostAsync("Administrador/Administrador/AtivarCondomino/", ativarCondominoContent);
+
+        // usar genérico para erros... Response 200 não retorna nenhum objeto.
+        UserResponseAuth requestResponse;
+
+        if (!VerifyResponseErros(response))
         {
+            requestResponse = new UserResponseAuth
+            {
+                Success = false,
+                Data = new DataAuth
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                }
+            };
+
+            foreach (var error in requestResponse.Data.ResponseResult.Errors.Messages)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            //ViewBag.Error = "Ocorreu um erro ao salvar";
+
+
             return RedirectToAction("NovosCondominos", "Administrador");
         }
-
-        condomino.Ativo = true;
-
-        await _condominoService.Update(condomino);
-
-        try
-        {
-            await _emailSender.SendEmailAsync(condomino.Email, "Condômino aprovado", "O seu cadastro em Desapegando já foi aprovado! Já é possível realizar o login e desfrutar da plataforma!");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-
 
         return RedirectToAction("NovosCondominos", "Administrador");
     }
 
-    //public async Task<IActionResult> ExcluirCondomino(Guid id)
-    //{
-    //    var condomino = await _condominoRepository.ReadById(id);
-
-    //    if (condomino == null)
-    //    {
-    //        return RedirectToAction("NovosCondominos", "Administrador");
-    //    }
-
-    //    await _condominoService.Delete(id);
-
-    //    try
-    //    {
-    //        await _emailSender.SendEmailAsync(condomino.Email, "Condômino não aprovado", "O seu cadastro em Desapegando não foi aprovado.");
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Console.WriteLine(e);
-    //        throw;
-    //    }
-
-
-    //    return RedirectToAction("NovosCondominos", "Administrador");
-    //}
-
     [HttpPost]
     public async Task<IActionResult> ExcluirCondomino(Guid id)
     {
-        var condomino = await _condominoRepository.ReadById(id);
+        var excluirCondominoContent = new StringContent(
+                    JsonSerializer.Serialize(id),
+                    Encoding.UTF8,
+                    "application/json");
 
-        if (condomino == null)
-        {
-            return RedirectToAction("NovosCondominos", "Administrador");
-        }
+        var response = await _httpClient.PostAsync("Administrador/Administrador/ExcluirCondomino/", excluirCondominoContent);
 
-        // verificar a melhor forma de fazer caso o email ou deletar apontar um erro.
-        try
+        // usar genérico para erros... Response 200 não retorna nenhum objeto.
+        UserResponseAuth requestResponse;
+
+        if (!VerifyResponseErros(response))
         {
-            await _emailSender.SendEmailAsync(condomino.Email, "Condômino não aprovado", "O seu cadastro em Desapegando não foi aprovado.");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
+            requestResponse = new UserResponseAuth
+            {
+                Success = false,
+                Data = new DataAuth
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                }
+            };
+
+            foreach (var error in requestResponse.Data.ResponseResult.Errors.Messages)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            //ViewBag.Error = "Ocorreu um erro ao salvar";
+
             return Json(HttpStatusCode.NotFound);
-        }
 
-        try
-        {
-            await _condominoService.Delete(id);
+            //return RedirectToAction("NovosCondominos", "Administrador");
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return Json(HttpStatusCode.NotFound);
-        }
-
 
         return Json(HttpStatusCode.OK);
     }
 
     public async Task<IActionResult> Dashboard()
     {
-        var produtos = await _produtoRepository.Read();
-        var campanhas = await _campanhaRepository.Read();
-        var condominos = await _condominoRepository.Read();
+
+        var responseCondomino = await _httpClient.GetAsync("Condomino/Condomino");
+
+        GetAllCondominoResponse condominoResponse;
+
+        condominoResponse = await DeserializeObjectResponse<GetAllCondominoResponse>(responseCondomino);
+
+
+        var responseProduto = await _httpClient.GetAsync("Produto/Produto");
+
+        GetAllProdutoResponse produtoResponse;
+
+        produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(responseProduto);
+
+        var responseCampanha = await _httpClient.GetAsync("Campanha/Campanha");
+
+        GetAllCampanhaResponse campanhaResponse;
+
+        campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(responseCampanha);
+
+        var produtos = _mapper.Map<IEnumerable<Produto>>(produtoResponse.Data);
+        var campanhas = _mapper.Map<IEnumerable<Campanha>>(campanhaResponse.Data);
+        var condominos = _mapper.Map<IEnumerable<Condomino>>(condominoResponse.Data);
+
+        //var produtos = await _produtoRepository.Read();
+        //var campanhas = await _campanhaRepository.Read();
+        //var condominos = await _condominoRepository.Read();
 
         // primeiros resultados
         var produtosDesistidos = produtos.Where(x => x.Desistencia == true);

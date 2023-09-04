@@ -1,5 +1,7 @@
 using Desapegando.API.Data;
 using Desapegando.API.Extensions;
+using Desapegando.API.HostedService;
+using Desapegando.API.Services;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
@@ -84,10 +86,10 @@ builder.Services.AddScoped<INotificador, Notificador>();
 builder.Services.AddScoped<IProdutoCurtidaRepository, ProdutoCurtidaRepository>();
 builder.Services.AddScoped<IProdutoCurtidaService, ProdutoCurtidaService>();
 
-//builder.Services.AddHostedService<CampanhaHostedService>();
+builder.Services.AddHostedService<CampanhaHostedService>();
 
-//builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
-//builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
+builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
+builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
