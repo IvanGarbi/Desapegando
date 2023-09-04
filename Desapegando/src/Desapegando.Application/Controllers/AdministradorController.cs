@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Desapegando.Application.ViewModels;
-using Desapegando.Business.Interfaces.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Desapegando.Business.Interfaces.Notifications;
 using System.Net;

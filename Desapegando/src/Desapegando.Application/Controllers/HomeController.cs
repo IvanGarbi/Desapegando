@@ -1,34 +1,50 @@
 ﻿using Desapegando.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Desapegando.Business.Interfaces.Repository;
 using AutoMapper;
 using Desapegando.Business.Interfaces.Notifications;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
+using Desapegando.Application.Extensions;
+using Desapegando.Business.Models;
 
 namespace Desapegando.Application.Controllers;
 
 public class HomeController : MainController
 {
-    private readonly ICampanhaRepository _campanhaRepository;
-    private readonly IProdutoRepository _produtoRepository;
+    private readonly HttpClient _httpClient;
     private readonly IMapper _mapper;
 
-    public HomeController(IMapper mapper, 
-                          IProdutoRepository produtoRepository, 
-                          ICampanhaRepository campanhaRepository,
+    public HomeController(IMapper mapper,
+                          HttpClient httpClient,
+                          IOptions<AppSettings> settings,
                           INotificador notificador) : base(notificador)
     {
         _mapper = mapper;
-        _produtoRepository = produtoRepository;
-        _campanhaRepository = campanhaRepository;
+        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
+        _httpClient = httpClient;
 
     }
 
     public async Task<IActionResult> Index()
     {
-        var produtos = await _produtoRepository.Read();
-        var campanhas = await _campanhaRepository.Read();
+        var responseProduto = await _httpClient.GetAsync("Produto/Produto");
+
+        GetAllProdutoResponse produtoResponse;
+
+        produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(responseProduto);
+
+        var responseCampanha = await _httpClient.GetAsync("Campanha/Campanha");
+
+        GetAllCampanhaResponse campanhaResponse;
+
+        campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(responseCampanha);
+
+
+        var produtos = _mapper.Map<IEnumerable<Produto>>(produtoResponse.Data);
+        var campanhas = _mapper.Map<IEnumerable<Campanha>>(campanhaResponse.Data);
+
+        //var produtos = await _produtoRepository.Read();
+        //var campanhas = await _campanhaRepository.Read();
 
         produtos = produtos.Where(x => x.Ativo);
         campanhas = campanhas.Where(x => x.Ativo);

@@ -1,7 +1,6 @@
 ﻿using Desapegando.Application.Extensions;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Text;

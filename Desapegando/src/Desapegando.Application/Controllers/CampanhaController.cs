@@ -2,13 +2,9 @@
 using Desapegando.Application.Extensions;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
-using Desapegando.Business.Interfaces.Repository;
-using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 
@@ -17,28 +13,14 @@ namespace Desapegando.Application.Controllers;
 public class CampanhaController : MainController
 {
     private readonly HttpClient _httpClient;
-
-    private readonly ICampanhaRepository _campanhaRepository;
-    private readonly ICampanhaService _campanhaService;
-    private readonly ICampanhaImagemService _campanhaImagemService;
-    private readonly UserManager<IdentityUser> _userManager;
     private readonly IMapper _mapper;
 
     public CampanhaController(HttpClient httpClient,
                               IOptions<AppSettings> settings,
-                              ICampanhaRepository campanhaRepository,
-                              ICampanhaService campanhaService,
                               IMapper mapper,
-                              UserManager<IdentityUser> userManager,
-                              ICampanhaImagemService campanhaImagemService,
                               INotificador notificador) : base(notificador)
     {
-        _campanhaRepository = campanhaRepository;
-        _campanhaService = campanhaService;
         _mapper = mapper;
-        _userManager = userManager;
-        _campanhaImagemService = campanhaImagemService;
-
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
         _httpClient = httpClient;
     }

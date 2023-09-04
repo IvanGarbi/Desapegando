@@ -2,10 +2,7 @@
 using Desapegando.Application.Extensions;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
-using Desapegando.Business.Interfaces.Repository;
-using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Text;
@@ -16,19 +13,14 @@ namespace Desapegando.Application.Controllers;
 public class ProdutoController : MainController
 {
     private readonly HttpClient _httpClient;
-
-    private readonly IProdutoRepository _produtoRepository;
     private readonly IMapper _mapper;
 
     public ProdutoController(HttpClient httpClient,
                              IOptions<AppSettings> settings, 
-                             IProdutoRepository produtoRepository,
                              IMapper mapper, 
                              INotificador notificador) : base(notificador)
     {
-        _produtoRepository = produtoRepository;
         _mapper = mapper;
-
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
         _httpClient = httpClient;
     }
