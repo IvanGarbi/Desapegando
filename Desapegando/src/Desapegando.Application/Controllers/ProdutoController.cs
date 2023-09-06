@@ -3,6 +3,7 @@ using Desapegando.Application.Extensions;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Models;
+using Desapegando.Business.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Text;
@@ -327,6 +328,14 @@ public class ProdutoController : MainController
 
     public async Task<IActionResult> Produtos()
     {
+        FiltrarProdutoViewModel model = new FiltrarProdutoViewModel();
+        model.CheckBoxItems = new List<EnumModel>
+        {
+            new EnumModel() { EstadoProduto = EstadoProduto.Novo, IsSelected = false },
+            new EnumModel() { EstadoProduto = EstadoProduto.Seminovo, IsSelected = false },
+            new EnumModel() { EstadoProduto = EstadoProduto.Usado, IsSelected = false }
+        };
+
         var response = await _httpClient.GetAsync("Produto/Produto");
 
         GetAllProdutoResponse produtoResponse;
@@ -335,22 +344,31 @@ public class ProdutoController : MainController
 
         var produtosDb = produtoResponse.Data.Where(x => x.Ativo);
 
-        ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
 
         if (!produtosDb.Any())
         {
-            return View();
+            ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
+            
+            return View(model);
         }
 
         ViewBag.Produtos = produtosDb;
 
-        return View();
+        return View(model);
     }
 
     [HttpPost]
     public async Task<IActionResult> Produtos(FiltrarProdutoViewModel filtrarProdutoViewModel)
     {
-        if (filtrarProdutoViewModel.Categorias == null)
+        // por algum motivo não volta o valor do front end...
+        filtrarProdutoViewModel.CheckBoxItems[0].EstadoProduto = EstadoProduto.Novo;
+        filtrarProdutoViewModel.CheckBoxItems[1].EstadoProduto = EstadoProduto.Seminovo;
+        filtrarProdutoViewModel.CheckBoxItems[2].EstadoProduto = EstadoProduto.Usado;
+
+        if (filtrarProdutoViewModel.Categorias == null &&
+            !filtrarProdutoViewModel.CheckBoxItems.Any(x => x.IsSelected) &&
+            filtrarProdutoViewModel.PrecoMinimo == null &&
+            filtrarProdutoViewModel.PrecoMaximo == null)
         {
             return RedirectToAction("Produtos");
         }
@@ -361,12 +379,20 @@ public class ProdutoController : MainController
 
         produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(response);
 
-        var produtosDb = produtoResponse.Data.Where(x => filtrarProdutoViewModel.Categorias.Contains(x.Categoria) && x.Ativo == true);
-
-        ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
+        var produtosDb = produtoResponse.Data.Where(x => (filtrarProdutoViewModel.Categorias != null && filtrarProdutoViewModel.Categorias.Contains(x.Categoria)) ||
+                                                                      (filtrarProdutoViewModel.CheckBoxItems[0].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[0].IsSelected) ||
+                                                                      (filtrarProdutoViewModel.CheckBoxItems[1].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[1].IsSelected) ||
+                                                                      (filtrarProdutoViewModel.CheckBoxItems[2].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[2].IsSelected) ||
+                                                                      ((filtrarProdutoViewModel.PrecoMinimo != null && filtrarProdutoViewModel.PrecoMaximo != null) &&
+                                                                      (x.Preco >= filtrarProdutoViewModel.PrecoMinimo && x.Preco <= filtrarProdutoViewModel.PrecoMaximo)) ||
+                                                                      (filtrarProdutoViewModel.PrecoMinimo != null && x.Preco >= filtrarProdutoViewModel.PrecoMinimo && filtrarProdutoViewModel.PrecoMaximo == null) ||
+                                                                      (filtrarProdutoViewModel.PrecoMaximo != null && x.Preco <= filtrarProdutoViewModel.PrecoMaximo && filtrarProdutoViewModel.PrecoMinimo == null) &&
+                                                                      x.Ativo == true);
 
         if (!produtosDb.Any())
         {
+            ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
+            
             return View();
         }
 

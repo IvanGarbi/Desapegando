@@ -103,6 +103,15 @@ namespace Desapegando.Application.ViewModels
     public class FiltrarProdutoViewModel
     {
         public List<Categoria> Categorias { get; set; }
+        public List<EnumModel> CheckBoxItems { get; set; }
+        public decimal? PrecoMinimo { get; set; }
+        public decimal? PrecoMaximo { get; set; }
+    }
+
+    public class EnumModel
+    {
+        public EstadoProduto EstadoProduto { get; set; }
+        public bool IsSelected { get; set; }
     }
 
     public class PostProdutoViewModel
