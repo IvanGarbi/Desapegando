@@ -34,6 +34,22 @@
                                 </div>
                             </div>
                         </div>
+                        <a class="btn px-0 ms-1 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseCondition" role="button" aria-expanded="true" aria-controls="collapseCondition">
+                            <div class="d-flex align-items-center justify-content-between w-100">
+                                <div class="fs-0 text-1000">Nome da Instituição</div><span class="fa-solid fa-angle-down toggle-icon text-500"></span>
+                            </div>
+                        </a>
+                        <div class="collapse ms-1 show" id="collapseCondition">
+                            <div class="mb-2">
+                                <div class="form mb-0 p-0">
+                                    <div class="mb-2">
+                                        <div class="mb-3 text-start">
+                                            <input asp-for="NomeInstituicao" class="form-control" placeholder="Nome da Instituição" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <button asp-action="Campanhas" asp-controller="Campanha" class="btn btn-phoenix-primary border-300 px-3" type="submit">Pesquisar</button>
                     </form>
                 </div>

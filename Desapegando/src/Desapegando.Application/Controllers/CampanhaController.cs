@@ -366,10 +366,10 @@ public class CampanhaController : MainController
 
         var campanhasDb = campanhaResponse.Data.Where(x => x.Ativo);
 
-        ViewBag.Campanhas = Enumerable.Empty<GetCampanhaViewModel>();
-
         if (!campanhasDb.Any())
         {
+            ViewBag.Campanhas = Enumerable.Empty<GetCampanhaViewModel>();
+            
             return View();
         }
 
@@ -381,7 +381,7 @@ public class CampanhaController : MainController
     [HttpPost]
     public async Task<IActionResult> Campanhas(FiltrarCampanhaViewModel filtrarCampanhaViewModel)
     {
-        if (filtrarCampanhaViewModel.Nome == null || string.IsNullOrEmpty(filtrarCampanhaViewModel.Nome))
+        if (string.IsNullOrEmpty(filtrarCampanhaViewModel.Nome) && string.IsNullOrEmpty(filtrarCampanhaViewModel.NomeInstituicao))
         {
             return RedirectToAction("Campanhas");
         }
@@ -392,12 +392,14 @@ public class CampanhaController : MainController
 
         campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(response);
 
-        var campanhasDb = campanhaResponse.Data.Where(x => x.Nome.ToLower().Trim().Contains(filtrarCampanhaViewModel.Nome.ToLower().Trim()) && x.Ativo == true);
-
-        ViewBag.Campanhas = Enumerable.Empty<GetCampanhaViewModel>();
+        var campanhasDb = campanhaResponse.Data.Where(x => (!string.IsNullOrEmpty(filtrarCampanhaViewModel.Nome) && x.Nome.ToLower().Trim().Contains(filtrarCampanhaViewModel.Nome.ToLower().Trim())) ||
+                                                           (!string.IsNullOrEmpty(filtrarCampanhaViewModel.NomeInstituicao) && x.NomeInstituicao.ToLower().Trim().Contains(filtrarCampanhaViewModel.NomeInstituicao.ToLower().Trim()))
+                                                           && x.Ativo == true);
 
         if (!campanhasDb.Any())
         {
+            ViewBag.Campanhas = Enumerable.Empty<GetCampanhaViewModel>();
+            
             return View();
         }
 

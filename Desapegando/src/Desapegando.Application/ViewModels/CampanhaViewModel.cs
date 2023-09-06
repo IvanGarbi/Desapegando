@@ -117,6 +117,7 @@ namespace Desapegando.Application.ViewModels
     public class FiltrarCampanhaViewModel
     {
         public string Nome { get; set; }
+        public string NomeInstituicao { get; set; }
     }
 
     public class PostCampanhaViewModel
