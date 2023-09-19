@@ -6,6 +6,7 @@ using Desapegando.Business.Models;
 using Desapegando.Business.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 
@@ -534,6 +535,51 @@ public class ProdutoController : MainController
         }
 
         return LocalRedirect(returnUrl);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RemoverProduto(Guid id, string motivo)
+    {
+        RemoverProdutoViewModel removerProdutoViewModel = new RemoverProdutoViewModel
+        {
+            ProdutoId = id,
+            Motivo = motivo
+        };
+
+        var removerProdutoContent = new StringContent(
+                        JsonSerializer.Serialize(removerProdutoViewModel),
+                        Encoding.UTF8,
+                        "application/json");
+
+        var response = await _httpClient.PostAsync("Produto/Produto/RemoverProduto/", removerProdutoContent);
+
+        ProdutoResponse produtoResponse;
+
+        produtoResponse = await DeserializeObjectResponse<ProdutoResponse>(response);
+
+        if (!VerifyResponseErros(response))
+        {
+            produtoResponse = new ProdutoResponse
+            {
+                Success = false,
+                Data = new DataProduto
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                }
+            };
+
+            List<string> errors = new List<string>();
+
+            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
+            {
+                errors.Add(error);
+            }
+
+            return Json(HttpStatusCode.NotFound);
+        }
+
+
+        return Json(HttpStatusCode.OK);
     }
 
 

@@ -155,4 +155,9 @@ namespace Desapegando.API.ViewModels
         public Guid ProdutoId { get; set; }
         public Guid CondominoId { get; set; }
     }
+    public class RemoverProdutoViewModel
+    {
+        public Guid ProdutoId { get; set; }
+        public string Motivo { get; set; }
+    }
 }

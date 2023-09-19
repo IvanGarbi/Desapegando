@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
+using Desapegando.API.Services;
 using Desapegando.API.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
+using Desapegando.Business.Notifications;
 using Desapegando.Business.Services;
 using Desapegando.Business.Validations;
 using Desapegando.Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Desapegando.API.Controllers
 {
@@ -22,9 +25,12 @@ namespace Desapegando.API.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IMapper _mapper;
 
+        private readonly IEmailSender _emailSender;
+
         public ProdutoController(IProdutoRepository produtoRepository,
                                  IProdutoService produtoService,
                                  IMapper mapper,
+                                 IEmailSender emailSender,
                                  UserManager<IdentityUser> userManager,
                                  IProdutoImagemService produtoImagemService,
                                  IProdutoCurtidaService produtoCurtidaService,
@@ -36,6 +42,7 @@ namespace Desapegando.API.Controllers
             _userManager = userManager;
             _produtoImagemService = produtoImagemService;
             _produtoCurtidaService = produtoCurtidaService;
+            _emailSender = emailSender;
         }
 
 
@@ -246,6 +253,45 @@ namespace Desapegando.API.Controllers
                 {
                     errors.Add(error.Mensagem);
                 }
+            }
+
+            return Response();
+        }
+
+        [HttpPost("RemoverProduto")]
+        public async Task<IActionResult> RemoverProduto(RemoverProdutoViewModel removerProdutoViewModel)
+        {
+            var produto = await _produtoRepository.ReadById(removerProdutoViewModel.ProdutoId);
+
+            if (produto == null)
+            {
+                _notificador.AdicionarNotificacao(new Notificacao("Não foi possível encontrar o produto."));
+                return Response();
+            }
+
+            // verificar a melhor forma de fazer caso o email ou deletar apontar um erro.
+            try
+            {
+                await _emailSender.SendEmailAsync(produto.Condomino.Email, "Produto Removido por Violação das Regras", removerProdutoViewModel.Motivo);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                _notificador.AdicionarNotificacao(new Notificacao("Houve um problema."));
+                return Response();
+            }
+
+            try
+            {
+                produto.Ativo = false;
+
+                await _produtoRepository.Update(produto);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                _notificador.AdicionarNotificacao(new Notificacao("Houve um problema."));
+                return Response();
             }
 
             return Response();

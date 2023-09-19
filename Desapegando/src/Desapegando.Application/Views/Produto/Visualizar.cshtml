@@ -29,21 +29,45 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex">
-                            @if (Model.ProdutoCurtidaViewModels.Any(x => x.ProdutoId == Model.Id && x.CondominoId == Guid.Parse(User.FindFirst("sub")?.Value)))
-                            {
-                                <a asp-action="Descurtir" asp-controller="Produto" asp-route-id="@Model.Id" asp-route-returnUrl="@Url.Page("/Produto/Visualizar" + Model.Id)" class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0" style="background-color:#e5780b;color:#fff;"><span class="me-2 far fa-heart"></span>Descurtir</a>
-                            }
-                            else
-                            {
-                                <a asp-action="Curtir" asp-controller="Produto" asp-route-id="@Model.Id" asp-route-returnUrl="@Url.Page("/Produto/Visualizar" + Model.Id)" class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</a>
-                            }
+                        @if (User.HasClaim("Role", "Sindico"))
+                        {
+                            <div class="d-flex">
+                                @if (Model.ProdutoCurtidaViewModels.Any(x => x.ProdutoId == Model.Id && x.CondominoId == Guid.Parse(User.Claims.First().Value)))
+                                {
+                                    <a asp-action="Descurtir" asp-controller="Produto" asp-route-id="@Model.Id" asp-route-returnUrl="@Url.Page("/Produto/Visualizar" + Model.Id)" class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0" style="background-color:#e5780b;color:#fff;"><span class="me-2 far fa-heart"></span>Descurtir</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Curtir" asp-controller="Produto" asp-route-id="@Model.Id" asp-route-returnUrl="@Url.Page("/Produto/Visualizar" + Model.Id)" class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</a>
+                                }
+                                @* <button class="btn btn-lg btn-outline-warning rounded-pill w-100 me-3 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Add to wishlist</button> *@
+
+                                @if (Model.Ativo)
+                                {
+                                    <button class="btn btn-lg btn-warning rounded-pill w-100 fs--1 fs-sm-0" data-bs-toggle="modal" data-bs-target="#removerProdutoModal"><span class="fas fa-x me-2"></span>Remover Produto</button>
+                                }
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex">
+                                @if (Model.ProdutoCurtidaViewModels.Any(x => x.ProdutoId == Model.Id && x.CondominoId == Guid.Parse(User.Claims.First().Value)))
+                                {
+                                    <a asp-action="Descurtir" asp-controller="Produto" asp-route-id="@Model.Id" asp-route-returnUrl="@Url.Page("/Produto/Visualizar" + Model.Id)" class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0" style="background-color:#e5780b;color:#fff;"><span class="me-2 far fa-heart"></span>Descurtir</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Curtir" asp-controller="Produto" asp-route-id="@Model.Id" asp-route-returnUrl="@Url.Page("/Produto/Visualizar" + Model.Id)" class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</a>
+                                }
 
 
-                            @*<button class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</button>*@
-                            @*<button class="btn btn-lg btn-outline-warning rounded-pill w-100 me-3 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</button>*@
-                            @*<button class="btn btn-lg btn-warning rounded-pill w-100 fs--1 fs-sm-0"><span class="fas fa-shopping-cart me-2"></span>Add to cart</button>*@
-                        </div>
+                                @*<button class="btn btn-lg btn-outline-warning rounded-pill w-100 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</button>*@
+                                @*<button class="btn btn-lg btn-outline-warning rounded-pill w-100 me-3 px-2 px-sm-4 fs--1 fs-sm-0"><span class="me-2 far fa-heart"></span>Curtir</button>*@
+                                @*<button class="btn btn-lg btn-warning rounded-pill w-100 fs--1 fs-sm-0"><span class="fas fa-shopping-cart me-2"></span>Add to cart</button>*@
+                            </div>
+
+                        }
                     </div>
                     <div class="col-12 col-lg-6">
                         <div class="d-flex flex-column justify-content-between h-100">
@@ -415,7 +439,32 @@
     <script src="~/public/vendors/rater-js/index.js"></script>
     <script src="~/public/vendors/glightbox/glightbox.min.js"> </script>
     @*<script src="~/public/assets/js/phoenix.js"></script>*@
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/src/js/Produto/Visualizar.js"></script>
 }
 
 
-
+@* <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#removerProdutoModal">Vertically centered modal</button> *@
+<div class="modal fade" id="removerProdutoModal" tabindex="-1" aria-labelledby="removerProdutoModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removerProdutoModalLabel">Remover Produto</h5>
+                <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close"><svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"></path></svg><!-- <span class="fas fa-times fs--1"></span> Font Awesome fontawesome.com --></button>
+            </div>
+            <form class="row g-3 needs-validation" novalidate="">
+                <div class="modal-body">
+                    <label class="form-label" for="validationCustom03">Descreva o motivo</label>
+                    <input hidden id="produtoId" value="@Model.Id" />
+                    <textarea class="form-control" rows="3" id="validationCustom03" required="" placeholder="Description"></textarea>
+                    <div class="invalid-feedback">Favor inserir um motivo.</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" id="btnRemoverProduto">Excluir</button>
+                    <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
