@@ -43,6 +43,12 @@ namespace Desapegando.API.AutoMapper
             CreateMap<CampanhaImagemViewModel, CampanhaImagem>().ReverseMap();
 
             CreateMap<UpdateCampanhaViewModel, Campanha>().ReverseMap();
+
+            CreateMap<PostCompraViewModel, Compra>().ReverseMap();
+
+            CreateMap<GetCompraViewModel, Compra>().ReverseMap();
+
+
         }
     }
 }

@@ -1,0 +1,204 @@
+﻿@model IEnumerable<Desapegando.Application.ViewModels.CondominoCompraViewModel>
+
+@{
+    Layout = "_Layout";
+
+    var quantidade = ViewBag.Quantidade;
+}
+
+
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<section class="pt-5 pb-9">
+    <div class="container-small px-0">
+        <div class="container">
+            <div class="mb-9">
+                <div class="row g-2 mb-4">
+                    <div class="col-auto">
+                        <h2 class="mb-0">Para qual condômino foi a venda?</h2>
+                        <br />
+                        <h3 class="mb-0">Quantidade: @quantidade.ToString()</h3>
+
+                        <input hidden id="quantidadeTotal" value="@quantidade" />
+                    </div>
+                </div>
+                <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
+                    @*              <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">All <span class="text-700 fw-semi-bold">(68817)</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">New <span class="text-700 fw-semi-bold">(6)</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Abandoned checkouts <span class="text-700 fw-semi-bold">(17)</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Locals <span class="text-700 fw-semi-bold">(6,810)</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Email subscribers <span class="text-700 fw-semi-bold">(8)</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Top reviews <span class="text-700 fw-semi-bold">(2)</span></a></li>*@
+                </ul>
+                <div id="products" data-list='{"valueNames":["customer","email","total-orders","total-spent","city","last-seen","last-order"],"page":10,"pagination":true}'>
+                    <div class="mb-4">
+                        <div class="row g-3">
+                            <div class="col-auto">
+                                <div class="search-box">
+                                    <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
+                                        <input class="form-control search-input search" type="search" placeholder="Procurar condôminos" aria-label="Search" />
+                                        <span class="fas fa-search search-box-icon"></span>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
+                                <div class="btn-group position-static" role="group">
+                                    @*                      <div class="btn-group position-static text-nowrap">
+                                    <button class="btn btn-phoenix-secondary px-7 flex-shrink-0" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                    Country<span class="fas fa-angle-down ms-2"></span></button>
+                                    <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">US</a></li>
+                                    <li><a class="dropdown-item" href="#">Uk</a></li>
+                                    <li><a class="dropdown-item" href="#">Australia</a></li>
+                                    </ul>
+                                    </div>*@
+                                    @*                      <div class="btn-group position-static text-nowrap">
+                                    <button class="btn btn-sm btn-phoenix-secondary px-7 flex-shrink-0" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                    VIP<span class="fas fa-angle-down ms-2"></span></button>
+                                    <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">VIP 1</a></li>
+                                    <li><a class="dropdown-item" href="#">VIP 2</a></li>
+                                    <li><a class="dropdown-item" href="#">VIP 3</a></li>
+                                    <li></li>
+                                    </ul>
+                                    </div>
+                                    <button class="btn btn-phoenix-secondary px-7 flex-shrink-0">More filters</button>*@
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                @*<button class="btn btn-link text-900 me-4 px-0"><span class="fa-solid fa-file-export fs--1 me-2"></span>Export</button>*@
+                                @*<button class="btn btn-primary"><span class="fas fa-plus me-2"></span>Add customer</button>*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-white border-top border-bottom border-200 position-relative top-1">
+                        <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+                            <table class="table table-sm fs--1 mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="white-space-nowrap fs--1 align-middle ps-0">
+                                            @*                          <div class="form-check mb-0 fs-0">
+                                            <input class="form-check-input" id="checkbox-bulk-customers-select" type="checkbox" data-bulk-select='{"body":"customers-table-body"}' />
+                                            </div>*@
+                                        </th>
+                                        <th class="sort align-middle pe-5" scope="col" data-sort="customer" style="width:10%;">NOME</th>
+                                        <th class="sort align-middle pe-5" scope="col" data-sort="email" style="width:20%;">EMAIL</th>
+                                        @* <th class="sort align-middle text-end" scope="col" data-sort="total-orders" style="width:10%">ATIVAR CONDÔMINO</th> *@
+                                        <th class="sort align-middle text-end ps-3" scope="col" data-sort="total-spent" style="width:10%">APARTAMENTO</th>
+                                        <th class="sort align-middle ps-7" scope="col" data-sort="city" style="width:25%;">CPF</th>
+                                        <th class="sort align-middle text-end" scope="col" data-sort="last-seen" style="width:15%;">TELEFONE</th>
+                                        <th class="sort align-middle text-end pe-0" scope="col" data-sort="last-order" style="width:10%;min-width: 150px;">SEXO</th>
+                                        <th class="sort align-middle text-end pe-5" scope="col" data-sort="last-order" style="width:10%;min-width: 100px;">QUANTIDADE</th>
+                                        <th class="sort align-middle text-end pe-0" scope="col" data-sort="last-order" style="width:10%;min-width: 100px;">AÇÃO</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list" id="customers-table-body">
+
+                                    @foreach (var condomino in Model)
+                                    {
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                                            <td class="fs--1 align-middle ps-0 py-3">
+                                                <div class="form-check mb-0 fs-0">
+                                                    @*<input class="form-check-input" type="checkbox" data-bulk-select-row='{"customer":{"avatar":"/team/32.webp","name":"@condomino.Nome"}, "email":"@condomino.Email","apartamento":"@condomino.Apartamento","cpf":@condomino.Cpf, "telefone":@condomino.Telefone ,"sexo":@condomino.Sexo}'/>*@
+                                                </div>
+                                            </td>
+                                            <td class="customer align-middle white-space-nowrap pe-5">
+                                                <a class="d-flex align-items-center" href="#!">
+                                                    <div class="avatar avatar-m">
+                                                        <img class="rounded-circle" src="~/public/assets/img/team/32.webp" alt="" />
+                                                    </div>
+                                                    <p class="mb-0 ms-3 text-1100 fw-bold">@condomino.Nome @condomino.Sobrenome</p>
+                                                </a>
+                                            </td>
+                                            <td class="email align-middle white-space-nowrap pe-5"><a class="fw-semi-bold" href="mailto:@condomino.Email">@condomino.Email</a></td>
+                                            @* <td class="email align-middle white-space-nowrap pe-5"><a class="fw-semi-bold" asp-controller="Administrador" asp-action="AtivarCondomino" asp-route-id="@condomino.Id">Ativar</a></td> *@
+                                            <td class="total-spent align-middle white-space-nowrap fw-bold text-end ps-3 text-1100">@condomino.Apartamento</td>
+                                            <td class="city align-middle white-space-nowrap text-1000 ps-7">@condomino.Cpf</td>
+                                            <td class="last-seen align-middle white-space-nowrap text-700 text-end">@condomino.Telefone</td>
+                                            <td class="last-order align-middle white-space-nowrap text-700 text-end">@condomino.Sexo</td>
+                                            <td class="last-order align-middle white-space-nowrap text-1100 text-end"><input class="form-control" id="quantidade" type="number" min="0" max="@quantidade" placeholder="Quantidade" /></td>
+
+                                            <td class="email align-middle white-space-nowrap pe-3 text-700 text-end">
+                                                <a id="url" class="fw-semi-bold" asp-controller="Compra" asp-action="AdicionarComprador"
+                                                   asp-route-id="@condomino.Id"
+                                                   asp-route-quantidade="0"
+                                                   asp-route-produtoId="@condomino.ProdutoId"
+                                                   asp-route-quantidadeTotal="@quantidade">Selecionar</a>
+                                            </td>
+
+                                            @* <td class="email align-middle white-space-nowrap pe-3 text-700 text-end"><div class="spinner-border" hidden role="status"><span class="visually-hidden">Loading...</span></div><a class="fw-semi-bold" id="btnExcluirCondomino" onclick="ExcluirCondomino('@condomino.Id' , '@condomino.ProdutoId')">Excluir</a></td> *@
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row align-items-center justify-content-between py-2 pe-0 fs--1">
+                            <div class="col-auto d-flex">
+                                <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900" data-list-info="data-list-info"></p><a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View Less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+                            </div>
+                            <div class="col-auto d-flex">
+                                <button class="page-link" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                                <ul class="mb-0 pagination"></ul>
+                                <button class="page-link pe-0" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var navbarTopStyle = window.config.config.phoenixNavbarTopStyle;
+        var navbarTop = document.querySelector('.navbar-top');
+        if (navbarTopStyle === 'darker') {
+            navbarTop.classList.add('navbar-darker');
+        }
+        var navbarVerticalStyle = window.config.config.phoenixNavbarVerticalStyle;
+        var navbarVertical = document.querySelector('.navbar-vertical');
+        if (navbarVertical && navbarVerticalStyle === 'darker') {
+            navbarVertical.classList.add('navbar-darker');
+        }
+    </script>
+</section>
+<!-- ===============================================-->
+<!--    End of Main Content-->
+<!-- ===============================================-->
+
+
+
+
+
+
+<div class="modal fade" id="verticallyCentered" tabindex="-1" aria-labelledby="verticallyCenteredModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verticallyCenteredModalLabel">Venda Produto</h5>
+                <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close"><svg class="svg-inline--fa fa-xmark fs--1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"></path></svg><!-- <span class="fas fa-times fs--1"></span> Font Awesome fontawesome.com --></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-700 lh-lg mb-0">Produto vendido com sucesso!</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" type="button" asp-action="Index" asp-controller="Home">Ir para página principal</a>
+                <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/src/js/Compra/Index.js"></script>
+}

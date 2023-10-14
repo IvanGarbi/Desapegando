@@ -8,7 +8,7 @@ public class Produto : Entity
     public string Descricao { get; set; }
     public Categoria Categoria { get; set; }
     public DateTime DataPublicacao { get; set; }
-    public DateTime? DataVenda { get; set; }
+    //public DateTime? DataVenda { get; set; }
     public decimal Preco { get; set; }
     public bool Ativo { get; set; } = true;
     public bool Desistencia { get; set; } = false;
@@ -21,4 +21,5 @@ public class Produto : Entity
     public Condomino Condomino { get; set; }
     public ICollection<ProdutoImagem> ProdutoImagens { get; set; }
     public ICollection<ProdutoCurtida> ProdutoCurtidas { get; set; }
+    public ICollection<Compra> Compras { get; set; }
 }

@@ -202,6 +202,12 @@ public class ProdutoController : MainController
     [HttpPost]
     public async Task<IActionResult> Editar(UpdateProdutoViewModel produtoViewModel)
     {
+        bool venda = false;
+        int quantidadeVenda = 0;
+        int quantidadeDb = 0;
+
+        int quantidadeViewModel = produtoViewModel.Quantidade.Value;
+
         bool novasImagens = produtoViewModel.ImagensUpload != null;
 
         if (!novasImagens)
@@ -228,6 +234,58 @@ public class ProdutoController : MainController
 
         patchProdutoViewModel.ImagensUploadNames = new List<string>();
 
+
+
+        var responseProduto = await _httpClient.GetAsync("Produto/Produto/" + produtoViewModel.Id);
+        GetProdutoResponseId produtoDb;
+        produtoDb = await DeserializeObjectResponse<GetProdutoResponseId>(responseProduto);
+
+        if (!produtoDb.Success)
+        {
+            return View(produtoViewModel);
+        }
+
+        //
+        quantidadeDb = produtoDb.Data.Quantidade;
+
+        if (produtoViewModel.Quantidade.Value == 0)
+        {
+            // não pode ter produto sem quantidade no banco de dados
+            produtoDb.Data.Quantidade = 1;
+            patchProdutoViewModel.Quantidade = 1;
+
+            quantidadeViewModel = quantidadeDb;
+        }
+
+        if (!produtoViewModel.Ativo && !produtoViewModel.Desistencia)
+        {
+            quantidadeVenda = quantidadeDb - quantidadeViewModel;
+
+            // nem todos os produtos (quantidade) foram vendidos
+            if (quantidadeVenda != 0)
+            {
+                patchProdutoViewModel.Ativo = true;
+                produtoDb.Data.Ativo = true;
+            }
+
+            //produtoDb.DataVenda = DateTime.Now;
+            venda = true;
+
+            if (quantidadeVenda == 0 && produtoViewModel.ProdutoVendido == true)
+            {
+                //patchProdutoViewModel.Ativo = false;
+                //produtoDb.Data.Ativo = false;
+
+                quantidadeVenda = quantidadeDb;
+
+                // não pode ter produto sem quantidade no banco de dados
+                patchProdutoViewModel.Quantidade = 1;
+                produtoDb.Data.Quantidade = 1;
+            }
+        }
+
+        //
+
         if (novasImagens)
         {
             foreach (var imagem in produtoViewModel.ImagensUpload)
@@ -243,17 +301,14 @@ public class ProdutoController : MainController
                 patchProdutoViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
             }
 
-            var responseProduto = await _httpClient.GetAsync("Produto/Produto/" + produtoViewModel.Id);
+            //var responseProduto = await _httpClient.GetAsync("Produto/Produto/" + produtoViewModel.Id);
 
-            GetProdutoResponseId produtoDb;
+            //GetProdutoResponseId produtoDb;
 
-            produtoDb = await DeserializeObjectResponse<GetProdutoResponseId>(responseProduto);
+            //produtoDb = await DeserializeObjectResponse<GetProdutoResponseId>(responseProduto);
 
 
-            if (!produtoDb.Success)
-            {
-                return View(produtoViewModel);
-            }
+
 
             var listaProdutoImagensDb = produtoDb.Data.ProdutoImagemViewModels;
             // Deletando imagens antigas
@@ -304,6 +359,19 @@ public class ProdutoController : MainController
 
         if (!_notificador.TemNotificacao())
         {
+
+            if (venda && quantidadeVenda >= 0)
+            {
+                if (quantidadeVenda == 0)
+                {
+                    quantidadeVenda = quantidadeViewModel;
+                }
+
+                return RedirectToAction("Index", "Compra", new { produtoId = produtoViewModel.Id, quantidade = quantidadeVenda });
+            }
+
+
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -313,7 +381,6 @@ public class ProdutoController : MainController
         }
 
         return View(produtoViewModel);
-
     }
 
     public async Task<IActionResult> Visualizar(Guid id)

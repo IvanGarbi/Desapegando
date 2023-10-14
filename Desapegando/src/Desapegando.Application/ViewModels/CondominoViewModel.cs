@@ -127,10 +127,49 @@ public class CondominoViewModel
     public bool Ativo { get; set; }
 }
 
+public class CondominoCompraViewModel
+{
+    public Guid Id { get; set; }
+
+    [DisplayName("Nome")]
+    public string Nome { get; set; }
+
+    [DisplayName("Sobrenome")]
+    public string Sobrenome { get; set; }
+
+    [DisplayName("Sexo")]
+    public Sexo Sexo { get; set; }
+
+    [DisplayName("Telefone")]
+    public string Telefone { get; set; }
+
+    [DisplayName("E-mail")]
+    public string Email { get; set; }
+
+    [DisplayName("CPF")]
+    public string Cpf { get; set; }
+
+    [DisplayName("Apartamento")]
+    public string Apartamento { get; set; }
+
+    [DisplayName("Data de Nascimento")]
+    public DateTime DataNascimento { get; set; }
+    public bool Administrador { get; set; }
+    public bool Ativo { get; set; }
+    public Guid ProdutoId { get; set; }
+    public int Quantidade { get; set; }
+}
+
 public class GetCondominoResponse
 {
     public bool Success { get; set; }
     public IEnumerable<CondominoViewModel> Data { get; set; }
+}
+
+public class GetCondominoCompraResponse
+{
+    public bool Success { get; set; }
+    public IEnumerable<CondominoCompraViewModel> Data { get; set; }
 }
 
 public class GetCondominoResponseId

@@ -164,7 +164,7 @@ namespace Desapegando.API.Controllers
 
             if (!produtoViewModel.Ativo && !produtoViewModel.Desistencia)
             {
-                produtoDb.DataVenda = DateTime.Now;
+                //produtoDb.DataVenda = DateTime.Now;
             }
 
             await _produtoService.Update(produtoDb);
@@ -307,6 +307,7 @@ namespace Desapegando.API.Controllers
             produto.Categoria = produtoViewModel.Categoria.Value;
             produto.Desistencia = produtoViewModel.Desistencia;
             produto.Ativo = produtoViewModel.Ativo;
+            produto.Quantidade = produtoViewModel.Quantidade.Value;
         }
 
         #endregion

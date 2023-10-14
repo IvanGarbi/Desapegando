@@ -18,4 +18,5 @@ public class Condomino : Entity
     public ICollection<Produto> Produtos { get; set; }
     public ICollection<Campanha> Campanhas { get; set; }
     public ICollection<ProdutoCurtida> ProdutoCurtidas { get; set; }
+    public ICollection<Compra> Compras { get; set; }
 }

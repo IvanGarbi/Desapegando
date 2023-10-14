@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desapegando.Business", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desapegando.Application", "src\Desapegando.Application\Desapegando.Application.csproj", "{D353F7DB-8E78-43F3-8331-D0833DDA971A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desapegando.API", "src\Desapegando.API\Desapegando.API.csproj", "{4354A488-B1B7-4A4B-8E03-679DD47F2FC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desapegando.API", "src\Desapegando.API\Desapegando.API.csproj", "{4354A488-B1B7-4A4B-8E03-679DD47F2FC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

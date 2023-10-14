@@ -38,9 +38,9 @@ public class ProdutoMapping : IEntityTypeConfiguration<Produto>
             .IsRequired()
             .HasColumnType("DATETIME");
 
-        builder.Property(x => x.DataVenda)
-            .IsRequired(false)
-            .HasColumnType("DATETIME");
+        //builder.Property(x => x.DataVenda)
+        //    .IsRequired(false)
+        //    .HasColumnType("DATETIME");
 
         builder.Property(x => x.Descricao)
             .IsRequired()
@@ -64,6 +64,11 @@ public class ProdutoMapping : IEntityTypeConfiguration<Produto>
             .HasForeignKey(k => k.ProdutoId);
 
         builder.HasMany(x => x.ProdutoCurtidas)
+            .WithOne(a => a.Produto)
+            .HasForeignKey(k => k.ProdutoId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasMany(x => x.Compras)
             .WithOne(a => a.Produto)
             .HasForeignKey(k => k.ProdutoId)
             .OnDelete(DeleteBehavior.NoAction);

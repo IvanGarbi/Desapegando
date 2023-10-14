@@ -85,6 +85,8 @@ builder.Services.AddScoped<ICampanhaImagemService, CampanhaImagemService>();
 builder.Services.AddScoped<INotificador, Notificador>();
 builder.Services.AddScoped<IProdutoCurtidaRepository, ProdutoCurtidaRepository>();
 builder.Services.AddScoped<IProdutoCurtidaService, ProdutoCurtidaService>();
+builder.Services.AddScoped<ICompraService, CompraService>();
+builder.Services.AddScoped<ICompraRepository, CompraRepository>();
 
 builder.Services.AddHostedService<CampanhaHostedService>();
 
