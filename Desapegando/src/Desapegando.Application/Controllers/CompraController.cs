@@ -71,7 +71,6 @@ namespace Desapegando.Application.Controllers
 
             return View(meusProdutosDbViewModel);
 
-
             //var comprasHistorico = await _compraRepository.ReadExpression(x => x.CondominoId == Guid.Parse(User.Claims.First().Value));
 
             //var meusProdutosDbViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(comprasHistorico.Select(x => x.Produto));
