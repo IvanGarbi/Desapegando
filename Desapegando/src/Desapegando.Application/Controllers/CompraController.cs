@@ -97,7 +97,6 @@ namespace Desapegando.Application.Controllers
 
             //var produto = await _produtoRepository.ReadById(produtoId);
 
-
             var responseProdutoById = await _httpClient.GetAsync("Produto/Produto/" + id);
 
             GetProdutoResponseId produtoResponse;
