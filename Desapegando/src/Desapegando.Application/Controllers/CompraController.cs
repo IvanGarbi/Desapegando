@@ -129,24 +129,44 @@ namespace Desapegando.Application.Controllers
 
             try
             {
-                Compra compra = new Compra
+
+                for (int i = 0; i < quantidade; i++)
                 {
-                    CondominoId = id,
-                    ProdutoId = produtoId,
-                    DataVenda = DateTime.Now,
-                };
+                    Compra compra = new Compra
+                    {
+                        CondominoId = id,
+                        ProdutoId = produtoId,
+                        DataVenda = DateTime.Now,
+                    };
+
+                    var compraContent = new StringContent(
+                            JsonSerializer.Serialize(compra),
+                            Encoding.UTF8,
+                            "application/json");
+
+                    var response = await _httpClient.PostAsync("Compra/Compra/", compraContent);
+
+                    CompraResponse compraResponse;
+                }
+
+                //Compra compra = new Compra
+                //{
+                //    CondominoId = id,
+                //    ProdutoId = produtoId,
+                //    DataVenda = DateTime.Now,
+                //};
 
                 //await _compraService.Create(compra);
 
 
-                var compraContent = new StringContent(
-                        JsonSerializer.Serialize(compra),
-                        Encoding.UTF8,
-                        "application/json");
+                //var compraContent = new StringContent(
+                //        JsonSerializer.Serialize(compra),
+                //        Encoding.UTF8,
+                //        "application/json");
 
-                var response = await _httpClient.PostAsync("Compra/Compra/", compraContent);
+                //var response = await _httpClient.PostAsync("Compra/Compra/", compraContent);
 
-                CompraResponse compraResponse;
+                //CompraResponse compraResponse;
 
 
             }
