@@ -203,7 +203,7 @@ public class AdministradorController : MainController
         // total produtos 7 dias
         var totalProdutosVendidos7Dias = totalVendas7Dias;
         //var totalProdutosDesistidos7Dias = produtos.Where(x => x.Desistencia == true && x.DataVenda >= DateTime.Now.AddDays(-7));
-        var totalProdutosDesistidos7Dias = produtos.Where(x => x.Desistencia == true);
+        var totalProdutosDesistidos7Dias = produtos.Where(x => x.Desistencia == true && x.DataDesistencia >= DateTime.Now.AddDays(-7));
         var totalProdutosDisponiveis7Dias = produtos.Where(x => x.Desistencia == false && x.Ativo == true && x.DataPublicacao >= DateTime.Now.AddDays(-7)).Sum(y => y.Quantidade);
         var totalProdutos7Dias = totalProdutosDesistidos7Dias.Count() + totalProdutosDisponiveis7Dias + totalVendas7Dias.Count();
 

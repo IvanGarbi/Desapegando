@@ -162,6 +162,11 @@ namespace Desapegando.API.Controllers
 
             MapearProduto(produtoDb, produtoViewModel);
 
+            if (produtoViewModel.Desistencia)
+            {
+                produtoDb.DataDesistencia = DateTime.Now;
+            }
+
             if (!produtoViewModel.Ativo && !produtoViewModel.Desistencia)
             {
                 //produtoDb.DataVenda = DateTime.Now;

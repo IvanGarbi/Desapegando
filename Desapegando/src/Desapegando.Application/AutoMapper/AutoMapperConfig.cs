@@ -48,5 +48,7 @@ public class AutoMapperConfig : Profile
         CreateMap<UpdateCampanhaViewModel, Campanha>().ReverseMap();
 
         CreateMap<UpdateCampanhaViewModel, PatchCampanhaViewModel>().ReverseMap();
+
+        CreateMap<GetCompraViewModel, Compra>().ReverseMap();
     }
 }

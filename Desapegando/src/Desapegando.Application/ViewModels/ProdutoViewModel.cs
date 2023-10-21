@@ -98,6 +98,7 @@ namespace Desapegando.Application.ViewModels
         public CondominoViewModel CondominoViewModel { get; set; }
 
         public bool Ativo { get; set; }
+        public bool Desistencia { get; set; }
     }
 
     public class FiltrarProdutoViewModel
