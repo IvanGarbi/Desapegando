@@ -36,8 +36,9 @@
                         <div class="border-bottom border-dashed border-300 pb-4">
                             <div class="row align-items-center g-3 g-sm-5 text-center text-sm-start">
                                 <div class="col-12 col-sm-auto">
-                                    <input class="d-none" id="avatarFile" type="file" />
+                                    @* <input class="d-none" id="avatarFile" type="file" /> *@
                                     @*<label class="cursor-pointer avatar avatar-5xl" for="avatarFile"><img class="rounded-circle" src="~/public/assets/img/team/15.webp" alt="" /></label>*@
+                                    <label class="cursor-pointer avatar avatar-5xl" for="avatarFile"><img class="rounded-circle" src="~/Imagens/@User.FindFirst("ProfilePicture").Value" alt="" /></label>
                                 </div>
                                 <div class="col-12 col-sm-auto flex-1">
                                     <h3>@Model.Nome</h3>
@@ -955,7 +956,7 @@
                         </div>
                     </div>
                 </div>
-                <form method="post">
+                <form enctype="multipart/form-data" method="post">
                     <div class="tab-pane fade show active" id="tab-personal-info" role="tabpanel" aria-labelledby="personal-info-tab">
                         <input asp-for="Id" hidden="true">
                         <input asp-for="Administrador" hidden="true">
@@ -971,12 +972,19 @@
                                 <input class="form-control" id="sobrenome" type="text" placeholder="Full name" asp-for="Sobrenome"/>
                                 <span asp-validation-for="Sobrenome" class="text-danger"></span>
                             </div>
-                            <div class="col-12 col-lg-6">
+                            <div class="col-12 col-lg-3">
                                 <label class="form-label text-1000 fs-0 ps-0 text-capitalize lh-sm" for="gender">Sexo</label>
                                 <select class="form-select" id="gender" asp-for="Sexo" asp-items="@Html.GetEnumSelectList<Sexo>()">
                                     <option selected="" value="">Selecione</option>
                                 </select>
                                 <span asp-validation-for="Sexo" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <div class="row g-2 gy-lg-0">
+                                    <label class="form-label text-1000 fs-0 ps-1 text-capitalize lh-sm" for="datepicker">Data de Nascimento</label>
+                                    <input asp-for="DataNascimento" class="form-control datetimepicker" id="datepicker" type="text" placeholder="dd/mm/yyyy" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' />
+                                    <span asp-validation-for="DataNascimento" class="text-danger"></span>
+                                </div>
                             </div>
                             <div class="col-12 col-lg-6">
                                 <label class="form-label text-1000 fs-0 ps-0 text-capitalize lh-sm" asp-for="Email">Email</label>
@@ -984,12 +992,17 @@
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                             <div class="col-12 col-lg-6">
+                                <label class="form-label text-1000 fs-0 ps-0 text-capitalize lh-sm" for="gender">Imagem de Perfil</label>
+                                <input asp-for="ImageUpload" class="form-control" type="file" placeholder="Imagem de Perfil" />
+                                <span asp-validation-for="ImageUpload" class="text-danger"></span>
+                            </div>
+@*                             <div class="col-12 col-lg-6">
                                 <div class="row g-2 gy-lg-0">
                                     <label class="form-label text-1000 fs-0 ps-1 text-capitalize lh-sm" for="datepicker">Data de Nascimento</label>
                                     <input asp-for="DataNascimento" class="form-control datetimepicker" id="datepicker" type="text" placeholder="dd/mm/yyyy" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}'/>
                                     <span asp-validation-for="DataNascimento" class="text-danger"></span>
                                 </div>
-                            </div>
+                            </div> *@
                             <div class="col-12 col-lg-4">
                                 <label class="form-label text-1000 fw-bold fs-0 ps-0 text-capitalize lh-sm" asp-for="Telefone">Telefone</label>
                                 <input class="form-control" id="phone" type="text" placeholder="Telefone" asp-for="Telefone"/>

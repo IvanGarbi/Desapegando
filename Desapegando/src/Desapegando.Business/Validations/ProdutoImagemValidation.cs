@@ -11,7 +11,7 @@ namespace Desapegando.Business.Validations
                 .NotNull()
                 .NotEmpty()
                 .WithMessage("O {PropertyName} deve ser informado.")
-                .EmailAddress()
+                .EmailAddress() // ??
                 .WithMessage("O {PropertyName} está em formato inválido.")
                 .MaximumLength(150)
                 .WithMessage("O {PropertyName} deve ter menos que 150 caracteres.");

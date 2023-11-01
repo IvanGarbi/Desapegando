@@ -1,6 +1,7 @@
 ﻿using Desapegando.Application.Extensions;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
+using Desapegando.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -30,11 +31,29 @@ public class RegisterController : MainController
     [HttpPost]
     public async Task<IActionResult> Index(CondominoRegisterViewModel condominoRegisterViewModel)
     {
+        ModelState.ClearValidationState("ImageFileName");
+        ModelState.MarkFieldValid("ImageFileName");
+
         if (!ModelState.IsValid)
         {
             return View(condominoRegisterViewModel);
         }
 
+
+        if (condominoRegisterViewModel.ImageUpload == null)
+        {
+            ModelState.AddModelError(string.Empty, "É obrigatório inserir uma imagem de perfil.");
+            return View(condominoRegisterViewModel);
+        }
+
+        var imgPrefixo = Guid.NewGuid() + "_";
+        if (!await UploadArquivo(condominoRegisterViewModel.ImageUpload, imgPrefixo))
+        {
+            ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar a imagem de perfil.");
+            return View(condominoRegisterViewModel);
+        }
+
+        condominoRegisterViewModel.ImageFileName = imgPrefixo + condominoRegisterViewModel.ImageUpload.FileName;
 
         var registerContent = new StringContent(
                 JsonSerializer.Serialize(condominoRegisterViewModel),
@@ -74,5 +93,46 @@ public class RegisterController : MainController
 
         return RedirectToAction("Index", "Login");
     }
+
+    #region MétodosPrivados
+    private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)
+    {
+        if (arquivo.Length <= 0) return false;
+
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Imagens", imgPrefixo + arquivo.FileName);
+
+        //verificar se o arquivo já existe no diretório
+        if (System.IO.File.Exists(path))
+        {
+            ModelState.AddModelError(string.Empty, "Já existe um arquivo com este nome!");
+            return false;
+        }
+
+
+        // gravando em "disco"
+        using (var stream = new FileStream(path, FileMode.Create))
+        {
+            await arquivo.CopyToAsync(stream);
+        }
+
+        return true;
+    }
+
+    private async Task<bool> DeletarArquivo(string imagem)
+    {
+        if (imagem.Length <= 0) return false;
+
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagens", imagem);
+
+        //verificar se o arquivo já existe no diretório
+        if (System.IO.File.Exists(path))
+        {
+            System.IO.File.Delete(path);
+            return true;
+        }
+
+        return false;
+    }
+    #endregion
 
 }

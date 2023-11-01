@@ -14,6 +14,7 @@ public class Condomino : Entity
     public DateTime DataNascimento { get; set; }
     public DateTime DataRegistro { get; set; } = DateTime.Now;
     public bool Ativo { get; set; } = false;
+    public string ImageFileName { get; set; }
 
     public ICollection<Produto> Produtos { get; set; }
     public ICollection<Campanha> Campanhas { get; set; }

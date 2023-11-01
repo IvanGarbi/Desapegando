@@ -87,7 +87,7 @@
                             <h3 class="text-1000">Registre-se</h3>
                             <p class="text-700">Crie Sua Conta Hoje!</p>
                         </div>
-                        <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                        <form asp-route-returnurl="@ViewData["ReturnUrl"]" enctype="multipart/form-data" method="post">
 
                             <vc:Summary></vc:Summary>
 
@@ -113,6 +113,14 @@
                                 <label asp-for="Email" class="form-label"></label>
                                 <input asp-for="Email" class="form-control" placeholder="E-mail"/>
                                 <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3 text-start">
+                                <label asp-for="ImageUpload" class="form-label"></label>
+                                <input asp-for="ImageUpload" class="form-control" type="file" placeholder="Imagem de Perfil" />
+                                <span asp-validation-for="ImageUpload" class="text-danger"></span>
+                                @* <label class="form-label" for="customFile">File input example</label> *@
+                                @* <input class="form-control" id="customFile" type="file" /> *@
                             </div>
 
                             <div class="row g-3 mb-3">

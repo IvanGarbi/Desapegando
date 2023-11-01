@@ -71,6 +71,16 @@ namespace Desapegando.API.Controllers
                 condomino.Cpf = condomino.Cpf.Replace(".", "");
                 condomino.Cpf = condomino.Cpf.Replace("-", "");
 
+                //if (string.IsNullOrEmpty(condominoRegisterViewModel.ImageFileName))
+                //{
+                //    _notificador.AdicionarNotificacao(new Notificacao("É obrigatório inserir uma imagem de perfil.", "ImageFileName"));
+                //}
+                //else
+                //{
+                //    var imgPrefixo = Guid.NewGuid() + "_";
+                //    condomino.ImageFileName = imgPrefixo + condominoRegisterViewModel.ImageFileName;
+                //}
+
                 var validator = new CondominoValidation();
                 var resultValidation = validator.Validate(condomino);
 
@@ -78,6 +88,9 @@ namespace Desapegando.API.Controllers
                 {
                     try
                     {
+                        // adicionando claim de foto principal
+                        await _userManager.AddClaimAsync(identity, new Claim("ProfilePicture", condomino.ImageFileName));
+
                         await _condominoService.Create(condomino);
 
                         if (!_notificador.TemNotificacao())
@@ -165,6 +178,8 @@ namespace Desapegando.API.Controllers
             return Response();
         }
 
+        #region MétodosPrivados
+
         private async Task<UserResponseLogin> CreateJwt(string email)
         {
             var user = await _userManager.FindByNameAsync(email);
@@ -231,6 +246,8 @@ namespace Desapegando.API.Controllers
 
         private static long ToUnixEpochDate(DateTime date)
             => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+        #endregion
     }
 }
 

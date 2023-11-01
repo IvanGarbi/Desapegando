@@ -51,6 +51,11 @@ public class CondominoMapping : IEntityTypeConfiguration<Condomino>
             .IsRequired()
             .HasColumnType("BIT");
 
+        builder.Property(x => x.ImageFileName)
+            .IsRequired()
+            .HasColumnType("NVARCHAR")
+            .HasMaxLength(150);
+
         builder.HasMany(x => x.Produtos)
             .WithOne(a => a.Condomino)
             .HasForeignKey(k => k.CondominoId);

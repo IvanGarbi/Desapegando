@@ -53,6 +53,12 @@ public class CondominoRegisterViewModel
     [DisplayName("Confirme sua senha")]
     [Compare("Senha", ErrorMessage = "As senhas não conferem.")]
     public string ConfirmarSenha { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Foto de Perfil")]
+    public IFormFile ImageUpload { get; set; }
+
+    public string ImageFileName { get; set; }
 }
 
 public class CondominoLoginViewModel
@@ -94,6 +100,9 @@ public class CondominoInativoViewModel
 
     [DisplayName("Data de Nascimento")]
     public DateTime DataNascimento { get; set; }
+
+    //[DisplayName("Foto de Perfil")]
+    public string ImageFileName { get; set; }
 }
 
 public class CondominoViewModel
@@ -125,6 +134,10 @@ public class CondominoViewModel
     public DateTime DataNascimento { get; set; }
     public bool Administrador { get; set; }
     public bool Ativo { get; set; }
+
+    //[DisplayName("Foto de Perfil")]
+    public string ImageFileName { get; set; }
+    public IFormFile ImageUpload { get; set; }
 }
 
 public class CondominoCompraViewModel
@@ -158,6 +171,10 @@ public class CondominoCompraViewModel
     public bool Ativo { get; set; }
     public Guid ProdutoId { get; set; }
     public int Quantidade { get; set; }
+
+    //[DisplayName("Foto de Perfil")]
+    public string ImageFileName { get; set; }
+    public IFormFile ImageUpload { get; set; }
 }
 
 public class GetCondominoResponse

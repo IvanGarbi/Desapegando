@@ -68,6 +68,13 @@ public class CondominoValidation : AbstractValidator<Condomino>
             .Must(cpf => ValidarCpf(cpf))
             .WithMessage("O {PropertyName} não está em formato de CPF adequado.");
 
+        RuleFor(x => x.ImageFileName)
+            .NotNull()
+            .NotEmpty()
+            .WithMessage("O {PropertyName} deve ser informado.")
+            .MaximumLength(150)
+            .WithMessage("O {PropertyName} deve ter menos que 150 caracteres.");
+
     }
 
     private static bool ValidarIdade(DateTime dataNascimento)
