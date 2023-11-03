@@ -138,6 +138,7 @@ public class CondominoViewModel
     //[DisplayName("Foto de Perfil")]
     public string ImageFileName { get; set; }
     public IFormFile ImageUpload { get; set; }
+    public bool NovaImagem { get; set; } = false;
 }
 
 public class CondominoCompraViewModel

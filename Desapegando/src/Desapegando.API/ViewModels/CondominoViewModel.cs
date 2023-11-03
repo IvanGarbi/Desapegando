@@ -171,4 +171,5 @@ public class PostCondominoViewModel
     public bool Ativo { get; set; }
 
     public string ImageFileName { get; set; }
+    public bool NovaImagem { get; set; }
 }

@@ -29,6 +29,8 @@ public abstract class MainController : Controller
             // adicionar erros quando necessário
             case 400:
                 return false;
+            case 500:
+                return false;
         }
 
         response.EnsureSuccessStatusCode();
