@@ -99,6 +99,8 @@ namespace Desapegando.Application.ViewModels
 
         public bool Ativo { get; set; }
         public bool Desistencia { get; set; }
+        public DateTime DataPublicacao { get; set; }
+        public DateTime? DataDesistencia { get; set; }
     }
 
     public class FiltrarProdutoViewModel

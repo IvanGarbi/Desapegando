@@ -18,7 +18,7 @@
         public decimal TotalProdutosDisponiveisUltimos7Dias { get; set; }
         public decimal TotalProdutosDesistidosUltimos7Dias { get; set; }
 
-        public int NovasCampanhasDisponiveisUlitmos30Dias { get; set; }
+        public decimal NovasCampanhasDisponiveisUlitmos30Dias { get; set; }
     }
 
     public class NovosCondominos7DiasViewModel

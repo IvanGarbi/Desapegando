@@ -160,7 +160,7 @@ public class AdministradorController : MainController
         // Novos condôminos 7 dias
         var novosCondominos7Dias = condominos.Where(x => x.Ativo == false && x.DataRegistro >= DateTime.Now.AddMonths(-2)).ToArray(); // pegar de 2 meses para facilitar, pois a iteração da data é quem define
         var datas = new List<DateTime>();
-        for (int i = 7; i > 0; i--)
+        for (int i = 6; i >= 0; i--)
         {
             datas.Add(DateTime.Now.AddDays(-i));
             datas.Add(DateTime.Now.AddDays(-i).AddMonths(-1));
@@ -172,7 +172,7 @@ public class AdministradorController : MainController
             NovosCondominos7DiasViewModel novosCondominos7DiasViewModel = new NovosCondominos7DiasViewModel
             {
                 DataRegistro = data,
-                Quantidade = novosCondominos7Dias.Where(x => x.DataRegistro.Day == data.Day) == null ? 0 : novosCondominos7Dias.Where(x => x.DataRegistro.Day == data.Day && x.DataRegistro.Month == data.Month).Count()
+                Quantidade = novosCondominos7Dias.Where(x => x.DataRegistro.Day == data.Day && x.DataRegistro.Month == data.Month) == null ? 0 : novosCondominos7Dias.Where(x => x.DataRegistro.Day == data.Day && x.DataRegistro.Month == data.Month).Count()
             };
 
             listanovosCondominos7DiasViewModel.Add(novosCondominos7DiasViewModel);
@@ -184,7 +184,7 @@ public class AdministradorController : MainController
         //var totalVendas7Dias = produtos.Where(x => x.Desistencia == false && x.Ativo == false && x.DataVenda >= DateTime.Now.AddDays(-8));
         var totalVendas7Dias = produtosVendidos.Where(x => x.DataVenda >= DateTime.Now.AddDays(-8));
         datas.Clear();
-        for (int i = 7; i > 0; i--)
+        for (int i = 6; i >= 0; i--)
         {
             datas.Add(DateTime.Now.AddDays(-i));
         }
@@ -306,7 +306,7 @@ public class AdministradorController : MainController
         dashboardViewModel.TotalProdutosDisponiveisUltimos7Dias = totalProdutosDisponiveis7Dias == 0 ? 0 : ((decimal)totalProdutosDisponiveis7Dias / totalProdutos7Dias) * 10000000;
         dashboardViewModel.TotalProdutosVendidosUltimos7Dias = totalProdutosVendidos7Dias.Any() == false ? 0 : ((decimal)totalProdutosVendidos7Dias.Count() / totalProdutos7Dias) * 10000000;
 
-        dashboardViewModel.NovasCampanhasDisponiveisUlitmos30Dias = novasCampanhasDisponiveis30Dias.Any() == false ? 0 : (novasCampanhasDisponiveis30Dias.Count() / totalCampanhas30Dias) * 100;
+        dashboardViewModel.NovasCampanhasDisponiveisUlitmos30Dias = novasCampanhasDisponiveis30Dias.Any() == false ? 0 : Math.Round(((decimal)novasCampanhasDisponiveis30Dias.Count() / totalCampanhas30Dias) * 100, 2);
 
         dashboardViewModel.VendasPeriodo1MesViewModel = listaVendas1PeriodoMesViewModel;
         dashboardViewModel.VendasPeriodo2MesViewModel = listaVendas2PeriodoMesViewModel;

@@ -152,6 +152,7 @@ public class GetCondominoViewModel
     public DateTime DataNascimento { get; set; }
     public bool Administrador { get; set; }
     public bool Ativo { get; set; }
+    public DateTime DataRegistro { get; set; }
 
     public string ImageFileName { get; set; }
 }

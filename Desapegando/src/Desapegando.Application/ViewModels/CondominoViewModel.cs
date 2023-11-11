@@ -139,6 +139,7 @@ public class CondominoViewModel
     public string ImageFileName { get; set; }
     public IFormFile ImageUpload { get; set; }
     public bool NovaImagem { get; set; } = false;
+    public DateTime DataRegistro { get; set; }
 }
 
 public class CondominoCompraViewModel

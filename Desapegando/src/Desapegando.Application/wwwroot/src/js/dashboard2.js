@@ -136,7 +136,7 @@
             const chart = window.echarts.init($echartNewCustomersCharts);
 
             var date = new Date();
-            const dataInicial = date.setDate(date.getDate() - 1);
+            const dataInicial = date.setDate(date.getDate() - 0);
             const dataFinal = date.setDate(date.getDate() - 6); // se retiar o gráfico quebra kkkk
 
             const getDefaultOptions = () => ({
@@ -2114,7 +2114,7 @@
             const chart = window.echarts.init(totalOrdersChartEl);
 
             var date = new Date();
-            const dataInicial = date.setDate(date.getDate() - 1);
+            const dataInicial = date.setDate(date.getDate() - 0);
             const dataFinal = date.setDate(date.getDate()- 6);
 
             const getDefaultOptions = () => ({
