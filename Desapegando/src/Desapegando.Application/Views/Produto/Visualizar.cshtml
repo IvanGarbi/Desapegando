@@ -116,16 +116,7 @@
                                     </div>
                                 </div>
                                 <div class="row g-3 g-sm-5 align-items-end">
-@*                                    <div class="col-12 col-sm-auto">
-                                        <p class="fw-semi-bold mb-2 text-900">Size : </p>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-select w-auto">
-                                                <option value="44">44</option>
-                                                <option value="22">22</option>
-                                                <option value="18">18</option>
-                                            </select><a class="ms-2 fs--1 fw-semi-bold" href="#!">Size chart</a>
-                                        </div>
-                                    </div>*@
+
                                     <div class="col-12 col-sm">
                                         <p class="fw-semi-bold mb-2 text-900">Quantidade : </p>
                                         <div class="d-flex justify-content-between align-items-end">
@@ -186,190 +177,14 @@
                                             </td>
                                             <td class="px-5 mb-0">@Html.DisplayTextFor(x => x.EstadoProduto)</td>
                                         </tr>
-                                        @*<tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Gpu core</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">7</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Neural engine</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">16 cores</td>
-                                        </tr>*@
+
                                     </tbody>
                                 </table>
-@*                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Storage</h3>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 40%"></th>
-                                            <th style="width: 60%"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Memory</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">8 GB unified</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">SSD</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">256 GB</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Display</h3>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 40%"> </th>
-                                            <th style="width: 60%"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Display type</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">Retina</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Size</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">24” (actual diagonal 23.5”)</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Resolution</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">4480 x 2520 </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Brightness</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">500 nits</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Additional Specifications</h3>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 40%"> </th>
-                                            <th style="width: 60%"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Camera</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">1080p FaceTime HD camera</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100">
-                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Video </h6>
-                                            </td>
-                                            <td class="px-5 mb-0">Full native resolution on built-in display at 1 billion colors; <br>One external display with up to 6K resolution at 60Hz</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100">
-                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Audio</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">High-fidelity six-speaker with force-cancelling woofers <br>Wide stereo sound <br>Spatial audio with Dolby Atmos3<br>Studio-quality three-mic array with directional beamforming</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100">
-                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Inputs </h6>
-                                            </td>
-                                            <td class="px-5 mb-0">Magic Keyboard<br>Magic Mouse</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100">
-                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Wireless </h6>
-                                            </td>
-                                            <td class="px-5 mb-0">802.11ax Wi-Fi 6 (IEEE 802.11a/b/g/n/ac compatible)<br>Bluetooth 5.0 wireless technology</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100">
-                                                <h6 class="mb-0 mt-1 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">I/O &amp; expantions </h6>
-                                            </td>
-                                            <td class="px-5 mb-0">Thunderbolt / USB 4 ports x 2<br>3.5 mm headphone jack<br>Gigabit Ethernet<br>USB 3 ports x2</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="bg-100 align-middle">
-                                                <h6 class="mb-0 text-900 text-uppercase fw-bolder px-4 fs--1 lh-sm">Operating System</h6>
-                                            </td>
-                                            <td class="px-5 mb-0">macOS Monterey </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <h3 class="mb-3 mt-6 ms-4 fw-bold">In The Box</h3>
-                                <p class="lh-sm border-top mb-0 py-3 px-4">iMac 24”</p>
-                                <p class="lh-sm border-top mb-0 py-3 px-4">Magic Keyboard </p>
-                                <p class="lh-sm border-top mb-0 py-3 px-4">Magic Mouse</p>
-                                <p class="lh-sm border-top mb-0 py-3 px-4">143W power adapter</p>
-                                <p class="lh-sm border-top mb-0 py-3 px-4">2m Power Cord</p>
-                                <p class="lh-sm border-y mb-0 py-3 px-4">USB-C to Lightning Cable</p>*@
+
                             </div>
                         </div>
                     </div>
-                    @*<div class="col-12 col-lg-5 col-xl-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="text-black">Usually Bought Together</h5>
-                                <div class="w-75">
-                                    <p class="text-700 fs--1 fw-bold line-clamp-1">with 24" iMac® with Retina 4.5K display - Apple M1 8GB Memory - 256GB SSD - w/Touch ID (Latest Model) - Blue</p>
-                                </div>
-                                <div class="border-dashed border-y py-4">
-                                    <div class="d-flex align-items-center mb-5">
-                                        <div class="form-check mb-0">
-                                            <input class="form-check-input" type="checkbox" checked="checked" />
-                                            <label class="form-check-label"></label>
-                                        </div><img class="border rounded" src="~/public/assets/img/products/2.png" width="53" alt="" />
-                                        <div class="ms-2">
-                                            <a class="fs--1 fw-bold line-clamp-2 mb-2" href="~/public/apps/e-commerce/landing/product-details.html"> iPhone 13 pro max-Pacific Blue- 128GB</a>
-                                            <h5>$899.99</h5>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-5">
-                                        <div class="form-check mb-0">
-                                            <input class="form-check-input" type="checkbox" checked="checked" />
-                                            <label class="form-check-label"></label>
-                                        </div><img class="border rounded" src="~/public/assets/img/products/16.png" width="53" alt="" />
-                                        <div class="ms-2">
-                                            <a class="fs--1 fw-bold line-clamp-2 mb-2" href="~/public/apps/e-commerce/landing/product-details.html">Apple AirPods Pro</a>
-                                            <h5>$59.00</h5>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-0">
-                                        <div class="form-check mb-0">
-                                            <input class="form-check-input" type="checkbox" />
-                                            <label class="form-check-label"></label>
-                                        </div><img class="border rounded" src="~/public/assets/img/products/10.png" width="53" alt="" />
-                                        <div class="ms-2">
-                                            <a class="fs--1 fw-bold line-clamp-2 mb-2" href="~/public/apps/e-commerce/landing/product-details.html">Apple Magic Mouse (Wireless, Rechargable) - Silver, Worst mouse ever</a>
-                                            <h5>$89.00</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-end justify-content-between pt-3">
-                                    <div>
-                                        <h5 class="mb-2 text-600">Total</h5>
-                                        <h4 class="mb-0 text-1100">$958.99</h4>
-                                    </div>
-                                    <div class="btn btn-outline-warning">Add 3 items to cart<span class="fas fa-shopping-cart ms-2"></span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>*@
+
                 </div>
             </div>
             <!-- end of .container-->
@@ -384,8 +199,6 @@
 </section>
 
 @section Scripts{
-    @*<link rel="manifest" href="~/public/assets/img/favicons/manifest.json">*@
-    @*<script src="~/public/vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>*@
     <script src="~/public/vendors/simplebar/simplebar.min.js"></script>
     <script src="~/public/assets/js/config.js"></script>
 
@@ -393,7 +206,6 @@
     <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
-    @*<link href="~/public/vendors/swiper/swiper-bundle.min.css" rel="stylesheet">*@
     <link href="~/public/vendors/dropzone/dropzone.min.css" rel="stylesheet">
     <link href="~/public/vendors/glightbox/glightbox.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -401,51 +213,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
     <link href="~/public/vendors/simplebar/simplebar.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-@*    <link href="~/public/assets/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
-    <link href="~/public/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
-    <link href="~/public/assets/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
-    <link href="~/public/assets/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">*@
-@*    <script>
-      var phoenixIsRTL = window.config.config.phoenixIsRTL;
-      if (phoenixIsRTL) {
-        var linkDefault = document.getElementById('style-default');
-        var userLinkDefault = document.getElementById('user-style-default');
-        linkDefault.setAttribute('disabled', true);
-        userLinkDefault.setAttribute('disabled', true);
-        document.querySelector('html').setAttribute('dir', 'rtl');
-      } else {
-        var linkRTL = document.getElementById('style-rtl');
-        var userLinkRTL = document.getElementById('user-style-rtl');
-        linkRTL.setAttribute('disabled', true);
-        userLinkRTL.setAttribute('disabled', true);
-      }
-    </script>
-*@
-    <!-- ===============================================-->
-    <!--    JavaScripts-->
-    <!-- ===============================================-->
-    @*<script src="~/public/vendors/popper/popper.min.js"></script>*@
-    @*<script src="~/public/vendors/bootstrap/bootstrap.min.js"></script>*@
-    @*<script src="~/public/vendors/anchorjs/anchor.min.js"></script>*@
-    @*<script src="~/public/vendors/is/is.min.js"></script>*@
-@*    <script src="~/public/vendors/fontawesome/all.min.js"></script>
-    <script src="~/public/vendors/lodash/lodash.min.js"></script>*@
-    @*<script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>*@
-    @*<script src="~/public/vendors/list.js/list.min.js"></script>*@
-    @*<script src="~/public/vendors/feather-icons/feather.min.js"></script>*@
-    @*<script src="~/public/vendors/dayjs/dayjs.min.js"></script>*@
-    @*<script src="~/public/vendors/swiper/swiper-bundle.min.js"></script>*@
     <script src="~/public/vendors/dropzone/dropzone.min.js"></script>
     <script src="~/public/vendors/rater-js/index.js"></script>
     <script src="~/public/vendors/glightbox/glightbox.min.js"> </script>
-    @*<script src="~/public/assets/js/phoenix.js"></script>*@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/src/js/Produto/Visualizar.js"></script>
 }
 
 
-@* <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#removerProdutoModal">Vertically centered modal</button> *@
 <div class="modal fade" id="removerProdutoModal" tabindex="-1" aria-labelledby="removerProdutoModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

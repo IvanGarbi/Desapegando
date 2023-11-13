@@ -10,44 +10,7 @@
     <section class="py-0">
 
         <div class="container-small">
-@*            <div class="scrollbar">
-                <div class="d-flex justify-content-between">
-                    <a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2 bg-warning-100 light"><span class="fs-4 uil uil-star text-warning"></span></div>
-                        <p class="nav-label">Deals</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-shopping-bag"></span></div>
-                        <p class="nav-label">Grocery</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-watch-alt"></span></div>
-                        <p class="nav-label">Fashion</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-mobile-android"></span></div>
-                        <p class="nav-label">Mobile</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-monitor"></span></div>
-                        <p class="nav-label">Electronics</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-estate"></span></div>
-                        <p class="nav-label">Home</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-lamp"></span></div>
-                        <p class="nav-label">Dining</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-gift"></span></div>
-                        <p class="nav-label">Gifts</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-wrench"></span></div>
-                        <p class="nav-label">Tools</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-plane-departure"></span></div>
-                        <p class="nav-label">Travel</p>
-                    </a><a class="icon-nav-item" href="#!">
-                        <div class="icon-container mb-2"><span class="fs-4 uil uil-palette"></span></div>
-                        <p class="nav-label">Others</p>
-                    </a>
-                </div>
-            </div>*@
+
         </div>
         <!-- end of .container-->
 
@@ -61,20 +24,7 @@
         <div class="container px-xl-0 px-xxl-3">
             <div class="row g-3 mb-9">
                 <div class="col-12">
-@*                    <div class="whooping-banner w-100 rounded-3 overflow-hidden">
-                        <div class="bg-holder z-index--1 product-bg" style="background-image:url(../public/assets/img/e-commerce/whooping_banner_product.png);background-position: bottom right;">
-                        </div>
-                        <!--/.bg-holder-->
 
-                        <div class="bg-holder z-index--1 shape-bg" style="background-image:url(../public/assets/img/e-commerce/whooping_banner_shape_2.png);background-position: bottom left;">
-                        </div>
-                        <!--/.bg-holder-->
-
-                        <div class="banner-text light">
-                            <h2 class="text-warning-300 fw-bolder fs-lg-5 fs-xxl-6">Whooping <span class="gradient-text">60% </span>Off</h2>
-                            <h3 class="fw-bolder fs-lg-3 fs-xxl-5 text-white light">on everyday items</h3>
-                        </div><a class="btn btn-lg btn-primary rounded-pill banner-button" href="#!">Shop Now</a>
-                    </div>*@
                 </div>
                 <div class="col-12 col-xl-6">
                     <div class="gift-items-banner w-100 rounded-3 overflow-hidden">
@@ -141,7 +91,8 @@
                                                                 <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
                                                             </a>
                                                         }
-                                                        <img class="img-fluid" src="~/Imagens/@produto.ProdutoImagemViewModels[0].FileName" alt="" />
+                                                        @* <img class="img-fluid" src="~/Imagens/@produto.ProdutoImagemViewModels[0].FileName" alt="" /> *@
+                                                        <img src="~/Imagens/@produto.ProdutoImagemViewModels[0].FileName" alt="" height="260.8px" width="260.8px" />
                                                     </div><a class="stretched-link text-decoration-none" asp-action="Visualizar" asp-controller="Produto" asp-route-id="@produto.Id">
                                                         <h6 class="mb-2 lh-sm line-clamp-3 product-name">@produto.Nome</h6>
                                                     </a>
@@ -219,168 +170,7 @@
                     </div>
                 </div><a class="fw-bold d-md-none" href="#!">Explore more<span class="fas fa-chevron-right fs--1 ms-1"></span></a>
             </div>
-@*            <div class="mb-6">
-                <div class="d-flex flex-between-center mb-3">
-                    <h3>Best Offers</h3><a class="fw-bold d-none d-md-block" href="#!">Explore more<span class="fas fa-chevron-right fs--1 ms-1"></span></a>
-                </div>
-                <div class="swiper-theme-container products-slider">
-                    <div class="swiper swiper-container theme-slider" data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"576":{"slidesPerView":3,"spaceBetween":20},"768":{"slidesPerView":4,"spaceBetween":20},"992":{"slidesPerView":5,"spaceBetween":20},"1200":{"slidesPerView":6,"spaceBetween":16}}}'>
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="position-relative text-decoration-none product-card h-100">
-                                    <div class="d-flex flex-column justify-content-between h-100">
-                                        <div>
-                                            <div class="border border-1 rounded-3 position-relative mb-3">
-                                                <button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
-                                                    <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
-                                                </button><img class="img-fluid" src="~/public/assets/img/products/25.png" alt="" />
-                                            </div><a class="stretched-link text-decoration-none" href="~/public/apps/e-commerce/landing/product-details.html">
-                                                <h6 class="mb-2 lh-sm line-clamp-3 product-name">RESPAWN 200 Racing Style Gaming Chair, in Gray RSP 200 GRY</h6>
-                                            </a>
-                                            <p class="fs--1">
-                                                <span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h6 class="text-success lh-1 mb-0">35% off</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="position-relative text-decoration-none product-card h-100">
-                                    <div class="d-flex flex-column justify-content-between h-100">
-                                        <div>
-                                            <div class="border border-1 rounded-3 position-relative mb-3">
-                                                <button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
-                                                    <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
-                                                </button><img class="img-fluid" src="~/public/assets/img/products/27.png" alt="" />
-                                            </div><a class="stretched-link text-decoration-none" href="~/public/apps/e-commerce/landing/product-details.html">
-                                                <h6 class="mb-2 lh-sm line-clamp-3 product-name">LEVOIT Humidifiers for Bedroom Large Room 6L Warm and Cool Mist for...</h6>
-                                            </a>
-                                            <p class="fs--1">
-                                                <span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa-regular fa-star text-warning-300"></span>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h6 class="text-success lh-1 mb-0">18% off</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="position-relative text-decoration-none product-card h-100">
-                                    <div class="d-flex flex-column justify-content-between h-100">
-                                        <div>
-                                            <div class="border border-1 rounded-3 position-relative mb-3">
-                                                <button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
-                                                    <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
-                                                </button><img class="img-fluid" src="~/public/assets/img/products/26.png" alt="" />
-                                            </div><a class="stretched-link text-decoration-none" href="~/public/apps/e-commerce/landing/product-details.html">
-                                                <h6 class="mb-2 lh-sm line-clamp-3 product-name">NETGEAR Nighthawk Pro Gaming XR500 Wi-Fi Router with 4 Ethernet Ports...</h6>
-                                            </a>
-                                            <p class="fs--1">
-                                                <span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h6 class="text-success lh-1 mb-0">15% off</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="position-relative text-decoration-none product-card h-100">
-                                    <div class="d-flex flex-column justify-content-between h-100">
-                                        <div>
-                                            <div class="border border-1 rounded-3 position-relative mb-3">
-                                                <button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
-                                                    <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
-                                                </button><img class="img-fluid" src="~/public/assets/img/products/18.png" alt="" />
-                                            </div><a class="stretched-link text-decoration-none" href="~/public/apps/e-commerce/landing/product-details.html">
-                                                <h6 class="mb-2 lh-sm line-clamp-3 product-name">Rachael Ray Cucina Bakeware Set Includes Nonstick Bread Baking Cookie Sheet...</h6>
-                                            </a>
-                                            <p class="fs--1">
-                                                <span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star-half-alt star-icon text-warning"></span><span class="fa-regular fa-star text-warning-300"></span>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h6 class="text-success lh-1 mb-0">20% off</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="position-relative text-decoration-none product-card h-100">
-                                    <div class="d-flex flex-column justify-content-between h-100">
-                                        <div>
-                                            <div class="border border-1 rounded-3 position-relative mb-3">
-                                                <button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
-                                                    <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
-                                                </button><img class="img-fluid" src="~/public/assets/img/products/17.png" alt="" />
-                                            </div><a class="stretched-link text-decoration-none" href="~/public/apps/e-commerce/landing/product-details.html">
-                                                <h6 class="mb-2 lh-sm line-clamp-3 product-name">Xbox Series S</h6>
-                                            </a>
-                                            <p class="fs--1">
-                                                <span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h6 class="text-success lh-1 mb-0">12% off</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="position-relative text-decoration-none product-card h-100">
-                                    <div class="d-flex flex-column justify-content-between h-100">
-                                        <div>
-                                            <div class="border border-1 rounded-3 position-relative mb-3">
-                                                <button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
-                                                    <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
-                                                </button><img class="img-fluid" src="~/public/assets/img/products/24.png" alt="" />
-                                            </div><a class="stretched-link text-decoration-none" href="~/public/apps/e-commerce/landing/product-details.html">
-                                                <h6 class="mb-2 lh-sm line-clamp-3 product-name">FURINNO Computer Writing Desk, Walnut</h6>
-                                            </a>
-                                            <p class="fs--1">
-                                                <span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h6 class="text-success lh-1 mb-0">16% off</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="position-relative text-decoration-none product-card h-100">
-                                    <div class="d-flex flex-column justify-content-between h-100">
-                                        <div>
-                                            <div class="border border-1 rounded-3 position-relative mb-3">
-                                                <button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
-                                                    <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
-                                                </button><img class="img-fluid" src="~/public/assets/img/products/18.png" alt="" />
-                                            </div><a class="stretched-link text-decoration-none" href="~/public/apps/e-commerce/landing/product-details.html">
-                                                <h6 class="mb-2 lh-sm line-clamp-3 product-name">Seagate Portable 2TB External Hard Drive Portable HDD</h6>
-                                            </a>
-                                            <p class="fs--1">
-                                                <span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa fa-star text-warning"></span><span class="fa-regular fa-star text-warning-300"></span>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h6 class="text-success lh-1 mb-0">15% off</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-nav">
-                        <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
-                        <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
-                    </div>
-                </div><a class="fw-bold d-md-none" href="#!">Explore more<span class="fas fa-chevron-right fs--1 ms-1"></span></a>
-            </div>*@
+
             <div class="row flex-center mb-15 mt-11 gy-6">
                 <div class="col-auto"><img class="d-dark-none" src="~/public/assets/img/spot-illustrations/light_30.png" alt="" width="305" /><img class="d-light-none" src="~/public/assets/img/spot-illustrations/dark_30.png" alt="" width="305" /></div>
                 <div class="col-auto">

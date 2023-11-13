@@ -33,14 +33,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                @*                            <div class="form-check mb-0">
-                                <input class="form-check-input mt-0" id="preBookInput" type="checkbox" name="color">
-                                <label class="form-check-label d-block lh-sm fs-0 text-900 fw-normal mb-0" for="preBookInput">Pre-book</label>
-                                </div>
-                                <div class="form-check mb-0">
-                                <input class="form-check-input mt-0" id="outOfStockInput" type="checkbox" name="color">
-                                <label class="form-check-label d-block lh-sm fs-0 text-900 fw-normal mb-0" for="outOfStockInput">Out of stock</label>
-                                </div>*@
+
                             </div>
                         </div>
                         <a class="btn px-0 ms-1 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseCondition" role="button" aria-expanded="true" aria-controls="collapseCondition">
@@ -97,7 +90,7 @@
                                     <div class="d-flex flex-column justify-content-between h-100">
                                         <div>
                                             <div class="border border-1 rounded-3 position-relative mb-3">
-                                                @if (((List<ProdutoCurtidaViewModel>)produto.ProdutoCurtidaViewModels).Any(x => x.ProdutoId == produto.Id && x.CondominoId == Guid.Parse(User.Claims.First().Value)))
+                                                @if (((List<ProdutoCurtidaViewModel>)produto.ProdutoCurtidaViewModels).Any(x => x.ProdutoId == produto.Id && x.CondominoId == Guid.Parse(User.FindFirst("sub")?.Value)))
                                                 {
                                                     <a asp-action="Descurtir" asp-controller="Produto" asp-route-id="@produto.Id" asp-route-returnUrl="@Url.Page("/Produtos")" class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Descurtir"
                                                        style="color: var(--phoenix-btn-hover-color);
@@ -117,7 +110,8 @@
                                                 }
                                                 @*<button class="btn rounded-circle p-0 d-flex flex-center btn-wish z-index-2 d-toggle-container btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to wishlist">
                                             <span class="fas fa-heart d-block-hover"></span><span class="far fa-heart d-none-hover"></span>
-                                            </button>*@<img class="img-fluid" src="~/Imagens/@produto.ProdutoImagemViewModels[0].FileName" alt="" />
+                                            </button>*@@* <img class="img-fluid" src="~/Imagens/@produto.ProdutoImagemViewModels[0].FileName" alt="" /> *@
+                                                <img src="~/Imagens/@produto.ProdutoImagemViewModels[0].FileName" alt="" height="212.38px" width="212.38px" />
                                             </div><a class="stretched-link text-decoration-none" asp-action="Visualizar" asp-controller="Produto" asp-route-id="@produto.Id">
                                                 <h6 class="mb-2 lh-sm line-clamp-3 product-name">@produto.Nome</h6>
                                             </a>
@@ -143,33 +137,7 @@
                     <button class="page-link" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
                     <ul class="mb-0 pagination"></ul>
                     <button class="page-link pe-0" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
-                    @*                    <nav aria-label="Page navigation example">
-                    <ul class="pagination mb-0">
-                    <li class="page-item">
-                    <a class="page-link" href="#">
-                    <span class="fas fa-chevron-left"> </span>
-                    </a>
-                    </li>
-                    <li class="page-item active" aria-current="page">
-                    <a class="page-link" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                    <a class="page-link" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                    <a class="page-link" href="#">3</a>
-                    </li>
-                    <li class="page-item">
-                    <a class="page-link" href="#">4</a>
-                    </li>
-                    <li class="page-item">
-                    <a class="page-link" href="#">5</a>
-                    </li>
-                    <li class="page-item">
-                    <a class="page-link pe-0" href="#"> <span class="fas fa-chevron-right"></span></a>
-                    </li>
-                    </ul>
-                    </nav>*@
+
                 </div>
             </div>
         </div>
