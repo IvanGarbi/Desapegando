@@ -96,6 +96,30 @@ namespace Desapegando.Data.Migrations
                     b.ToTable("CampanhaImagem", (string)null);
                 });
 
+            modelBuilder.Entity("Desapegando.Business.Models.Compra", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CondominoId")
+                        .HasColumnType("UNIQUEIDENTIFIER");
+
+                    b.Property<DateTime?>("DataVenda")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<Guid>("ProdutoId")
+                        .HasColumnType("UNIQUEIDENTIFIER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CondominoId");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("Compras", (string)null);
+                });
+
             modelBuilder.Entity("Desapegando.Business.Models.Condomino", b =>
                 {
                     b.Property<Guid>("Id")
@@ -124,6 +148,11 @@ namespace Desapegando.Data.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("ImageFileName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR(150)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -163,10 +192,10 @@ namespace Desapegando.Data.Migrations
                     b.Property<int>("Curtida")
                         .HasColumnType("INT");
 
-                    b.Property<DateTime>("DataPublicacao")
+                    b.Property<DateTime?>("DataDesistencia")
                         .HasColumnType("DATETIME");
 
-                    b.Property<DateTime?>("DataVenda")
+                    b.Property<DateTime>("DataPublicacao")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("Descricao")
@@ -261,6 +290,25 @@ namespace Desapegando.Data.Migrations
                     b.Navigation("Campanha");
                 });
 
+            modelBuilder.Entity("Desapegando.Business.Models.Compra", b =>
+                {
+                    b.HasOne("Desapegando.Business.Models.Condomino", "Condomino")
+                        .WithMany("Compras")
+                        .HasForeignKey("CondominoId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Desapegando.Business.Models.Produto", "Produto")
+                        .WithMany("Compras")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Condomino");
+
+                    b.Navigation("Produto");
+                });
+
             modelBuilder.Entity("Desapegando.Business.Models.Produto", b =>
                 {
                     b.HasOne("Desapegando.Business.Models.Condomino", "Condomino")
@@ -311,6 +359,8 @@ namespace Desapegando.Data.Migrations
                 {
                     b.Navigation("Campanhas");
 
+                    b.Navigation("Compras");
+
                     b.Navigation("ProdutoCurtidas");
 
                     b.Navigation("Produtos");
@@ -318,6 +368,8 @@ namespace Desapegando.Data.Migrations
 
             modelBuilder.Entity("Desapegando.Business.Models.Produto", b =>
                 {
+                    b.Navigation("Compras");
+
                     b.Navigation("ProdutoCurtidas");
 
                     b.Navigation("ProdutoImagens");
