@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'desapegando'
           slot-name: 'production'
-          package: ${{ runner.workspace }}/Desapegando/src/Desapegando.Application/bin/Release/net6.0/Desapegando.Application.dll
+          package: ${{ runner.workspace }}/Desapegando/Desapegando/Desapegando/src/Desapegando.Application/bin/Release/net6.0/Desapegando.Application.dll
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E9E696E6A0E84810B8E93F363A33DBB8 }}
