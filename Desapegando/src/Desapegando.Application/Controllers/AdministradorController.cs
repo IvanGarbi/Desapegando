@@ -218,7 +218,7 @@ public class AdministradorController : MainController
 
         // 1
         datas.Clear();
-        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1); i.Month == (DateTime.Now.Month - 1); i = i.AddDays(1))
+        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1); i.Month == (DateTime.Now.Month); i = i.AddDays(1))
         {
             datas.Add(i);
         }
@@ -228,7 +228,7 @@ public class AdministradorController : MainController
             VendasPeriodoMesViewModel vendasPeriodo1MesViewModel = new VendasPeriodoMesViewModel
             {
                 DataVenda = data,
-                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day).Count()
+                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day && x.DataVenda.Value.Month == data.Month) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day && x.DataVenda.Value.Month == data.Month).Count()
             };
 
             listaVendas1PeriodoMesViewModel.Add(vendasPeriodo1MesViewModel);
@@ -237,7 +237,7 @@ public class AdministradorController : MainController
         // 2
         datas.Clear();
         // Loop from the first day of the month until we hit the next month, moving forward a day at a time
-        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 2, 1); i.Month == (DateTime.Now.Month - 2); i = i.AddDays(1))
+        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1); i.Month == (DateTime.Now.Month - 1); i = i.AddDays(1))
         {
             datas.Add(i);
         }
@@ -247,7 +247,7 @@ public class AdministradorController : MainController
             VendasPeriodoMesViewModel vendasPeriodo2MesViewModel = new VendasPeriodoMesViewModel
             {
                 DataVenda = data,
-                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day).Count()
+                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day && x.DataVenda.Value.Month == data.Month) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day && x.DataVenda.Value.Month == data.Month).Count()
             };
 
             listaVendas2PeriodoMesViewModel.Add(vendasPeriodo2MesViewModel);
@@ -256,7 +256,7 @@ public class AdministradorController : MainController
         // 3
         datas.Clear();
         // Loop from the first day of the month until we hit the next month, moving forward a day at a time
-        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 3, 1); i.Month == (DateTime.Now.Month - 3); i = i.AddDays(1))
+        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 2, 1); i.Month == (DateTime.Now.Month - 2); i = i.AddDays(1))
         {
             datas.Add(i);
         }
@@ -266,7 +266,7 @@ public class AdministradorController : MainController
             VendasPeriodoMesViewModel vendasPeriodo3MesViewModel = new VendasPeriodoMesViewModel
             {
                 DataVenda = data,
-                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day).Count()
+                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day && x.DataVenda.Value.Month == data.Month) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day && x.DataVenda.Value.Month == data.Month).Count()
             };
 
             listaVendas3PeriodoMesViewModel.Add(vendasPeriodo3MesViewModel);
@@ -275,7 +275,7 @@ public class AdministradorController : MainController
         // 4
         datas.Clear();
         // Loop from the first day of the month until we hit the next month, moving forward a day at a time
-        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 4, 1); i.Month == (DateTime.Now.Month - 4); i = i.AddDays(1))
+        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 3, 1); i.Month == (DateTime.Now.Month - 3); i = i.AddDays(1))
         {
             datas.Add(i);
         }
@@ -285,7 +285,7 @@ public class AdministradorController : MainController
             VendasPeriodoMesViewModel vendasPeriodo4MesViewModel = new VendasPeriodoMesViewModel
             {
                 DataVenda = data,
-                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day).Count()
+                Quantidade = totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day && x.DataVenda.Value.Month == data.Month) == null ? 0 : totalProdutosVendidosPeriodo.Where(x => x.DataVenda.Value.Day == data.Day && x.DataVenda.Value.Month == data.Month).Count()
             };
 
             listaVendas4PeriodoMesViewModel.Add(vendasPeriodo4MesViewModel);

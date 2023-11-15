@@ -78,6 +78,16 @@ public class RegisterController : MainController
                 ModelState.AddModelError(string.Empty, error);
             }
 
+
+            bool result = await DeletarArquivo(condominoRegisterViewModel.ImageFileName);
+
+            if (!result)
+            {
+                ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar a imagem de perfil.");
+            }
+
+
+
             return View(condominoRegisterViewModel);
 
         }
