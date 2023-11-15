@@ -40,5 +40,5 @@ jobs:
       with:
         app-name: 'desapegando'
         slot-name: 'production'
-        package: .
+        package: ./Desapegando/Desapegando.sln
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_75758f3fe46f4433ab4cfb0a6b575b34 }}
