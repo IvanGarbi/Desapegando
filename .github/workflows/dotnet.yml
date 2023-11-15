@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     steps:
     - name: Download artifact from build job
@@ -39,6 +39,6 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'desapegando'
-        slot-name: 'Production'
+        slot-name: 'production'
         package: ./Desapegando/Desapegando.sln
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_75758f3fe46f4433ab4cfb0a6b575b34 }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F56B96E90DCC4B5E93B6F04E27DB28E9 }}
