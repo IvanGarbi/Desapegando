@@ -24,7 +24,7 @@ jobs:
       run: dotnet build ./Desapegando/Desapegando.sln --no-restore
       
     - name: dotnet publish
-      run: dotnet publish -c Release -o ./Desapegando/Desapegando.sln
+      run: dotnet publish ./Desapegando/Desapegando.sln
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
       with:
