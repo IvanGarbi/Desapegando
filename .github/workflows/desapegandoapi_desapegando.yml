@@ -54,4 +54,4 @@ jobs:
           app-name: 'desapegando'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F56B96E90DCC4B5E93B6F04E27DB28E9 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E9E696E6A0E84810B8E93F363A33DBB8 }}
