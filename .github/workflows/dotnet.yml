@@ -27,7 +27,7 @@ jobs:
     - name: Build with dotnet
       run: dotnet build ./Desapegando/src/Desapegando.Application/Desapegando.Application.csproj --configuration Release
     - name: dotnet publish
-      run: dotnet publish ./Desapegando/src/Desapegando.Application/Desapegando.Application.csproj -c Release -o ./Desapegando/Desapegando.sln
+      run: dotnet publish ./Desapegando/src/Desapegando.Application/Desapegando.Application.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
       with:
