@@ -32,7 +32,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
+        path: ${{env.DOTNET_ROOT}}/Desapegando/src/Desapegando.Application/Desapegando.Application.csproj
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'desapegando'
           slot-name: 'production'
-          package: ${{env.DOTNET_ROOT}}/myapp
+          package: ${{env.DOTNET_ROOT}}/Desapegando/src/Desapegando.Application/Desapegando.Application.csproj
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E9E696E6A0E84810B8E93F363A33DBB8 }}
