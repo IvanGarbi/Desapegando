@@ -9,9 +9,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -22,36 +20,3 @@ jobs:
       run: dotnet restore ./Desapegando/Desapegando.sln
     - name: Build
       run: dotnet build ./Desapegando/Desapegando.sln --no-restore
-      
-
-    - name: Build with dotnet
-      run: dotnet build ./Desapegando/src/Desapegando.Application/Desapegando.Application.csproj --configuration Release
-    - name: dotnet publish
-      run: dotnet publish ./Desapegando/src/Desapegando.Application/Desapegando.Application.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v3
-      with:
-        name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: .net-app
-      
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'desapegando'
-          slot-name: 'production'
-          package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E9E696E6A0E84810B8E93F363A33DBB8 }}
