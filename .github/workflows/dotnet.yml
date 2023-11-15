@@ -24,12 +24,12 @@ jobs:
       run: dotnet build ./Desapegando/Desapegando.sln --no-restore
       
     - name: dotnet publish
-      run: dotnet publish ./Desapegando/Desapegando.sln
+      run: dotnet publish ./Desapegando/Desapegando/src/Desapegando.Application/Desapegando.Application.csproj
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
       with:
         name: .net-app
-        path: ./Desapegando/Desapegando.sln
+        path: ./Desapegando/Desapegando/src/Desapegando.Application/Desapegando.Application.csproj
 
   deploy:
     runs-on: ubuntu-latest
