@@ -431,13 +431,13 @@ public class ProdutoController : MainController
         produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(response);
 
         var produtosDb = produtoResponse.Data.Where(x => (filtrarProdutoViewModel.Categorias != null && filtrarProdutoViewModel.Categorias.Contains(x.Categoria)) ||
-                                                                      (filtrarProdutoViewModel.CheckBoxItems[0].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[0].IsSelected) ||
+                                                                      ((filtrarProdutoViewModel.CheckBoxItems[0].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[0].IsSelected) ||
                                                                       (filtrarProdutoViewModel.CheckBoxItems[1].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[1].IsSelected) ||
                                                                       (filtrarProdutoViewModel.CheckBoxItems[2].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[2].IsSelected) ||
                                                                       ((filtrarProdutoViewModel.PrecoMinimo != null && filtrarProdutoViewModel.PrecoMaximo != null) &&
                                                                       (x.Preco >= filtrarProdutoViewModel.PrecoMinimo && x.Preco <= filtrarProdutoViewModel.PrecoMaximo)) ||
                                                                       (filtrarProdutoViewModel.PrecoMinimo != null && x.Preco >= filtrarProdutoViewModel.PrecoMinimo && filtrarProdutoViewModel.PrecoMaximo == null) ||
-                                                                      (filtrarProdutoViewModel.PrecoMaximo != null && x.Preco <= filtrarProdutoViewModel.PrecoMaximo && filtrarProdutoViewModel.PrecoMinimo == null) &&
+                                                                      (filtrarProdutoViewModel.PrecoMaximo != null && x.Preco <= filtrarProdutoViewModel.PrecoMaximo && filtrarProdutoViewModel.PrecoMinimo == null)) &&
                                                                       x.Ativo == true);
 
         if (!produtosDb.Any())

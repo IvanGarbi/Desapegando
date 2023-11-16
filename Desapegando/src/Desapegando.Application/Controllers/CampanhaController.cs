@@ -375,8 +375,8 @@ public class CampanhaController : MainController
 
         campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(response);
 
-        var campanhasDb = campanhaResponse.Data.Where(x => (!string.IsNullOrEmpty(filtrarCampanhaViewModel.Nome) && x.Nome.ToLower().Trim().Contains(filtrarCampanhaViewModel.Nome.ToLower().Trim())) ||
-                                                           (!string.IsNullOrEmpty(filtrarCampanhaViewModel.NomeInstituicao) && x.NomeInstituicao.ToLower().Trim().Contains(filtrarCampanhaViewModel.NomeInstituicao.ToLower().Trim()))
+        var campanhasDb = campanhaResponse.Data.Where(x => ((!string.IsNullOrEmpty(filtrarCampanhaViewModel.Nome) && x.Nome.ToLower().Trim().Contains(filtrarCampanhaViewModel.Nome.ToLower().Trim())) ||
+                                                           (!string.IsNullOrEmpty(filtrarCampanhaViewModel.NomeInstituicao) && x.NomeInstituicao.ToLower().Trim().Contains(filtrarCampanhaViewModel.NomeInstituicao.ToLower().Trim())))
                                                            && x.Ativo == true);
 
         if (!campanhasDb.Any())
