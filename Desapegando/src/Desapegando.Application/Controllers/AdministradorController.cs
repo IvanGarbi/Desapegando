@@ -111,7 +111,7 @@ public class AdministradorController : MainController
             return Json(new { status = HttpStatusCode.NotFound, erro = requestResponse.Data.ResponseResult.Errors.Messages.FirstOrDefault() });
         }
 
-        return Json(HttpStatusCode.OK);
+        return Json(new { status = HttpStatusCode.OK });
     }
 
     public async Task<IActionResult> Dashboard()

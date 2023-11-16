@@ -628,7 +628,7 @@ public class ProdutoController : MainController
         }
 
 
-        return Json(HttpStatusCode.OK);
+        return Json(new { status = HttpStatusCode.OK });
     }
 
 
