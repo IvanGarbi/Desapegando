@@ -89,7 +89,7 @@ public class CondominoController : MainController
             Encoding.UTF8,
             "application/json");
 
-        var response = await _httpClient.PutAsync("Condomino/Condomino/" + condominoViewModel.Id, condominoContent);
+        var response = await _httpClient.PatchAsync("Condomino/Condomino/" + condominoViewModel.Id, condominoContent);
 
         if (!condominoViewModel.NovaImagem)
         {

@@ -153,7 +153,7 @@ public class AdministradorController : MainController
         var produtosDisponiveis = produtos.Where(x => x.Ativo == true).Sum(y => y.Quantidade);
 
         // Novos condôminos 7 dias
-        var novosCondominos7Dias = condominos.Where(x => x.Ativo == false && x.DataRegistro >= DateTime.Now.AddMonths(-2)).ToArray(); // pegar de 2 meses para facilitar, pois a iteração da data é quem define
+        var novosCondominos7Dias = condominos.Where(x => x.Ativo == true && x.DataRegistro >= DateTime.Now.AddMonths(-2)).ToArray(); // pegar de 2 meses para facilitar, pois a iteração da data é quem define
         var datas = new List<DateTime>();
         for (int i = 6; i >= 0; i--)
         {

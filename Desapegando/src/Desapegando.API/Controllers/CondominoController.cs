@@ -54,8 +54,8 @@ namespace Desapegando.API.Controllers
             return Response(_mapper.Map<GetCondominoViewModel>(await _condominoRepository.ReadById(id)));
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] PostCondominoViewModel condominoViewModel)
+        [HttpPatch("{id:guid}")]
+        public async Task<IActionResult> Patch(Guid id, [FromBody] PostCondominoViewModel condominoViewModel)
         {
             var condominoDb = await _condominoRepository.ReadById(id);
 
