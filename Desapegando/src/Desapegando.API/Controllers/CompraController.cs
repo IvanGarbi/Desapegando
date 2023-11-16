@@ -74,7 +74,8 @@ namespace Desapegando.API.Controllers
 
             if (!_notificador.TemNotificacao())
             {
-                return Response();
+                //return Response();
+                return ResponseCeated();
             }
 
             foreach (var error in _notificador.GetNotificacoes())

@@ -107,9 +107,8 @@ public class AdministradorController : MainController
 
             //ViewBag.Error = "Ocorreu um erro ao salvar";
 
-            return Json(HttpStatusCode.NotFound);
-
-            //return RedirectToAction("NovosCondominos", "Administrador");
+            //return Json(HttpStatusCode.NotFound);
+            return Json(new { status = HttpStatusCode.NotFound, erro = requestResponse.Data.ResponseResult.Errors.Messages.FirstOrDefault() });
         }
 
         return Json(HttpStatusCode.OK);
@@ -146,10 +145,6 @@ public class AdministradorController : MainController
         var campanhas = _mapper.Map<IEnumerable<Campanha>>(campanhaResponse.Data);
         var condominos = _mapper.Map<IEnumerable<Condomino>>(condominoResponse.Data);
         var compras = _mapper.Map<IEnumerable<Compra>>(compraResponse.Data);
-
-        //var produtos = await _produtoRepository.Read();
-        //var campanhas = await _campanhaRepository.Read();
-        //var condominos = await _condominoRepository.Read();
 
         // primeiros resultados
         var produtosDesistidos = produtos.Where(x => x.Desistencia == true);

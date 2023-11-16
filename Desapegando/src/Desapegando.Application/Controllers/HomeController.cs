@@ -39,12 +39,8 @@ public class HomeController : MainController
 
         campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(responseCampanha);
 
-
         var produtos = _mapper.Map<IEnumerable<Produto>>(produtoResponse.Data);
         var campanhas = _mapper.Map<IEnumerable<Campanha>>(campanhaResponse.Data);
-
-        //var produtos = await _produtoRepository.Read();
-        //var campanhas = await _campanhaRepository.Read();
 
         produtos = produtos.Where(x => x.Ativo);
         campanhas = campanhas.Where(x => x.Ativo);

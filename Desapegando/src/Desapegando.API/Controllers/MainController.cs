@@ -1,5 +1,6 @@
 ﻿using Desapegando.Business.Interfaces.Notifications;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Desapegando.API.Controllers
 {
@@ -32,6 +33,15 @@ namespace Desapegando.API.Controllers
             {
                 { "Messages", _notificador.GetNotificacoes().Select(n => n.Mensagem).ToArray() }
             }
+            });
+        }
+
+        protected ActionResult ResponseCeated(object result = null)
+        {
+            return Created("", new
+            {
+                success = true,
+                data = result
             });
         }
     }

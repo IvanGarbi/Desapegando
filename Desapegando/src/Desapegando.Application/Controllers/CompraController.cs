@@ -40,21 +40,6 @@ namespace Desapegando.Application.Controllers
             condominoComprasViewModel.ToList().ForEach(x => x.ProdutoId = produtoId);
 
             return View(condominoComprasViewModel);
-
-
-
-
-
-            //var condominos = await _condominoRepository.ReadWithExpressionList(x => x.Ativo == true && x.Id != Guid.Parse(User.Claims.First().Value));
-
-            //var condominoComprasViewModel = _mapper.Map<IEnumerable<CondominoComprasViewModel>>(condominos);
-
-            //ViewBag.Quantidade = quantidade;
-
-            //condominoComprasViewModel.ToList().ForEach(x => x.ProdutoId = produtoId);
-
-            ////return View(_mapper.Map<IEnumerable<CondominoViewModel>>(condominos));
-            //return View(condominoComprasViewModel);
         }
 
         public async Task<IActionResult> Historico()
@@ -70,12 +55,6 @@ namespace Desapegando.Application.Controllers
             var meusProdutosDbViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(compraResponse.Data.Select(x => x.Produto));
 
             return View(meusProdutosDbViewModel);
-
-            //var comprasHistorico = await _compraRepository.ReadExpression(x => x.CondominoId == Guid.Parse(User.Claims.First().Value));
-
-            //var meusProdutosDbViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(comprasHistorico.Select(x => x.Produto));
-
-            //return View(meusProdutosDbViewModel);
         }
 
         //[HttpPost]
@@ -84,18 +63,12 @@ namespace Desapegando.Application.Controllers
             if (id == Guid.Empty || quantidade == 0 || produtoId == Guid.Empty || quantidadeTotal == 0)
             {
                 return RedirectToAction("Index", "Compra", new { produtoId = produtoId, quantidade = quantidadeTotal });
-
-                //return Json(HttpStatusCode.NotFound);
             }
 
             if (quantidadeTotal < quantidade)
             {
-                //return Json(HttpStatusCode.BadRequest); // 400 significa que a pessoa selecionou mais do que a quantidade existente para isso
-
                 return RedirectToAction("Index", "Compra", new { produtoId = produtoId, quantidade = quantidadeTotal });
             }
-
-            //var produto = await _produtoRepository.ReadById(produtoId);
 
             var responseProdutoById = await _httpClient.GetAsync("Produto/Produto/" + id);
 
@@ -104,12 +77,6 @@ namespace Desapegando.Application.Controllers
             produtoResponse = await DeserializeObjectResponse<GetProdutoResponseId>(responseProdutoById);
 
             var produto = produtoResponse;
-
-
-
-
-            //var condomino = await _condominoRepository.ReadById(id);
-
 
             var responseCondominoById = await _httpClient.GetAsync("Condomino/Condomino/" + id);
 
@@ -122,8 +89,6 @@ namespace Desapegando.Application.Controllers
 
             if (condomino == null || produto == null)
             {
-                //return RedirectToAction("Index", "Compras");
-                //return Json(HttpStatusCode.NotFound);
                 return RedirectToAction("Index", "Compra", new { produtoId = produtoId, quantidade = quantidadeTotal });
             }
 
@@ -148,49 +113,13 @@ namespace Desapegando.Application.Controllers
 
                     CompraResponse compraResponse;
                 }
-
-                //Compra compra = new Compra
-                //{
-                //    CondominoId = id,
-                //    ProdutoId = produtoId,
-                //    DataVenda = DateTime.Now,
-                //};
-
-                //await _compraService.Create(compra);
-
-
-                //var compraContent = new StringContent(
-                //        JsonSerializer.Serialize(compra),
-                //        Encoding.UTF8,
-                //        "application/json");
-
-                //var response = await _httpClient.PostAsync("Compra/Compra/", compraContent);
-
-                //CompraResponse compraResponse;
-
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                //return Json(HttpStatusCode.NotFound);
 
                 return RedirectToAction("Index", "Compra", new { produtoId = produtoId, quantidade = quantidadeTotal });
             }
-
-            //try
-            //{
-            //    produto.Quantidade -= quantidade;
-
-            //    await _produtoRepository.Update(produto);
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine(e);
-            //    //return Json(HttpStatusCode.NotFound);
-
-            //    return RedirectToAction("Index", "Compra", new { produtoId = produtoId, quantidade = quantidadeTotal });
-            //}
 
             var qtd = quantidadeTotal - quantidade;
 
@@ -200,8 +129,6 @@ namespace Desapegando.Application.Controllers
             }
 
             return RedirectToAction("Index", "Home");
-
-            //return Json(HttpStatusCode.OK);
         }
     }
 }

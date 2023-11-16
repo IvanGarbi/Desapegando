@@ -19,10 +19,10 @@ function ExcluirCondomino(id) {
         type: 'POST',
         data: { "id": id },
         success: function (data) {
-            if (data != "404") {
+            if (data.status != "404") {
                 location.reload();
             } else {
-                alert("Ocorreu um erro");
+                alert(data.erro);
                 location.reload();
             }
         },

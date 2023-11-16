@@ -60,9 +60,6 @@ namespace Desapegando.API.Controllers
                 return Response(postCampanhaViewModel);
             }
 
-            //var imagensUploadNames = new List<string>();
-            //imagensUploadNames.AddRange(postProdutoViewModel.ImagensUploadNames);
-
             if (postCampanhaViewModel.ImagensUploadNames.Any() && postCampanhaViewModel.ImagensUploadNames.Count > 4)
             {
                 ModelState.AddModelError("ImagensUploadNames", "Só é possível adicionar no máximo 4 imagens.");
@@ -86,27 +83,8 @@ namespace Desapegando.API.Controllers
                     await _campanhaImagemService.Create(campanhaImagem);
                 }
 
-                //foreach (var imagem in postProdutoViewModel.ImagensUpload)
-                //{
-                //    var imgPrefixo = Guid.NewGuid() + "_";
-                //    //if (!await UploadArquivo(imagem, imgPrefixo))
-                //    //{
-                //    //    await _produtoService.Delete(produto.Id);
-
-                //    //    ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
-
-                //    //    return View(postProdutoViewModel);
-                //    //}
-
-                //    var produtoImagem = new ProdutoImagem();
-                //    produtoImagem.FileName = imgPrefixo + imagem.FileName;
-                //    produtoImagem.ProdutoId = produto.Id;
-
-                //    await _produtoImagemService.Create(produtoImagem);
-
-                //}
-
-                return Response();
+                //return Response();
+                return ResponseCeated();
             }
 
             foreach (var error in _notificador.GetNotificacoes())
@@ -120,7 +98,6 @@ namespace Desapegando.API.Controllers
         [HttpPatch]
         public async Task<IActionResult> Patch([FromBody] PatchCampanhaViewModel campanhaViewModel)
         {
-            //bool novasImagens = campanhaViewModel.ImagensUploadNames != null;
             bool novasImagens = campanhaViewModel.ImagensUploadNames.Any();
 
             if (!novasImagens)

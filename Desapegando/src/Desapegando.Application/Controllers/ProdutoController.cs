@@ -47,8 +47,6 @@ public class ProdutoController : MainController
             return View(produtoViewModel);
         }
 
-        //
-
         var postProdutoViewModel = _mapper.Map<PostProdutoViewModel>(produtoViewModel);
 
         postProdutoViewModel.CondominoId = Guid.Parse(User.FindFirst("sub")?.Value);
@@ -67,14 +65,6 @@ public class ProdutoController : MainController
             
             postProdutoViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
         }
-
-        //var produtoContentImagem = new MultipartFormDataContent();
-
-        //foreach (var file in produtoViewModel.ImagensUpload)
-        //{
-        //    produtoContentImagem.Add(new StreamContent(file.OpenReadStream()), "file", file.FileName);
-        //}
-
 
         var produtoContent = new StringContent(
                 JsonSerializer.Serialize(postProdutoViewModel),
@@ -107,13 +97,6 @@ public class ProdutoController : MainController
         }
 
         produtoResponse = await DeserializeObjectResponse<ProdutoResponse>(response);
-        //
-
-        //var produto = _mapper.Map<Produto>(produtoViewModel);
-
-        //produto.CondominoId = Guid.Parse(_userManager.GetUserId(this.User));
-
-        //await _produtoService.Create(produto);
 
         if (!_notificador.TemNotificacao())
         {
@@ -506,8 +489,6 @@ public class ProdutoController : MainController
 
     public async Task<IActionResult> Curtir(Guid id, string returnUrl)
     {
-        //var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
-
         CurtidaViewModel curtidaViewModel = new CurtidaViewModel
         {
             CondominoId = Guid.Parse(User.FindFirst("sub")?.Value),
@@ -642,7 +623,8 @@ public class ProdutoController : MainController
                 errors.Add(error);
             }
 
-            return Json(HttpStatusCode.NotFound);
+            //return Json(HttpStatusCode.NotFound);
+            return Json(new { status = HttpStatusCode.NotFound, erro = errors.FirstOrDefault()});
         }
 
 

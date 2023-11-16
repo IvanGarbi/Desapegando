@@ -71,16 +71,6 @@ namespace Desapegando.API.Controllers
                 condomino.Cpf = condomino.Cpf.Replace(".", "");
                 condomino.Cpf = condomino.Cpf.Replace("-", "");
 
-                //if (string.IsNullOrEmpty(condominoRegisterViewModel.ImageFileName))
-                //{
-                //    _notificador.AdicionarNotificacao(new Notificacao("É obrigatório inserir uma imagem de perfil.", "ImageFileName"));
-                //}
-                //else
-                //{
-                //    var imgPrefixo = Guid.NewGuid() + "_";
-                //    condomino.ImageFileName = imgPrefixo + condominoRegisterViewModel.ImageFileName;
-                //}
-
                 var validator = new CondominoValidation();
                 var resultValidation = validator.Validate(condomino);
 
@@ -96,7 +86,8 @@ namespace Desapegando.API.Controllers
                         if (!_notificador.TemNotificacao())
                         {
                             // aqui retornamos o JWT para após o Registro já ser feito o Login na aplicação!
-                            return Response(await CreateJwt(condomino.Email));
+                            //return Response(await CreateJwt(condomino.Email));
+                            return ResponseCeated(await CreateJwt(condomino.Email)); //verificar
                         }
 
                         await _userManager.DeleteAsync(user);

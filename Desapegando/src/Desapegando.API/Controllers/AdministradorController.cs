@@ -74,7 +74,6 @@ namespace Desapegando.API.Controllers
                 Console.WriteLine(e);
                 _notificador.AdicionarNotificacao(new Notificacao("Erro ao disparar e-mail."));
                 return Response();
-                //return Json(HttpStatusCode.NotFound);
             }
 
             try
@@ -86,7 +85,6 @@ namespace Desapegando.API.Controllers
                 Console.WriteLine(e);
                 _notificador.AdicionarNotificacao(new Notificacao("Erro ao deletar usuário e-mail."));
                 return Response();
-                //return Json(HttpStatusCode.NotFound);
             }
 
 

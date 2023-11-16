@@ -44,8 +44,6 @@ public class CampanhaController : MainController
             return View(campanhaViewModel);
         }
 
-        //
-
         var postCampanhaViewModel = _mapper.Map<PostCampanhaViewModel>(campanhaViewModel);
 
         postCampanhaViewModel.CondominoId = Guid.Parse(User.FindFirst("sub")?.Value);
@@ -64,14 +62,6 @@ public class CampanhaController : MainController
 
             postCampanhaViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
         }
-
-        //var produtoContentImagem = new MultipartFormDataContent();
-
-        //foreach (var file in produtoViewModel.ImagensUpload)
-        //{
-        //    produtoContentImagem.Add(new StreamContent(file.OpenReadStream()), "file", file.FileName);
-        //}
-
 
         var campanhaContent = new StringContent(
                 JsonSerializer.Serialize(postCampanhaViewModel),
@@ -104,13 +94,6 @@ public class CampanhaController : MainController
         }
 
         campanhaResponse = await DeserializeObjectResponse<CampanhaResponse>(response);
-        //
-
-        //var produto = _mapper.Map<Produto>(produtoViewModel);
-
-        //produto.CondominoId = Guid.Parse(_userManager.GetUserId(this.User));
-
-        //await _produtoService.Create(produto);
 
         if (!_notificador.TemNotificacao())
         {
