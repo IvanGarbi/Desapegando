@@ -57,19 +57,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // Dependcy Injection
 //builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddTransient<DesapegandoDbContext>();
-builder.Services.AddScoped<ICondominoService, CondominoService>();
-builder.Services.AddScoped<ICondominoRepository, CondominoRepository>();
-builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
-builder.Services.AddScoped<IProdutoService, ProdutoService>();
-builder.Services.AddScoped<IProdutoImagemRepository, ProdutoImagemRepository>();
-builder.Services.AddScoped<IProdutoImagemService, ProdutoImagemService>();
 builder.Services.AddScoped<ICampanhaRepository, CampanhaRepository>();
-builder.Services.AddScoped<ICampanhaService, CampanhaService>();
-builder.Services.AddScoped<ICampanhaImagemRepository, CampanhaImagemRepository>();
-builder.Services.AddScoped<ICampanhaImagemService, CampanhaImagemService>();
 builder.Services.AddScoped<INotificador, Notificador>();
-builder.Services.AddScoped<IProdutoCurtidaRepository, ProdutoCurtidaRepository>();
-builder.Services.AddScoped<IProdutoCurtidaService, ProdutoCurtidaService>();
 
 builder.Services.AddHostedService<CampanhaHostedService>();
 
@@ -85,9 +74,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.Configure<AppSettings>(builder.Configuration);
-builder.Services.AddHttpClient<RegisterController>();
-
-
+builder.Services.AddHttpClient<RegisterController>(); // ????????????????????????? Pq a Register Controller?
 
 var app = builder.Build();
 

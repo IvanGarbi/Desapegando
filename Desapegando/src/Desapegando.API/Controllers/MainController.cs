@@ -1,9 +1,11 @@
 ﻿using Desapegando.Business.Interfaces.Notifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace Desapegando.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public abstract class MainController : ControllerBase

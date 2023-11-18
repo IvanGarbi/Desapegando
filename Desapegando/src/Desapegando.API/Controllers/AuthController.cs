@@ -7,6 +7,7 @@ using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
 using Desapegando.Business.Notifications;
 using Desapegando.Business.Validations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -17,6 +18,7 @@ using System.Text;
 
 namespace Desapegando.API.Controllers
 {
+    [AllowAnonymous]
     [Route("Auth/[controller]")]
     public class AuthController : MainController
     {

@@ -7,6 +7,11 @@ using System.Text.Json;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Desapegando.Application.ViewModels;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using NuGet.Configuration;
+using Microsoft.Extensions.Options;
+using Desapegando.Application.Extensions;
 
 namespace Desapegando.Application.Controllers;
 
@@ -14,13 +19,24 @@ namespace Desapegando.Application.Controllers;
 public abstract class MainController : Controller
 {
     protected readonly INotificador _notificador;
+    protected readonly HttpClient _httpClient;
 
-    public MainController(INotificador notificador)
+    public MainController(HttpClient httpClient,
+                          IOptions<AppSettings> settings,
+                          INotificador notificador)
     {
         _notificador = notificador;
+        
+        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
+        _httpClient = httpClient;
     }
 
 
+    protected void AdicionarJWTnoHeader()
+    {
+        var tokenJwt = User.FindFirst("JWT")?.Value;
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenJwt);
+    }
 
     protected bool VerifyResponseErros(HttpResponseMessage response)
     {

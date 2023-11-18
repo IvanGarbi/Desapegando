@@ -18,7 +18,7 @@ namespace Desapegando.Application.Controllers
         public CompraController(HttpClient httpClient,
                                  IOptions<AppSettings> settings,
                                  IMapper mapper,
-                                 INotificador notificador) : base(notificador)
+                                 INotificador notificador) : base(httpClient, settings, notificador)
         {
             _mapper = mapper;
             httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
@@ -27,6 +27,8 @@ namespace Desapegando.Application.Controllers
 
         public async Task<IActionResult> Index(Guid produtoId, int quantidade)
         {
+            AdicionarJWTnoHeader();
+
             var response = await _httpClient.GetAsync("Condomino/Condomino");
 
             GetCondominoCompraResponse condominoResponse;
@@ -44,6 +46,8 @@ namespace Desapegando.Application.Controllers
 
         public async Task<IActionResult> Historico()
         {
+            AdicionarJWTnoHeader();
+
             var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
             var response = await _httpClient.GetAsync("Compra/Compra/MinhasCompras/" + condominoId);
@@ -69,6 +73,8 @@ namespace Desapegando.Application.Controllers
             {
                 return RedirectToAction("Index", "Compra", new { produtoId = produtoId, quantidade = quantidadeTotal });
             }
+
+            AdicionarJWTnoHeader();
 
             var responseProdutoById = await _httpClient.GetAsync("Produto/Produto/" + id);
 

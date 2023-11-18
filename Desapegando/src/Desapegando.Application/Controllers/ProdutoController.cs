@@ -20,7 +20,7 @@ public class ProdutoController : MainController
     public ProdutoController(HttpClient httpClient,
                              IOptions<AppSettings> settings, 
                              IMapper mapper, 
-                             INotificador notificador) : base(notificador)
+                             INotificador notificador) : base(httpClient, settings, notificador)
     {
         _mapper = mapper;
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
@@ -65,6 +65,8 @@ public class ProdutoController : MainController
             
             postProdutoViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
         }
+
+        AdicionarJWTnoHeader();
 
         var produtoContent = new StringContent(
                 JsonSerializer.Serialize(postProdutoViewModel),
@@ -133,6 +135,8 @@ public class ProdutoController : MainController
 
     public async Task<IActionResult> MeusProdutos()
     {
+        AdicionarJWTnoHeader();
+
         var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
         var response = await _httpClient.GetAsync("Produto/Produto/MeusProdutos/" + condominoId);
@@ -146,6 +150,8 @@ public class ProdutoController : MainController
 
     public async Task<IActionResult> Editar(Guid id)
     {
+        AdicionarJWTnoHeader();
+
         var response = await _httpClient.GetAsync("Produto/Produto/" + id);
 
         GetProdutoResponseId produtoResponse;
@@ -217,7 +223,7 @@ public class ProdutoController : MainController
 
         patchProdutoViewModel.ImagensUploadNames = new List<string>();
 
-
+        AdicionarJWTnoHeader();
 
         var responseProduto = await _httpClient.GetAsync("Produto/Produto/" + produtoViewModel.Id);
         GetProdutoResponseId produtoDb;
@@ -368,6 +374,8 @@ public class ProdutoController : MainController
 
     public async Task<IActionResult> Visualizar(Guid id)
     {
+        AdicionarJWTnoHeader();
+
         var response = await _httpClient.GetAsync("Produto/Produto/" + id);
 
         GetProdutoResponseId produtoResponse;
@@ -386,6 +394,8 @@ public class ProdutoController : MainController
             new EnumModel() { EstadoProduto = EstadoProduto.Seminovo, IsSelected = false },
             new EnumModel() { EstadoProduto = EstadoProduto.Usado, IsSelected = false }
         };
+
+        AdicionarJWTnoHeader();
 
         var response = await _httpClient.GetAsync("Produto/Produto");
 
@@ -424,6 +434,8 @@ public class ProdutoController : MainController
             return RedirectToAction("Produtos");
         }
 
+        AdicionarJWTnoHeader();
+        
         var response = await _httpClient.GetAsync("Produto/Produto");
 
         GetAllProdutoResponse produtoResponse;
@@ -495,6 +507,8 @@ public class ProdutoController : MainController
             ProdutoId = id
         };
 
+        AdicionarJWTnoHeader();
+
         var curtidaContent = new StringContent(
         JsonSerializer.Serialize(curtidaViewModel),
         Encoding.UTF8,
@@ -543,6 +557,8 @@ public class ProdutoController : MainController
             CondominoId = Guid.Parse(User.FindFirst("sub")?.Value),
             ProdutoId = id
         };
+
+        AdicionarJWTnoHeader();
 
         var descurtidaContent = new StringContent(
                 JsonSerializer.Serialize(descurtidaViewModel),
@@ -593,6 +609,8 @@ public class ProdutoController : MainController
             ProdutoId = id,
             Motivo = motivo
         };
+
+        AdicionarJWTnoHeader();
 
         var removerProdutoContent = new StringContent(
                         JsonSerializer.Serialize(removerProdutoViewModel),

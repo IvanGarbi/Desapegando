@@ -19,7 +19,7 @@ public class CondominoController : MainController
                                IOptions<AppSettings> settings,
                                SignInManager<IdentityUser> signInManager,
                                UserManager<IdentityUser> userManager,
-                               INotificador notificador) : base(notificador)
+                               INotificador notificador) : base(httpClient, settings, notificador)
     {
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
         _httpClient = httpClient;
@@ -29,6 +29,8 @@ public class CondominoController : MainController
 
     public async Task<IActionResult> Index()
     {
+        AdicionarJWTnoHeader();
+
         var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
         var response = await _httpClient.GetAsync("Condomino/Condomino/" + condominoId);
@@ -83,6 +85,8 @@ public class CondominoController : MainController
         }
 
         //
+
+        AdicionarJWTnoHeader();
 
         var condominoContent = new StringContent(
             JsonSerializer.Serialize(condominoViewModel),

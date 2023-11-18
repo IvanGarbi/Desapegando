@@ -18,7 +18,7 @@ public class CampanhaController : MainController
     public CampanhaController(HttpClient httpClient,
                               IOptions<AppSettings> settings,
                               IMapper mapper,
-                              INotificador notificador) : base(notificador)
+                              INotificador notificador) : base(httpClient, settings, notificador)
     {
         _mapper = mapper;
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
@@ -62,6 +62,8 @@ public class CampanhaController : MainController
 
             postCampanhaViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
         }
+
+        AdicionarJWTnoHeader();
 
         var campanhaContent = new StringContent(
                 JsonSerializer.Serialize(postCampanhaViewModel),
@@ -130,6 +132,8 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> MinhasCampanhas()
     {
+        AdicionarJWTnoHeader();
+
         var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
         var response = await _httpClient.GetAsync("Campanha/Campanha/MinhasCampanhas/" + condominoId);
@@ -143,6 +147,8 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> Editar(Guid id)
     {
+        AdicionarJWTnoHeader();
+
         var response = await _httpClient.GetAsync("Campanha/Campanha/" + id);
 
         GetCampanhaResponseId campanhaResponse;
@@ -207,6 +213,8 @@ public class CampanhaController : MainController
         patchCampanhaViewModel.CondominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
         patchCampanhaViewModel.ImagensUploadNames = new List<string>();
+
+        AdicionarJWTnoHeader();
 
         if (novasImagens)
         {
@@ -297,6 +305,8 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> Visualizar(Guid id)
     {
+        AdicionarJWTnoHeader();
+
         var response = await _httpClient.GetAsync("Campanha/Campanha/" + id);
 
         GetCampanhaResponseId campanhaResponse;
@@ -308,6 +318,8 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> Deletar(Guid id)
     {
+        AdicionarJWTnoHeader();
+
         var response = await _httpClient.DeleteAsync("Campanha/Campanha/" + id);
 
         CampanhaResponse campanhaResponse;
@@ -341,6 +353,8 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> Campanhas()
     {
+        AdicionarJWTnoHeader();
+
         var response = await _httpClient.GetAsync("Campanha/Campanha");
 
         GetAllCampanhaResponse campanhaResponse;
@@ -368,6 +382,8 @@ public class CampanhaController : MainController
         {
             return RedirectToAction("Campanhas");
         }
+
+        AdicionarJWTnoHeader();
 
         var response = await _httpClient.GetAsync("Campanha/Campanha");
 

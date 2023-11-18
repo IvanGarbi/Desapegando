@@ -6,29 +6,26 @@ using Desapegando.Business.Interfaces.Notifications;
 using Microsoft.Extensions.Options;
 using Desapegando.Application.Extensions;
 using Desapegando.Business.Models;
-
 namespace Desapegando.Application.Controllers;
 
 public class HomeController : MainController
 {
-    private readonly HttpClient _httpClient;
     private readonly IMapper _mapper;
 
     public HomeController(IMapper mapper,
                           HttpClient httpClient,
                           IOptions<AppSettings> settings,
-                          INotificador notificador) : base(notificador)
+                          INotificador notificador) : base(httpClient, settings, notificador)
     {
         _mapper = mapper;
-        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
-        _httpClient = httpClient;
-
     }
 
     public async Task<IActionResult> Index()
     {
-        var responseProduto = await _httpClient.GetAsync("Produto/Produto");
+        AdicionarJWTnoHeader();
 
+        var responseProduto = await _httpClient.GetAsync("Produto/Produto");
+        
         GetAllProdutoResponse produtoResponse;
 
         produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(responseProduto);

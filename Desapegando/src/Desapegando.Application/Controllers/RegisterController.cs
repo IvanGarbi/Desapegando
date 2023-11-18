@@ -17,7 +17,7 @@ public class RegisterController : MainController
 
     public RegisterController(HttpClient httpClient,
                               IOptions<AppSettings> settings,
-                              INotificador notificador) : base(notificador)
+                              INotificador notificador) : base(httpClient, settings, notificador)
     {
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
         _httpClient = httpClient;

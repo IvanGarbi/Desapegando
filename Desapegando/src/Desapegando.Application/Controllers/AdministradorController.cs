@@ -19,7 +19,7 @@ public class AdministradorController : MainController
     public AdministradorController(HttpClient httpClient,
                                    IOptions<AppSettings> settings,
                                    IMapper mapper, 
-                                   INotificador notificador) : base(notificador)
+                                   INotificador notificador) : base(httpClient, settings, notificador)
     {
         _mapper = mapper;
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
@@ -28,6 +28,8 @@ public class AdministradorController : MainController
 
     public async Task<IActionResult> NovosCondominos()
     {
+        AdicionarJWTnoHeader();
+
         var response = await _httpClient.GetAsync("Condomino/Condomino");
 
         GetAllCondominoResponse condominoResponse;
@@ -41,6 +43,8 @@ public class AdministradorController : MainController
 
     public async Task<IActionResult> AtivarCondomino(Guid id)
     {
+        AdicionarJWTnoHeader();
+
         var ativarCondominoContent = new StringContent(
             JsonSerializer.Serialize(id),
             Encoding.UTF8,
@@ -79,6 +83,8 @@ public class AdministradorController : MainController
     [HttpPost]
     public async Task<IActionResult> ExcluirCondomino(Guid id)
     {
+        AdicionarJWTnoHeader();
+
         var excluirCondominoContent = new StringContent(
                     JsonSerializer.Serialize(id),
                     Encoding.UTF8,
@@ -116,6 +122,7 @@ public class AdministradorController : MainController
 
     public async Task<IActionResult> Dashboard()
     {
+        AdicionarJWTnoHeader();
 
         var responseCondomino = await _httpClient.GetAsync("Condomino/Condomino");
 
