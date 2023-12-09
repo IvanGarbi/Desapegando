@@ -77,7 +77,7 @@ namespace Desapegando.API.Controllers
                 ModelState.AddModelError("ImagensUploadNames", "Só é possível adicionar no máximo 4 imagens.");
                 return Response(postProdutoViewModel);
             }
-
+            var x = 0;
             var produto = _mapper.Map<Produto>(postProdutoViewModel);
 
             await _produtoService.Create(produto);
