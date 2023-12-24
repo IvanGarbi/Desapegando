@@ -19,7 +19,7 @@ using System.Text;
 namespace Desapegando.API.Controllers
 {
     [AllowAnonymous]
-    [Route("Auth/[controller]")]
+    [Route("[controller]")]
     public class AuthController : MainController
     {
         private readonly ICondominoService _condominoService;

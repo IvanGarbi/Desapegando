@@ -15,7 +15,7 @@ using System.Net;
 
 namespace Desapegando.API.Controllers
 {
-    [Route("Produto/[controller]")]
+    [Route("[controller]")]
     public class ProdutoController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;

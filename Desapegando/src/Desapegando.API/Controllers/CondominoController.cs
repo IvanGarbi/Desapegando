@@ -16,7 +16,7 @@ using System.Text;
 
 namespace Desapegando.API.Controllers
 {
-    [Route("Condomino/[controller]")]
+    [Route("[controller]")]
     public class CondominoController : MainController
     {
         private readonly ICondominoRepository _condominoRepository;

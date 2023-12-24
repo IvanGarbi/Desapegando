@@ -17,8 +17,7 @@ public class LoginController : MainController
     private readonly HttpClient _httpClient;
 
     public LoginController(HttpClient httpClient,
-                           IOptions<AppSettings> settings,
-                           INotificador notificador) : base(httpClient, settings, notificador)
+                           IOptions<AppSettings> settings)
     {
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
         _httpClient = httpClient;
@@ -46,7 +45,7 @@ public class LoginController : MainController
             JsonSerializer.Serialize(condominoLoginViewModel),
             Encoding.UTF8,
             "application/json");
-        var response = await _httpClient.PostAsync("Auth/Auth/Login", loginContent);
+        var response = await _httpClient.PostAsync("Auth/Login", loginContent);
 
         UserResponseAuth userResponse;
 

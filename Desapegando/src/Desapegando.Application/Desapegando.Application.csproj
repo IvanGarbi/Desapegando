@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="AutoMapper\" />
-    <Folder Include="Services\" />
     <Folder Include="wwwroot\src\js\Administrador\" />
     <Folder Include="wwwroot\src\js\Compra\" />
   </ItemGroup>

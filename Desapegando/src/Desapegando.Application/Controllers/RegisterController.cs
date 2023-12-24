@@ -16,8 +16,7 @@ public class RegisterController : MainController
     private readonly HttpClient _httpClient;
 
     public RegisterController(HttpClient httpClient,
-                              IOptions<AppSettings> settings,
-                              INotificador notificador) : base(httpClient, settings, notificador)
+                              IOptions<AppSettings> settings)
     {
         httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
         _httpClient = httpClient;
@@ -59,7 +58,7 @@ public class RegisterController : MainController
                 JsonSerializer.Serialize(condominoRegisterViewModel),
                 Encoding.UTF8,
                 "application/json");
-        var response = await _httpClient.PostAsync("Auth/Auth/Register/", registerContent);
+        var response = await _httpClient.PostAsync("Auth/Register/", registerContent);
 
         UserResponseAuth userResponse;
 

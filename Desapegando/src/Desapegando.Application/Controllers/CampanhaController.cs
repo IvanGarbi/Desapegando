@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Desapegando.Application.Extensions;
+using Desapegando.Application.Services.MVC;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Models;
@@ -12,17 +13,14 @@ namespace Desapegando.Application.Controllers;
 
 public class CampanhaController : MainController
 {
-    private readonly HttpClient _httpClient;
     private readonly IMapper _mapper;
+    private readonly CampanhaService _campanhaService;
 
-    public CampanhaController(HttpClient httpClient,
-                              IOptions<AppSettings> settings,
-                              IMapper mapper,
-                              INotificador notificador) : base(httpClient, settings, notificador)
+    public CampanhaController(CampanhaService campanhaService,
+                              IMapper mapper)
     {
         _mapper = mapper;
-        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
-        _httpClient = httpClient;
+        _campanhaService = campanhaService;
     }
 
     public async Task<IActionResult> Criar()
@@ -63,14 +61,12 @@ public class CampanhaController : MainController
             postCampanhaViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
         }
 
-        AdicionarJWTnoHeader();
-
         var campanhaContent = new StringContent(
                 JsonSerializer.Serialize(postCampanhaViewModel),
                 Encoding.UTF8,
         "application/json");
 
-        var response = await _httpClient.PostAsync("Campanha/Campanha/", campanhaContent);
+        var response = await _campanhaService._httpClient.PostAsync("Campanha/", campanhaContent);
 
         CampanhaResponse campanhaResponse;
 
@@ -97,46 +93,44 @@ public class CampanhaController : MainController
 
         campanhaResponse = await DeserializeObjectResponse<CampanhaResponse>(response);
 
-        if (!_notificador.TemNotificacao())
-        {
-            //foreach (var imagem in produtoViewModel.ImagensUpload)
-            //{
-            //    var imgPrefixo = Guid.NewGuid() + "_";
-            //    if (!await UploadArquivo(imagem, imgPrefixo))
-            //    {
-            //        await _produtoService.Delete(postProdutoViewModel.Id);
+        //if (!_notificador.TemNotificacao())
+        //{
+        //    //foreach (var imagem in produtoViewModel.ImagensUpload)
+        //    //{
+        //    //    var imgPrefixo = Guid.NewGuid() + "_";
+        //    //    if (!await UploadArquivo(imagem, imgPrefixo))
+        //    //    {
+        //    //        await _produtoService.Delete(postProdutoViewModel.Id);
 
-            //        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
+        //    //        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
 
-            //        return View(produtoViewModel);
-            //    }
+        //    //        return View(produtoViewModel);
+        //    //    }
 
-            //    var produtoImagem = new ProdutoImagem();
-            //    produtoImagem.FileName = imgPrefixo + imagem.FileName;
-            //    produtoImagem.ProdutoId = postProdutoViewModel.Id;
+        //    //    var produtoImagem = new ProdutoImagem();
+        //    //    produtoImagem.FileName = imgPrefixo + imagem.FileName;
+        //    //    produtoImagem.ProdutoId = postProdutoViewModel.Id;
 
-            //    await _produtoImagemService.Create(produtoImagem);
+        //    //    await _produtoImagemService.Create(produtoImagem);
 
-            //}
+        //    //}
 
-            return RedirectToAction("Index", "Home");
-        }
+        //    return RedirectToAction("Index", "Home");
+        //}
 
-        foreach (var error in _notificador.GetNotificacoes())
-        {
-            ModelState.AddModelError(error.Propriedade, error.Mensagem);
-        }
+        //foreach (var error in _notificador.GetNotificacoes())
+        //{
+        //    ModelState.AddModelError(error.Propriedade, error.Mensagem);
+        //}
 
         return View(campanhaViewModel);
     }
 
     public async Task<IActionResult> MinhasCampanhas()
     {
-        AdicionarJWTnoHeader();
-
         var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
-        var response = await _httpClient.GetAsync("Campanha/Campanha/MinhasCampanhas/" + condominoId);
+        var response = await _campanhaService._httpClient.GetAsync("Campanha/MinhasCampanhas/" + condominoId);
 
         GetMinhasCampanhasResponse campanhasResponse;
 
@@ -147,9 +141,7 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> Editar(Guid id)
     {
-        AdicionarJWTnoHeader();
-
-        var response = await _httpClient.GetAsync("Campanha/Campanha/" + id);
+        var response = await _campanhaService._httpClient.GetAsync("Campanha/" + id);
 
         GetCampanhaResponseId campanhaResponse;
 
@@ -214,8 +206,6 @@ public class CampanhaController : MainController
 
         patchCampanhaViewModel.ImagensUploadNames = new List<string>();
 
-        AdicionarJWTnoHeader();
-
         if (novasImagens)
         {
             foreach (var imagem in campanhaViewModel.ImagensUpload)
@@ -231,7 +221,7 @@ public class CampanhaController : MainController
                 patchCampanhaViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
             }
 
-            var responseCampanha = await _httpClient.GetAsync("Campanha/Campanha/" + campanhaViewModel.Id);
+            var responseCampanha = await _campanhaService._httpClient.GetAsync("Campanha/" + campanhaViewModel.Id);
 
             GetCampanhaResponseId campanhaDb;
 
@@ -262,7 +252,7 @@ public class CampanhaController : MainController
         Encoding.UTF8,
         "application/json");
 
-        var response = await _httpClient.PatchAsync("Campanha/Campanha/", campanhaContent);
+        var response = await _campanhaService._httpClient.PatchAsync("Campanha/", campanhaContent);
 
         CampanhaResponse campanhaResponse;
 
@@ -290,24 +280,22 @@ public class CampanhaController : MainController
         campanhaResponse = await DeserializeObjectResponse<CampanhaResponse>(response);
         //
 
-        if (!_notificador.TemNotificacao())
-        {
-            return RedirectToAction("Index", "Home");
-        }
+        //if (!_notificador.TemNotificacao())
+        //{
+        //    return RedirectToAction("Index", "Home");
+        //}
 
-        foreach (var error in _notificador.GetNotificacoes())
-        {
-            ModelState.AddModelError(error.Propriedade, error.Mensagem);
-        }
+        //foreach (var error in _notificador.GetNotificacoes())
+        //{
+        //    ModelState.AddModelError(error.Propriedade, error.Mensagem);
+        //}
 
         return View(campanhaViewModel);
     }
 
     public async Task<IActionResult> Visualizar(Guid id)
     {
-        AdicionarJWTnoHeader();
-
-        var response = await _httpClient.GetAsync("Campanha/Campanha/" + id);
+        var response = await _campanhaService._httpClient.GetAsync("Campanha/" + id);
 
         GetCampanhaResponseId campanhaResponse;
 
@@ -318,9 +306,7 @@ public class CampanhaController : MainController
 
     public async Task<IActionResult> Deletar(Guid id)
     {
-        AdicionarJWTnoHeader();
-
-        var response = await _httpClient.DeleteAsync("Campanha/Campanha/" + id);
+        var response = await _campanhaService._httpClient.DeleteAsync("Campanha/" + id);
 
         CampanhaResponse campanhaResponse;
 
@@ -343,19 +329,17 @@ public class CampanhaController : MainController
             return View();
         }
 
-        if (!_notificador.TemNotificacao())
-        {
-            return RedirectToAction("MinhasCampanhas");
-        }
+        //if (!_notificador.TemNotificacao())
+        //{
+        //    return RedirectToAction("MinhasCampanhas");
+        //}
 
         return View();
     }
 
     public async Task<IActionResult> Campanhas()
     {
-        AdicionarJWTnoHeader();
-
-        var response = await _httpClient.GetAsync("Campanha/Campanha");
+        var response = await _campanhaService._httpClient.GetAsync("Campanha");
 
         GetAllCampanhaResponse campanhaResponse;
 
@@ -383,9 +367,7 @@ public class CampanhaController : MainController
             return RedirectToAction("Campanhas");
         }
 
-        AdicionarJWTnoHeader();
-
-        var response = await _httpClient.GetAsync("Campanha/Campanha");
+        var response = await _campanhaService._httpClient.GetAsync("Campanha");
 
         GetAllCampanhaResponse campanhaResponse;
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Desapegando.Application.Extensions;
+using Desapegando.Application.Services.MVC;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Models;
@@ -12,24 +13,26 @@ namespace Desapegando.Application.Controllers
 {
     public class CompraController : MainController
     {
-        private readonly HttpClient _httpClient;
         private readonly IMapper _mapper;
+        private readonly CondominoService _condominoService;
+        private readonly CompraService _compraService;
+        private readonly ProdutoService _produtoService;
 
-        public CompraController(HttpClient httpClient,
-                                 IOptions<AppSettings> settings,
-                                 IMapper mapper,
-                                 INotificador notificador) : base(httpClient, settings, notificador)
+        public CompraController(CondominoService condominoService,
+                                CompraService compraService,
+                                ProdutoService produtoService,
+                                IMapper mapper)
         {
             _mapper = mapper;
-            httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
-            _httpClient = httpClient;
+            _compraService = compraService;
+            _condominoService = condominoService;
+            _produtoService = produtoService;
         }
 
         public async Task<IActionResult> Index(Guid produtoId, int quantidade)
         {
-            AdicionarJWTnoHeader();
 
-            var response = await _httpClient.GetAsync("Condomino/Condomino");
+            var response = await _condominoService._httpClient.GetAsync("Condomino");
 
             GetCondominoCompraResponse condominoResponse;
 
@@ -46,11 +49,9 @@ namespace Desapegando.Application.Controllers
 
         public async Task<IActionResult> Historico()
         {
-            AdicionarJWTnoHeader();
-
             var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
-            var response = await _httpClient.GetAsync("Compra/Compra/MinhasCompras/" + condominoId);
+            var response = await _compraService._httpClient.GetAsync("Compra/MinhasCompras/" + condominoId);
 
             GetCompraResponse compraResponse;
 
@@ -74,9 +75,7 @@ namespace Desapegando.Application.Controllers
                 return RedirectToAction("Index", "Compra", new { produtoId = produtoId, quantidade = quantidadeTotal });
             }
 
-            AdicionarJWTnoHeader();
-
-            var responseProdutoById = await _httpClient.GetAsync("Produto/Produto/" + id);
+            var responseProdutoById = await _produtoService._httpClient.GetAsync("Produto/" + id);
 
             GetProdutoResponseId produtoResponse;
 
@@ -84,7 +83,7 @@ namespace Desapegando.Application.Controllers
 
             var produto = produtoResponse;
 
-            var responseCondominoById = await _httpClient.GetAsync("Condomino/Condomino/" + id);
+            var responseCondominoById = await _condominoService._httpClient.GetAsync("Condomino/" + id);
 
             GetCondominoResponseId condominoResponse;
 
@@ -115,7 +114,7 @@ namespace Desapegando.Application.Controllers
                             Encoding.UTF8,
                             "application/json");
 
-                    var response = await _httpClient.PostAsync("Compra/Compra/", compraContent);
+                    var response = await _compraService._httpClient.PostAsync("Compra/", compraContent);
 
                     CompraResponse compraResponse;
                 }

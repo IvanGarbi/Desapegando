@@ -3,6 +3,7 @@ using Desapegando.Application.Data;
 using Desapegando.Application.Extensions;
 using Desapegando.Application.HostedService;
 using Desapegando.Application.Services;
+using Desapegando.Application.Services.Handlers;
 using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
@@ -38,7 +39,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
 
 //builder.Services.ConfigureApplicationCookie(options =>
 //{
@@ -56,11 +57,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 // Dependcy Injection
 //builder.Services.AddScoped<ApplicationDbContext>();
+
 builder.Services.AddTransient<DesapegandoDbContext>();
-builder.Services.AddScoped<ICampanhaRepository, CampanhaRepository>();
 builder.Services.AddScoped<INotificador, Notificador>();
 
 builder.Services.AddHostedService<CampanhaHostedService>();
+builder.Services.AddScoped<ICampanhaRepository, CampanhaRepository>();
 
 builder.Services.Configure<EmailSender>(builder.Configuration.GetSection("EmailSender"));
 builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
@@ -73,8 +75,18 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+builder.Services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+
 builder.Services.Configure<AppSettings>(builder.Configuration);
-builder.Services.AddHttpClient<RegisterController>(); // ????????????????????????? Pq a Register Controller?
+
+builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.ProdutoService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.CampanhaService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.CompraService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.AdministradorService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.CondominoService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+
+
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 

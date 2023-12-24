@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desapegando.API.Controllers
 {
-    [Route("Campanha/[controller]")]
+    [Route("[controller]")]
     public class CampanhaController : MainController
     {
         private readonly ICampanhaRepository _campanhaRepository;

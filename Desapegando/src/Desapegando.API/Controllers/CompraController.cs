@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desapegando.API.Controllers
 {
-    [Route("Compra/[controller]")]
+    [Route("[controller]")]
     public class CompraController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;

@@ -10,10 +10,7 @@ namespace Desapegando.Application.Controllers
 {
     public class ErrorController : MainController
     {
-        public ErrorController(HttpClient httpClient,
-                              IOptions<AppSettings>
-                              settings,
-                              INotificador notificador) : base(httpClient, settings, notificador)
+        public ErrorController()
         {
         }
 

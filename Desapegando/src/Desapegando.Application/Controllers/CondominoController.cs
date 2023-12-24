@@ -1,4 +1,5 @@
 ﻿using Desapegando.Application.Extensions;
+using Desapegando.Application.Services.MVC;
 using Desapegando.Application.ViewModels;
 using Desapegando.Business.Interfaces.Notifications;
 using Microsoft.AspNetCore.Identity;
@@ -11,29 +12,24 @@ namespace Desapegando.Application.Controllers;
 
 public class CondominoController : MainController
 {
-    private readonly HttpClient _httpClient;
     private readonly UserManager<IdentityUser> _userManager;
     SignInManager<IdentityUser> _signInManager;
+    private readonly CondominoService _condominoService;
 
-    public CondominoController(HttpClient httpClient,
-                               IOptions<AppSettings> settings,
-                               SignInManager<IdentityUser> signInManager,
-                               UserManager<IdentityUser> userManager,
-                               INotificador notificador) : base(httpClient, settings, notificador)
+    public CondominoController(SignInManager<IdentityUser> signInManager,
+                               CondominoService condominoService,
+                               UserManager<IdentityUser> userManager)
     {
-        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
-        _httpClient = httpClient;
         _userManager = userManager;
         _signInManager = signInManager;
+        _condominoService = condominoService;
     }
 
     public async Task<IActionResult> Index()
     {
-        AdicionarJWTnoHeader();
-
         var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
-        var response = await _httpClient.GetAsync("Condomino/Condomino/" + condominoId);
+        var response = await _condominoService._httpClient.GetAsync("Condomino/" + condominoId);
 
         GetCondominoResponseId employeesResponse;
 
@@ -86,14 +82,12 @@ public class CondominoController : MainController
 
         //
 
-        AdicionarJWTnoHeader();
-
         var condominoContent = new StringContent(
             JsonSerializer.Serialize(condominoViewModel),
             Encoding.UTF8,
             "application/json");
 
-        var response = await _httpClient.PatchAsync("Condomino/Condomino/" + condominoViewModel.Id, condominoContent);
+        var response = await _condominoService._httpClient.PatchAsync("Condomino/" + condominoViewModel.Id, condominoContent);
 
         if (!condominoViewModel.NovaImagem)
         {

@@ -8,29 +8,37 @@ using Desapegando.Application.Extensions;
 using System.Text;
 using System.Text.Json;
 using Desapegando.Business.Models;
+using Desapegando.Application.Services.MVC;
 
 namespace Desapegando.Application.Controllers;
 
 public class AdministradorController : MainController
 {
-    private readonly HttpClient _httpClient;
     private readonly IMapper _mapper;
+    private readonly CondominoService _condominoService;
+    private readonly CampanhaService _campanhaService;
+    private readonly AdministradorService _administradorService;
+    private readonly ProdutoService _produtoService;
+    private readonly CompraService _compraService;
 
-    public AdministradorController(HttpClient httpClient,
-                                   IOptions<AppSettings> settings,
-                                   IMapper mapper, 
-                                   INotificador notificador) : base(httpClient, settings, notificador)
+    public AdministradorController(CondominoService condominoService,
+                                   CompraService compraService,
+                                   ProdutoService produtoService,
+                                   CampanhaService campanhaService,
+                                   AdministradorService administradorService,
+                                   IMapper mapper)
     {
         _mapper = mapper;
-        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
-        _httpClient = httpClient;
+        _condominoService = condominoService;
+        _produtoService = produtoService;
+        _compraService = compraService;
+        _administradorService = administradorService;
+        _campanhaService = campanhaService;
     }
 
     public async Task<IActionResult> NovosCondominos()
     {
-        AdicionarJWTnoHeader();
-
-        var response = await _httpClient.GetAsync("Condomino/Condomino");
+        var response = await _condominoService._httpClient.GetAsync("Condomino");
 
         GetAllCondominoResponse condominoResponse;
 
@@ -43,14 +51,12 @@ public class AdministradorController : MainController
 
     public async Task<IActionResult> AtivarCondomino(Guid id)
     {
-        AdicionarJWTnoHeader();
-
         var ativarCondominoContent = new StringContent(
             JsonSerializer.Serialize(id),
             Encoding.UTF8,
             "application/json");
 
-        var response = await _httpClient.PostAsync("Administrador/Administrador/AtivarCondomino/", ativarCondominoContent);
+        var response = await _administradorService._httpClient.PostAsync("Administrador/AtivarCondomino/", ativarCondominoContent);
 
         // usar genérico para erros... Response 200 não retorna nenhum objeto.
         UserResponseAuth requestResponse;
@@ -83,14 +89,12 @@ public class AdministradorController : MainController
     [HttpPost]
     public async Task<IActionResult> ExcluirCondomino(Guid id)
     {
-        AdicionarJWTnoHeader();
-
         var excluirCondominoContent = new StringContent(
                     JsonSerializer.Serialize(id),
                     Encoding.UTF8,
                     "application/json");
 
-        var response = await _httpClient.PostAsync("Administrador/Administrador/ExcluirCondomino/", excluirCondominoContent);
+        var response = await _administradorService._httpClient.PostAsync("Administrador/ExcluirCondomino/", excluirCondominoContent);
 
         // usar genérico para erros... Response 200 não retorna nenhum objeto.
         UserResponseAuth requestResponse;
@@ -122,27 +126,25 @@ public class AdministradorController : MainController
 
     public async Task<IActionResult> Dashboard()
     {
-        AdicionarJWTnoHeader();
-
-        var responseCondomino = await _httpClient.GetAsync("Condomino/Condomino");
+        var responseCondomino = await _condominoService._httpClient.GetAsync("Condomino");
 
         GetAllCondominoResponse condominoResponse;
 
         condominoResponse = await DeserializeObjectResponse<GetAllCondominoResponse>(responseCondomino);
 
-        var responseProduto = await _httpClient.GetAsync("Produto/Produto");
+        var responseProduto = await _produtoService._httpClient.GetAsync("Produto");
 
         GetAllProdutoResponse produtoResponse;
 
         produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(responseProduto);
 
-        var responseCampanha = await _httpClient.GetAsync("Campanha/Campanha");
+        var responseCampanha = await _campanhaService._httpClient.GetAsync("Campanha");
 
         GetAllCampanhaResponse campanhaResponse;
 
         campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(responseCampanha);
 
-        var responseCompra = await _httpClient.GetAsync("Compra/Compra");
+        var responseCompra = await _compraService._httpClient.GetAsync("Compra");
 
         GetAllCompraResponse compraResponse;
 

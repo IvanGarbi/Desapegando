@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desapegando.API.Controllers
 {
-    [Route("Administrador/[controller]")]
+    [Route("[controller]")]
     public class AdministradorController : MainController
     {
         private readonly ICondominoRepository _condominoRepository;

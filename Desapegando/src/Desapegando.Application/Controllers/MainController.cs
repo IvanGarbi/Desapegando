@@ -18,25 +18,12 @@ namespace Desapegando.Application.Controllers;
 [Authorize]
 public abstract class MainController : Controller
 {
-    protected readonly INotificador _notificador;
-    protected readonly HttpClient _httpClient;
+    //protected readonly INotificador _notificador;
 
-    public MainController(HttpClient httpClient,
-                          IOptions<AppSettings> settings,
-                          INotificador notificador)
-    {
-        _notificador = notificador;
-        
-        httpClient.BaseAddress = new Uri(settings.Value.DesapegandoApiUrl);
-        _httpClient = httpClient;
-    }
-
-
-    protected void AdicionarJWTnoHeader()
-    {
-        var tokenJwt = User.FindFirst("JWT")?.Value;
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenJwt);
-    }
+    //public MainController(INotificador notificador)
+    //{
+    //    _notificador = notificador;
+    //}
 
     protected bool VerifyResponseErros(HttpResponseMessage response)
     {

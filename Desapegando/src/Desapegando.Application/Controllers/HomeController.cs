@@ -2,35 +2,35 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using AutoMapper;
-using Desapegando.Business.Interfaces.Notifications;
-using Microsoft.Extensions.Options;
-using Desapegando.Application.Extensions;
 using Desapegando.Business.Models;
+using System.Text.Json;
+using Desapegando.Application.Services.MVC;
 namespace Desapegando.Application.Controllers;
 
 public class HomeController : MainController
 {
     private readonly IMapper _mapper;
+    private readonly ProdutoService _produtoService;
+    private readonly CampanhaService _campanhaService;
 
     public HomeController(IMapper mapper,
-                          HttpClient httpClient,
-                          IOptions<AppSettings> settings,
-                          INotificador notificador) : base(httpClient, settings, notificador)
+                          ProdutoService produtoService,
+                          CampanhaService campanhaService)
     {
         _mapper = mapper;
+        _produtoService = produtoService;
+        _campanhaService = campanhaService;
     }
 
     public async Task<IActionResult> Index()
     {
-        AdicionarJWTnoHeader();
-
-        var responseProduto = await _httpClient.GetAsync("Produto/Produto");
+        var responseProduto = await _produtoService._httpClient.GetAsync("Produto");
         
         GetAllProdutoResponse produtoResponse;
 
         produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(responseProduto);
 
-        var responseCampanha = await _httpClient.GetAsync("Campanha/Campanha");
+        var responseCampanha = await _campanhaService._httpClient.GetAsync("Campanha");
 
         GetAllCampanhaResponse campanhaResponse;
 
@@ -58,5 +58,15 @@ public class HomeController : MainController
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    protected async Task<T> DeserializeObjectResponse<T>(HttpResponseMessage responseMessage)
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        return JsonSerializer.Deserialize<T>(await responseMessage.Content.ReadAsStringAsync(), options);
     }
 }
