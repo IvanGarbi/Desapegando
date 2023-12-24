@@ -25,6 +25,21 @@ public abstract class MainController : Controller
     //    _notificador = notificador;
     //}
 
+    protected bool ResponsePossuiErros(ResponseResult resposta)
+    {
+        if (resposta != null && resposta.Errors.Messages.Any())
+        {
+            foreach (var mensagem in resposta.Errors.Messages)
+            {
+                ModelState.AddModelError(string.Empty, mensagem);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     protected bool VerifyResponseErros(HttpResponseMessage response)
     {
         switch ((int)response.StatusCode)

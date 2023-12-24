@@ -1,24 +1,19 @@
 ﻿using AutoMapper;
-using Desapegando.Application.Extensions;
 using Desapegando.Application.Services.MVC;
 using Desapegando.Application.ViewModels;
-using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Models;
 using Desapegando.Business.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System.Net;
-using System.Text;
-using System.Text.Json;
 
 namespace Desapegando.Application.Controllers;
 
 public class ProdutoController : MainController
 {
     private readonly IMapper _mapper;
-    private readonly ProdutoService _produtoService;
+    private readonly IProdutoService _produtoService;
 
-    public ProdutoController(ProdutoService produtoService,
+    public ProdutoController(IProdutoService produtoService,
                              IMapper mapper)
     {
         _mapper = mapper;
@@ -60,120 +55,43 @@ public class ProdutoController : MainController
 
                 return View(produtoViewModel);
             }
-            
+
             postProdutoViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
         }
 
-        var produtoContent = new StringContent(
-                JsonSerializer.Serialize(postProdutoViewModel),
-                Encoding.UTF8,
-                "application/json");
+        var response = await _produtoService.CriarProduto(postProdutoViewModel);
 
-        var response = await _produtoService._httpClient.PostAsync("Produto/", produtoContent);
-
-        ProdutoResponse produtoResponse;
-
-        if (!VerifyResponseErros(response))
+        if (ResponsePossuiErros(response))
         {
-            produtoResponse = new ProdutoResponse
-            {
-                Success = false,
-                Data = new DataProduto
-                {
-                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
-                }
-            };
-
-            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
-            {
-                ModelState.AddModelError(string.Empty, error);
-            }
-
             ViewBag.Error = "Ocorreu um erro ao salvar";
 
             return View(produtoViewModel);
         }
 
-        produtoResponse = await DeserializeObjectResponse<ProdutoResponse>(response);
-
-        //if (!_notificador.TemNotificacao())
-        //{
-        //    //foreach (var imagem in produtoViewModel.ImagensUpload)
-        //    //{
-        //    //    var imgPrefixo = Guid.NewGuid() + "_";
-        //    //    if (!await UploadArquivo(imagem, imgPrefixo))
-        //    //    {
-        //    //        await _produtoService.Delete(postProdutoViewModel.Id);
-
-        //    //        ModelState.AddModelError(string.Empty, "Ocorreu um erro ao salvar as imagens.");
-
-        //    //        return View(produtoViewModel);
-        //    //    }
-
-        //    //    var produtoImagem = new ProdutoImagem();
-        //    //    produtoImagem.FileName = imgPrefixo + imagem.FileName;
-        //    //    produtoImagem.ProdutoId = postProdutoViewModel.Id;
-
-        //    //    await _produtoImagemService.Create(produtoImagem);
-
-        //    //}
-
-        //    return RedirectToAction("Index", "Home");
-        //}
-
-        //foreach (var error in _notificador.GetNotificacoes())
-        //{
-        //    ModelState.AddModelError(error.Propriedade, error.Mensagem);
-        //}
-
-        return View(produtoViewModel);
+        return RedirectToAction("Index", "Home");
     }
 
     public async Task<IActionResult> MeusProdutos()
     {
         var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
-        var response = await _produtoService._httpClient.GetAsync("Produto/MeusProdutos/" + condominoId);
+        var teste = await _produtoService.GetMeusProdutos(condominoId);
 
-        GetMeusProdutoResponse produtosResponse;
-
-        produtosResponse = await DeserializeObjectResponse<GetMeusProdutoResponse>(response);
-
-        return View(produtosResponse.Data);
+        return View(teste.Data);
     }
 
     public async Task<IActionResult> Editar(Guid id)
     {
-        var response = await _produtoService._httpClient.GetAsync("Produto/" + id);
+        var response = await _produtoService.GetProduto(id);
 
-        GetProdutoResponseId produtoResponse;
+        if (!response.Success)
+        {
+            ViewBag.Error = "Ocorreu um erro ao salvar";
 
-        //ProdutoResponse condominoResponse;
+            return View();
+        }
 
-        //if (!VerifyResponseErros(response))
-        //{
-        //    condominoResponse = new ProdutoResponse
-        //    {
-        //        Success = false,
-        //        Data = new DataProduto
-        //        {
-        //            ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
-        //        }
-        //    };
-
-        //    foreach (var error in condominoResponse.Data.ResponseResult.Errors.Messages)
-        //    {
-        //        ModelState.AddModelError(string.Empty, error);
-        //    }
-
-        //    ViewBag.Error = "Ocorreu um erro ao salvar";
-
-        //    return View();
-        //}
-
-        produtoResponse = await DeserializeObjectResponse<GetProdutoResponseId>(response);
-
-        var produto = _mapper.Map<Produto>(produtoResponse.Data);
+        var produto = _mapper.Map<Produto>(response.Data);
 
         var updateProdutoViewModel = _mapper.Map<UpdateProdutoViewModel>(produto);
 
@@ -215,9 +133,9 @@ public class ProdutoController : MainController
 
         patchProdutoViewModel.ImagensUploadNames = new List<string>();
 
-        var responseProduto = await _produtoService._httpClient.GetAsync("Produto/" + produtoViewModel.Id);
-        GetProdutoResponseId produtoDb;
-        produtoDb = await DeserializeObjectResponse<GetProdutoResponseId>(responseProduto);
+        var responseProduto = await _produtoService.GetProduto(produtoViewModel.Id);
+
+        GetProdutoResponseId produtoDb = responseProduto;
 
         if (!produtoDb.Success)
         {
@@ -280,15 +198,6 @@ public class ProdutoController : MainController
                 patchProdutoViewModel.ImagensUploadNames.Add(imgPrefixo + imagem.FileName);
             }
 
-            //var responseProduto = await _produtoService._httpClient.GetAsync("Produto/Produto/" + produtoViewModel.Id);
-
-            //GetProdutoResponseId produtoDb;
-
-            //produtoDb = await DeserializeObjectResponse<GetProdutoResponseId>(responseProduto);
-
-
-
-
             var listaProdutoImagensDb = produtoDb.Data.ProdutoImagemViewModels;
             // Deletando imagens antigas
             foreach (var imagem in listaProdutoImagensDb)
@@ -302,75 +211,33 @@ public class ProdutoController : MainController
             }
         }
 
-        //
-        var produtoContent = new StringContent(
-        JsonSerializer.Serialize(patchProdutoViewModel),
-        Encoding.UTF8,
-        "application/json");
+        var response = await _produtoService.UpdateProduto(patchProdutoViewModel);
 
-        var response = await _produtoService._httpClient.PatchAsync("Produto/", produtoContent);
-
-        ProdutoResponse produtoResponse;
-
-        if (!VerifyResponseErros(response))
+        if (ResponsePossuiErros(response))
         {
-            produtoResponse = new ProdutoResponse
-            {
-                Success = false,
-                Data = new DataProduto
-                {
-                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
-                }
-            };
-
-            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
-            {
-                ModelState.AddModelError(string.Empty, error);
-            }
-
             ViewBag.Error = "Ocorreu um erro ao salvar";
 
             return View(produtoViewModel);
         }
 
-        produtoResponse = await DeserializeObjectResponse<ProdutoResponse>(response);
-        //
+        if (venda && quantidadeVenda >= 0)
+        {
+            if (quantidadeVenda == 0)
+            {
+                quantidadeVenda = quantidadeViewModel;
+            }
 
-        //if (!_notificador.TemNotificacao())
-        //{
+            return RedirectToAction("Index", "Compra", new { produtoId = produtoViewModel.Id, quantidade = quantidadeVenda });
+        }
 
-        //    if (venda && quantidadeVenda >= 0)
-        //    {
-        //        if (quantidadeVenda == 0)
-        //        {
-        //            quantidadeVenda = quantidadeViewModel;
-        //        }
-
-        //        return RedirectToAction("Index", "Compra", new { produtoId = produtoViewModel.Id, quantidade = quantidadeVenda });
-        //    }
-
-
-
-        //    return RedirectToAction("Index", "Home");
-        //}
-
-        //foreach (var error in _notificador.GetNotificacoes())
-        //{
-        //    ModelState.AddModelError(error.Propriedade, error.Mensagem);
-        //}
-
-        return View(produtoViewModel);
+        return RedirectToAction("Index", "Home");
     }
 
     public async Task<IActionResult> Visualizar(Guid id)
     {
-        var response = await _produtoService._httpClient.GetAsync("Produto/" + id);
+        var response = await _produtoService.GetProduto(id);
 
-        GetProdutoResponseId produtoResponse;
-
-        produtoResponse = await DeserializeObjectResponse<GetProdutoResponseId>(response);
-
-        return View(produtoResponse.Data);
+        return View(response.Data);
     }
 
     public async Task<IActionResult> Produtos()
@@ -383,19 +250,14 @@ public class ProdutoController : MainController
             new EnumModel() { EstadoProduto = EstadoProduto.Usado, IsSelected = false }
         };
 
-        var response = await _produtoService._httpClient.GetAsync("Produto");
+        var response = await _produtoService.GetProdutos();
 
-        GetAllProdutoResponse produtoResponse;
-
-        produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(response);
-
-        var produtosDb = produtoResponse.Data.Where(x => x.Ativo);
-
+        var produtosDb = response.Data.Where(x => x.Ativo);
 
         if (!produtosDb.Any())
         {
             ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
-            
+
             return View(model);
         }
 
@@ -420,13 +282,9 @@ public class ProdutoController : MainController
             return RedirectToAction("Produtos");
         }
 
-        var response = await _produtoService._httpClient.GetAsync("Produto");
+        var response = await _produtoService.GetProdutos();
 
-        GetAllProdutoResponse produtoResponse;
-
-        produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(response);
-
-        var produtosDb = produtoResponse.Data.Where(x => (filtrarProdutoViewModel.Categorias != null && filtrarProdutoViewModel.Categorias.Contains(x.Categoria)) ||
+        var produtosDb = response.Data.Where(x => (filtrarProdutoViewModel.Categorias != null && filtrarProdutoViewModel.Categorias.Contains(x.Categoria)) ||
                                                                       ((filtrarProdutoViewModel.CheckBoxItems[0].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[0].IsSelected) ||
                                                                       (filtrarProdutoViewModel.CheckBoxItems[1].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[1].IsSelected) ||
                                                                       (filtrarProdutoViewModel.CheckBoxItems[2].EstadoProduto == x.EstadoProduto && filtrarProdutoViewModel.CheckBoxItems[2].IsSelected) ||
@@ -439,7 +297,7 @@ public class ProdutoController : MainController
         if (!produtosDb.Any())
         {
             ViewBag.Produtos = Enumerable.Empty<GetProdutoViewModel>();
-            
+
             return View();
         }
 
@@ -452,35 +310,14 @@ public class ProdutoController : MainController
 
     public async Task<IActionResult> Deletar(Guid id)
     {
-        var response = await _produtoService._httpClient.DeleteAsync("Produto/" + id);
+        var response = await _produtoService.DeletarProduto(id);
 
-        ProdutoResponse produtoResponse;
-
-        if (!VerifyResponseErros(response))
+        if (ResponsePossuiErros(response))
         {
-            produtoResponse = new ProdutoResponse
-            {
-                Success = false,
-                Data = new DataProduto
-                {
-                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
-                }
-            };
-
-            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
-            {
-                ModelState.AddModelError(string.Empty, error);
-            }
-
             return View();
         }
 
-        //if (!_notificador.TemNotificacao())
-        //{
-        //    return RedirectToAction("MeusProdutos");
-        //}
-
-        return View();
+        return RedirectToAction("MeusProdutos");
     }
 
     public async Task<IActionResult> Curtir(Guid id, string returnUrl)
@@ -491,37 +328,11 @@ public class ProdutoController : MainController
             ProdutoId = id
         };
 
-        var curtidaContent = new StringContent(
-        JsonSerializer.Serialize(curtidaViewModel),
-        Encoding.UTF8,
-        "application/json");
+        var response = await _produtoService.CurtirProduto(curtidaViewModel);
 
-        var response = await _produtoService._httpClient.PostAsync("Produto/Curtir/", curtidaContent);
-
-        ProdutoResponse produtoResponse;
-
-        produtoResponse = await DeserializeObjectResponse<ProdutoResponse>(response);
-
-        if (!VerifyResponseErros(response))
+        if (ResponsePossuiErros(response))
         {
-            produtoResponse = new ProdutoResponse
-            {
-                Success = false,
-                Data = new DataProduto
-                {
-                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
-                }
-            };
-
-            List<string> errors = new List<string>();
-
-            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
-            {
-                errors.Add(error);
-            }
-
-            // não funciona
-            ViewBag.Errors = errors;
+            return View();
         }
 
         if (!string.IsNullOrEmpty(returnUrl) && returnUrl.Contains("Produto"))
@@ -540,37 +351,10 @@ public class ProdutoController : MainController
             ProdutoId = id
         };
 
-        var descurtidaContent = new StringContent(
-                JsonSerializer.Serialize(descurtidaViewModel),
-                Encoding.UTF8,
-                "application/json");
-
-        var response = await _produtoService._httpClient.PostAsync("Produto/Descurtir/", descurtidaContent);
-
-        ProdutoResponse produtoResponse;
-
-        produtoResponse = await DeserializeObjectResponse<ProdutoResponse>(response);
-
-        if (!VerifyResponseErros(response))
+        var response = await _produtoService.DescurtirProduto(descurtidaViewModel);
+        if (ResponsePossuiErros(response))
         {
-            produtoResponse = new ProdutoResponse
-            {
-                Success = false,
-                Data = new DataProduto
-                {
-                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
-                }
-            };
-
-            List<string> errors = new List<string>();
-
-            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
-            {
-                errors.Add(error);
-            }
-
-            // não funciona
-            ViewBag.Errors = errors;
+            return View();
         }
 
         if (!string.IsNullOrEmpty(returnUrl) && returnUrl.Contains("Produto"))
@@ -590,39 +374,19 @@ public class ProdutoController : MainController
             Motivo = motivo
         };
 
-        var removerProdutoContent = new StringContent(
-                        JsonSerializer.Serialize(removerProdutoViewModel),
-                        Encoding.UTF8,
-                        "application/json");
+        var response = await _produtoService.RemoverProduto(removerProdutoViewModel);
 
-        var response = await _produtoService._httpClient.PostAsync("Produto/RemoverProduto/", removerProdutoContent);
-
-        ProdutoResponse produtoResponse;
-
-        produtoResponse = await DeserializeObjectResponse<ProdutoResponse>(response);
-
-        if (!VerifyResponseErros(response))
+        if (response != null && response.Errors.Messages.Any())
         {
-            produtoResponse = new ProdutoResponse
-            {
-                Success = false,
-                Data = new DataProduto
-                {
-                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
-                }
-            };
-
             List<string> errors = new List<string>();
 
-            foreach (var error in produtoResponse.Data.ResponseResult.Errors.Messages)
+            foreach (var error in response.Errors.Messages)
             {
                 errors.Add(error);
             }
 
-            //return Json(HttpStatusCode.NotFound);
-            return Json(new { status = HttpStatusCode.NotFound, erro = errors.FirstOrDefault()});
+            return Json(new { status = HttpStatusCode.NotFound, erro = errors.FirstOrDefault() });
         }
-
 
         return Json(new { status = HttpStatusCode.OK });
     }

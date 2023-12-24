@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using Desapegando.Application.Extensions;
 using Desapegando.Application.Services.MVC;
 using Desapegando.Application.ViewModels;
-using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
 
@@ -16,11 +13,11 @@ namespace Desapegando.Application.Controllers
         private readonly IMapper _mapper;
         private readonly CondominoService _condominoService;
         private readonly CompraService _compraService;
-        private readonly ProdutoService _produtoService;
+        private readonly IProdutoService _produtoService;
 
         public CompraController(CondominoService condominoService,
                                 CompraService compraService,
-                                ProdutoService produtoService,
+                                IProdutoService produtoService,
                                 IMapper mapper)
         {
             _mapper = mapper;
@@ -75,13 +72,9 @@ namespace Desapegando.Application.Controllers
                 return RedirectToAction("Index", "Compra", new { produtoId = produtoId, quantidade = quantidadeTotal });
             }
 
-            var responseProdutoById = await _produtoService._httpClient.GetAsync("Produto/" + id);
+            var responseProdutoById = await _produtoService.GetProduto(id);
 
-            GetProdutoResponseId produtoResponse;
-
-            produtoResponse = await DeserializeObjectResponse<GetProdutoResponseId>(responseProdutoById);
-
-            var produto = produtoResponse;
+            var produto = responseProdutoById;
 
             var responseCondominoById = await _condominoService._httpClient.GetAsync("Condomino/" + id);
 

@@ -10,11 +10,11 @@ namespace Desapegando.Application.Controllers;
 public class HomeController : MainController
 {
     private readonly IMapper _mapper;
-    private readonly ProdutoService _produtoService;
+    private readonly IProdutoService _produtoService;
     private readonly CampanhaService _campanhaService;
 
     public HomeController(IMapper mapper,
-                          ProdutoService produtoService,
+                          IProdutoService produtoService,
                           CampanhaService campanhaService)
     {
         _mapper = mapper;
@@ -24,11 +24,7 @@ public class HomeController : MainController
 
     public async Task<IActionResult> Index()
     {
-        var responseProduto = await _produtoService._httpClient.GetAsync("Produto");
-        
-        GetAllProdutoResponse produtoResponse;
-
-        produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(responseProduto);
+        var produtoResponse = await _produtoService.GetProdutos();
 
         var responseCampanha = await _campanhaService._httpClient.GetAsync("Campanha");
 
