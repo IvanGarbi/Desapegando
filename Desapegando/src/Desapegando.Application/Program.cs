@@ -80,7 +80,7 @@ builder.Services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 builder.Services.Configure<AppSettings>(builder.Configuration);
 
 builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.IProdutoService, Desapegando.Application.Services.MVC.ProdutoService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
-builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.CampanhaService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.ICampanhaService, Desapegando.Application.Services.MVC.CampanhaService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.CompraService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.AdministradorService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 builder.Services.AddHttpClient<Desapegando.Application.Services.MVC.CondominoService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();

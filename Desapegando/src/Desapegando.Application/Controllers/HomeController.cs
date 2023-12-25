@@ -11,11 +11,11 @@ public class HomeController : MainController
 {
     private readonly IMapper _mapper;
     private readonly IProdutoService _produtoService;
-    private readonly CampanhaService _campanhaService;
+    private readonly ICampanhaService _campanhaService;
 
     public HomeController(IMapper mapper,
                           IProdutoService produtoService,
-                          CampanhaService campanhaService)
+                          ICampanhaService campanhaService)
     {
         _mapper = mapper;
         _produtoService = produtoService;
@@ -26,11 +26,7 @@ public class HomeController : MainController
     {
         var produtoResponse = await _produtoService.GetProdutos();
 
-        var responseCampanha = await _campanhaService._httpClient.GetAsync("Campanha");
-
-        GetAllCampanhaResponse campanhaResponse;
-
-        campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(responseCampanha);
+        var campanhaResponse = await _campanhaService.GetCampanhas();
 
         var produtos = _mapper.Map<IEnumerable<Produto>>(produtoResponse.Data);
         var campanhas = _mapper.Map<IEnumerable<Campanha>>(campanhaResponse.Data);
