@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
 using Desapegando.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Desapegando.Business.Interfaces.Notifications;
 using System.Net;
-using Microsoft.Extensions.Options;
-using Desapegando.Application.Extensions;
-using System.Text;
-using System.Text.Json;
 using Desapegando.Business.Models;
 using Desapegando.Application.Services.MVC;
 
@@ -16,16 +11,16 @@ public class AdministradorController : MainController
 {
     private readonly IMapper _mapper;
     private readonly CondominoService _condominoService;
-    private readonly CampanhaService _campanhaService;
-    private readonly AdministradorService _administradorService;
-    private readonly ProdutoService _produtoService;
+    private readonly ICampanhaService _campanhaService;
+    private readonly IAdministradorService _administradorService;
+    private readonly IProdutoService _produtoService;
     private readonly CompraService _compraService;
 
     public AdministradorController(CondominoService condominoService,
                                    CompraService compraService,
-                                   ProdutoService produtoService,
-                                   CampanhaService campanhaService,
-                                   AdministradorService administradorService,
+                                   IProdutoService produtoService,
+                                   ICampanhaService campanhaService,
+                                   IAdministradorService administradorService,
                                    IMapper mapper)
     {
         _mapper = mapper;
@@ -51,34 +46,11 @@ public class AdministradorController : MainController
 
     public async Task<IActionResult> AtivarCondomino(Guid id)
     {
-        var ativarCondominoContent = new StringContent(
-            JsonSerializer.Serialize(id),
-            Encoding.UTF8,
-            "application/json");
+        var response = await _administradorService.AtivarCondomino(id);
 
-        var response = await _administradorService._httpClient.PostAsync("Administrador/AtivarCondomino/", ativarCondominoContent);
-
-        // usar genérico para erros... Response 200 não retorna nenhum objeto.
-        UserResponseAuth requestResponse;
-
-        if (!VerifyResponseErros(response))
+        if (ResponsePossuiErros(response))
         {
-            requestResponse = new UserResponseAuth
-            {
-                Success = false,
-                Data = new DataAuth
-                {
-                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
-                }
-            };
-
-            foreach (var error in requestResponse.Data.ResponseResult.Errors.Messages)
-            {
-                ModelState.AddModelError(string.Empty, error);
-            }
-
-            //ViewBag.Error = "Ocorreu um erro ao salvar";
-
+            ViewBag.Error = "Ocorreu um erro.";
 
             return RedirectToAction("NovosCondominos", "Administrador");
         }
@@ -89,36 +61,11 @@ public class AdministradorController : MainController
     [HttpPost]
     public async Task<IActionResult> ExcluirCondomino(Guid id)
     {
-        var excluirCondominoContent = new StringContent(
-                    JsonSerializer.Serialize(id),
-                    Encoding.UTF8,
-                    "application/json");
+        var response = await _administradorService.ExcluirCondomino(id);
 
-        var response = await _administradorService._httpClient.PostAsync("Administrador/ExcluirCondomino/", excluirCondominoContent);
-
-        // usar genérico para erros... Response 200 não retorna nenhum objeto.
-        UserResponseAuth requestResponse;
-
-        if (!VerifyResponseErros(response))
+        if (ResponsePossuiErros(response))
         {
-            requestResponse = new UserResponseAuth
-            {
-                Success = false,
-                Data = new DataAuth
-                {
-                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
-                }
-            };
-
-            foreach (var error in requestResponse.Data.ResponseResult.Errors.Messages)
-            {
-                ModelState.AddModelError(string.Empty, error);
-            }
-
-            //ViewBag.Error = "Ocorreu um erro ao salvar";
-
-            //return Json(HttpStatusCode.NotFound);
-            return Json(new { status = HttpStatusCode.NotFound, erro = requestResponse.Data.ResponseResult.Errors.Messages.FirstOrDefault() });
+            return Json(new { status = HttpStatusCode.NotFound, erro = response.Errors.Messages.FirstOrDefault() });
         }
 
         return Json(new { status = HttpStatusCode.OK });
@@ -132,17 +79,9 @@ public class AdministradorController : MainController
 
         condominoResponse = await DeserializeObjectResponse<GetAllCondominoResponse>(responseCondomino);
 
-        var responseProduto = await _produtoService._httpClient.GetAsync("Produto");
+        var produtoResponse = await _produtoService.GetProdutos();
 
-        GetAllProdutoResponse produtoResponse;
-
-        produtoResponse = await DeserializeObjectResponse<GetAllProdutoResponse>(responseProduto);
-
-        var responseCampanha = await _campanhaService._httpClient.GetAsync("Campanha");
-
-        GetAllCampanhaResponse campanhaResponse;
-
-        campanhaResponse = await DeserializeObjectResponse<GetAllCampanhaResponse>(responseCampanha);
+        var campanhaResponse = await _campanhaService.GetCampanhas();
 
         var responseCompra = await _compraService._httpClient.GetAsync("Compra");
 
