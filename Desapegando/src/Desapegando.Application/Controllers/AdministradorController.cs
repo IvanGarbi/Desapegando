@@ -92,7 +92,6 @@ public class AdministradorController : MainController
 
         // primeiros resultados
         var produtosDesistidos = produtos.Where(x => x.Desistencia == true);
-        //var produtosVendidos = produtos.Where(x => x.Desistencia == false && x.Ativo == false);
         var produtosVendidos = compras;
         var produtosDisponiveis = produtos.Where(x => x.Ativo == true).Sum(y => y.Quantidade);
 
@@ -120,7 +119,6 @@ public class AdministradorController : MainController
         listanovosCondominos7DiasViewModel = listanovosCondominos7DiasViewModel.OrderBy(x => x.DataRegistro).ToList();
 
         // total vendas 7 dias
-        //var totalVendas7Dias = produtos.Where(x => x.Desistencia == false && x.Ativo == false && x.DataVenda >= DateTime.Now.AddDays(-8));
         var totalVendas7Dias = produtosVendidos.Where(x => x.DataVenda >= DateTime.Now.AddDays(-8));
         datas.Clear();
         for (int i = 6; i >= 0; i--)
@@ -141,7 +139,6 @@ public class AdministradorController : MainController
 
         // total produtos 7 dias
         var totalProdutosVendidos7Dias = totalVendas7Dias;
-        //var totalProdutosDesistidos7Dias = produtos.Where(x => x.Desistencia == true && x.DataVenda >= DateTime.Now.AddDays(-7));
         var totalProdutosDesistidos7Dias = produtos.Where(x => x.Desistencia == true && x.DataDesistencia >= DateTime.Now.AddDays(-7));
         var totalProdutosDisponiveis7Dias = produtos.Where(x => x.Desistencia == false && x.Ativo == true && x.DataPublicacao >= DateTime.Now.AddDays(-7)).Sum(y => y.Quantidade);
         var totalProdutos7Dias = totalProdutosDesistidos7Dias.Count() + totalProdutosDisponiveis7Dias + totalVendas7Dias.Count();
@@ -152,7 +149,6 @@ public class AdministradorController : MainController
         var totalCampanhas30Dias = novasCampanhasDisponiveis30Dias.Count() + novasCampanhasEncerradas30Dias.Count();
 
         // Produtos por período
-        //var totalProdutosVendidosPeriodo = produtos.Where(x => x.Desistencia == false && x.Ativo == false && x.DataVenda >= DateTime.Now.AddMonths(-5));
         var totalProdutosVendidosPeriodo = produtosVendidos.Where(x => x.DataVenda >= DateTime.Now.AddMonths(-5));
 
         // 1
@@ -235,7 +231,6 @@ public class AdministradorController : MainController
         DashboardViewModel dashboardViewModel = new DashboardViewModel();
         dashboardViewModel.NovosCondominos = produtosDesistidos.Count();
         dashboardViewModel.ProdutosVendidos = produtosVendidos.Count();
-        //dashboardViewModel.ProdutosDisponiveis = produtosDisponiveis.Count();
         dashboardViewModel.ProdutosDisponiveis = produtosDisponiveis;
 
         dashboardViewModel.NovosCondominos7Dias = listanovosCondominos7DiasViewModel;

@@ -47,10 +47,6 @@ namespace Desapegando.Application.Controllers
 
             var response = await _compraService.GetMinhasCompras(condominoId);
 
-            //GetCompraResponse compraResponse;
-
-            //compraResponse = await DeserializeObjectResponse<GetCompraResponse>(response);
-
             var meusProdutosDbViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(response.Data.Select(x => x.Produto));
 
             return View(meusProdutosDbViewModel);
@@ -98,11 +94,6 @@ namespace Desapegando.Application.Controllers
                         ProdutoId = produtoId,
                         DataVenda = DateTime.Now,
                     };
-
-                    //var compraContent = new StringContent(
-                    //        JsonSerializer.Serialize(compraViewModel),
-                    //        Encoding.UTF8,
-                    //        "application/json");
 
                     var response = await _compraService.CriarCompra(compraViewModel);
 
