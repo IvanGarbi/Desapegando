@@ -4,8 +4,6 @@ using Desapegando.Business.Interfaces.Notifications;
 using Desapegando.Business.Interfaces.Repository;
 using Desapegando.Business.Interfaces.Services;
 using Desapegando.Business.Models;
-using Desapegando.Business.Services;
-using Desapegando.Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

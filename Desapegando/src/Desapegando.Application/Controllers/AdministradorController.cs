@@ -14,10 +14,10 @@ public class AdministradorController : MainController
     private readonly ICampanhaService _campanhaService;
     private readonly IAdministradorService _administradorService;
     private readonly IProdutoService _produtoService;
-    private readonly CompraService _compraService;
+    private readonly ICompraService _compraService;
 
     public AdministradorController(CondominoService condominoService,
-                                   CompraService compraService,
+                                   ICompraService compraService,
                                    IProdutoService produtoService,
                                    ICampanhaService campanhaService,
                                    IAdministradorService administradorService,
@@ -82,12 +82,8 @@ public class AdministradorController : MainController
         var produtoResponse = await _produtoService.GetProdutos();
 
         var campanhaResponse = await _campanhaService.GetCampanhas();
-
-        var responseCompra = await _compraService._httpClient.GetAsync("Compra");
-
-        GetAllCompraResponse compraResponse;
-
-        compraResponse = await DeserializeObjectResponse<GetAllCompraResponse>(responseCompra);
+        
+        var compraResponse = await _compraService.GetCompras();
 
         var produtos = _mapper.Map<IEnumerable<Produto>>(produtoResponse.Data);
         var campanhas = _mapper.Map<IEnumerable<Campanha>>(campanhaResponse.Data);
@@ -179,8 +175,8 @@ public class AdministradorController : MainController
 
         // 2
         datas.Clear();
-        // Loop from the first day of the month until we hit the next month, moving forward a day at a time
-        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1); i.Month == (DateTime.Now.Month - 1); i = i.AddDays(1))
+        DateTime dataInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1);
+        for (var i = dataInicial; i.Month == dataInicial.Month; i = i.AddDays(1))
         {
             datas.Add(i);
         }
@@ -198,8 +194,8 @@ public class AdministradorController : MainController
 
         // 3
         datas.Clear();
-        // Loop from the first day of the month until we hit the next month, moving forward a day at a time
-        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 2, 1); i.Month == (DateTime.Now.Month - 2); i = i.AddDays(1))
+        dataInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-2);
+        for (var i = dataInicial; i.Month == dataInicial.Month; i = i.AddDays(1))
         {
             datas.Add(i);
         }
@@ -217,8 +213,8 @@ public class AdministradorController : MainController
 
         // 4
         datas.Clear();
-        // Loop from the first day of the month until we hit the next month, moving forward a day at a time
-        for (var i = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 3, 1); i.Month == (DateTime.Now.Month - 3); i = i.AddDays(1))
+        dataInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-3);
+        for (var i = dataInicial; i.Month == dataInicial.Month; i = i.AddDays(1))
         {
             datas.Add(i);
         }

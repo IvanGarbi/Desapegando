@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using Desapegando.Application.Services.MVC;
 using Desapegando.Application.ViewModels;
-using Desapegando.Business.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using System.Text.Json;
 
 namespace Desapegando.Application.Controllers
 {
@@ -12,11 +9,11 @@ namespace Desapegando.Application.Controllers
     {
         private readonly IMapper _mapper;
         private readonly CondominoService _condominoService;
-        private readonly CompraService _compraService;
+        private readonly ICompraService _compraService;
         private readonly IProdutoService _produtoService;
 
         public CompraController(CondominoService condominoService,
-                                CompraService compraService,
+                                ICompraService compraService,
                                 IProdutoService produtoService,
                                 IMapper mapper)
         {
@@ -48,13 +45,13 @@ namespace Desapegando.Application.Controllers
         {
             var condominoId = Guid.Parse(User.FindFirst("sub")?.Value);
 
-            var response = await _compraService._httpClient.GetAsync("Compra/MinhasCompras/" + condominoId);
+            var response = await _compraService.GetMinhasCompras(condominoId);
 
-            GetCompraResponse compraResponse;
+            //GetCompraResponse compraResponse;
 
-            compraResponse = await DeserializeObjectResponse<GetCompraResponse>(response);
+            //compraResponse = await DeserializeObjectResponse<GetCompraResponse>(response);
 
-            var meusProdutosDbViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(compraResponse.Data.Select(x => x.Produto));
+            var meusProdutosDbViewModel = _mapper.Map<IEnumerable<GetProdutoViewModel>>(response.Data.Select(x => x.Produto));
 
             return View(meusProdutosDbViewModel);
         }
@@ -95,19 +92,19 @@ namespace Desapegando.Application.Controllers
 
                 for (int i = 0; i < quantidade; i++)
                 {
-                    Compra compra = new Compra
+                    CompraViewModel compraViewModel = new CompraViewModel
                     {
                         CondominoId = id,
                         ProdutoId = produtoId,
                         DataVenda = DateTime.Now,
                     };
 
-                    var compraContent = new StringContent(
-                            JsonSerializer.Serialize(compra),
-                            Encoding.UTF8,
-                            "application/json");
+                    //var compraContent = new StringContent(
+                    //        JsonSerializer.Serialize(compraViewModel),
+                    //        Encoding.UTF8,
+                    //        "application/json");
 
-                    var response = await _compraService._httpClient.PostAsync("Compra/", compraContent);
+                    var response = await _compraService.CriarCompra(compraViewModel);
 
                     CompraResponse compraResponse;
                 }
